@@ -8,7 +8,7 @@
 
 This is basic Gaiman DLS example:
 
-```
+```ruby
 def ask_email(message)
    set reply = ask message
    if reply ~= /y|yes/i then

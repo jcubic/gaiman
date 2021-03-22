@@ -1,0 +1,23 @@
+{
+  "name": "gaiman",
+  "version": "0.1.0",
+  "description": "![Gaiman Text based advanture games engine](assets/banner.svg)",
+  "main": "index.js",
+  "scripts": {
+    "build": "pegjs -o parser.js src/gaiman.pegjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcubic/gaiman.git"
+  },
+  "keywords": [],
+  "author": "Jakub T. Jankiewicz <jcubic@onet.pl>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jcubic/gaiman/issues"
+  },
+  "homepage": "https://github.com/jcubic/gaiman#readme",
+  "devDependencies": {
+    "pegjs": "^0.10.0"
+  }
+}

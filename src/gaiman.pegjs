@@ -33,15 +33,15 @@ var = _ "set" _ name:expression _ "=" _ expression:(command / expression) _ {
    return { "set": name, "value": expression };
 }
 
-echo = "echo" _ string:string {
-  return { "echo": string };
+echo = "echo" _ expression:(command / expression ) {
+  return { "echo": expression };
 }
 
 string = "\"" ([^"] / "\\\\\"")*  "\"" {
   return JSON.parse(text());
 }
 
-expression = expression:(property / function_call / name) {
+expression = expression:(property / function_call / name / string) {
    return {"expression": expression};
 }
 

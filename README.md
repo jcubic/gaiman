@@ -1,5 +1,7 @@
 # Gaiman
 
+![Gaiman Text based advanture games engine](assets/banner.svg)
+
 [Storytelling Text Based Game Engine](https://github.com/jcubic/gaiman)
 
 ## License

@@ -34,25 +34,51 @@ if cookie.visited then
   if cookie.USER_NAME then
     echo "hello $user"
   else if cookie.EMAIL then
-    if cookie.EMAIL ~= /foo/ then
-    end
+    echo "Will contact with with any updates"
   else
-    set command = ask "name: "
-    if command then
-       set user = command
-       set cookie.user = command
-       set response = post "/register" { name: user, email: email }
-       if response then
+    echo "Do you want me to contact you with updates?"
+    set confirm = ask "yes/no: "
+    if confirm ~= /y|yes/i then
+      echo "what is your name?"
+      set command = ask "name: "
+      if command then
+        set user = command
+        set cookie.user = command
+        set response = post "/register" { name: user, email: email }
+        if response then
           echo "Welcome $user. You're successfully registered"
-       end
+        end
+      end
     end
   end
 end
 ```
 
+## TODO
+- [ ] Parser
+  - [x] variables
+  - [x] property access
+  - [x] if/else if/else statements
+  - [x] Functions
+  - [ ] Functions return value
+  - [x] Commands
+    - [x] `ask` - set prompt
+    - [x] `get` - send HTTP GET request
+    - [x] `post` - send HTTP POST request
+    - [x] `echo` - print message
+    - [x] `set` - save expression or command into variable
+  - [ ] Not operator inside if statements
+  - [ ] comparison operators
+    - [x] regex match `~=`
+    - [ ] `$1` variables
+- [ ] Compiler to JSON
+- [ ] Unit tests
+- [ ] Interpreter
+- [ ] jQuery Terminal integration
+
 ## Name
 
-Name is based on [Neil Gaiman](https://en.wikipedia.org/wiki/Neil_Gaiman),
+Name came from [Neil Gaiman](https://en.wikipedia.org/wiki/Neil_Gaiman),
 Author of novels, comic books, graphic novels and films. Great storyteller.
 
 ## Acknowledge

@@ -4,6 +4,40 @@
 
 [Storytelling Text Based Game Engine](https://github.com/jcubic/gaiman)
 
+## Examples
+
+This is basic Gaiman DLS example:
+
+```
+def ask_email(message)
+   set reply = ask message
+   if reply ~= /y|yes/i then
+      echo "OK"
+   else
+      echo "FAIL"
+   end
+end
+
+if cookie.visited then
+  if cookie.USER_NAME then
+    echo "hello $user"
+  else if cookie.EMAIL then
+    if cookie.EMAIL ~= /foo/ then
+    end
+  else
+    set command = ask "name: "
+    if command then
+       set user = command
+       set cookie.user = command
+       set response = post "/register" { name: user, email: email }
+       if response then
+          echo "Welcome $user. You're successfully registered"
+       end
+    end
+  end
+end
+```
+
 ## Name
 
 Name is based on [Neil Gaiman](https://en.wikipedia.org/wiki/Neil_Gaiman),

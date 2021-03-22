@@ -6,6 +6,9 @@
   "scripts": {
     "build": "pegjs -o parser.js src/gaiman.pegjs"
   },
+  "bin": {
+    "gaiman": "bin/compile.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jcubic/gaiman.git"
@@ -19,5 +22,8 @@
   "homepage": "https://github.com/jcubic/gaiman#readme",
   "devDependencies": {
     "pegjs": "^0.10.0"
+  },
+  "dependencies": {
+    "@jcubic/lily": "^0.1.0"
   }
 }

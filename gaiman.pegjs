@@ -4,7 +4,7 @@ Start = statements:statements* {
   return statements;
 }
 
-statements = _ statement:(function_definition / if / echo / var /  command ) _ {
+statements = _ statement:(if / function_definition / function_call / command ) _ {
    return {"statements": statement}
 }
 
@@ -12,29 +12,29 @@ if = _ "if" _ cond:(command / expression) _ "then" _ body:statements* _ next:els
    return {"if": [{"cond": cond, "body": body}].concat(next), "else": last };
 }
 
-if_rest = _ "else" _ body:statements* {
-   return body
+if_rest = _ "else" _ body:statements* _ {
+   return body;
 }
 
-else_if = _ "else" _ "if" _ cond:expression _ "then" _ body:statements* {
-   return {"if": cond, "body": body}
+else_if = _ "else" _ "if" _ cond:(command / expression) _ "then" _ body:statements* _ {
+   return { "cond": cond, "body": body };
 }
 
-function_call = name _ "(" names:(name _ "," _ ?)* ")" {
-
+function_call = _ name: name _ "(" names:(name _ ","? _)* ")" _ {
+   return { "call": name, args: names.map(function(name) { return name[0]; }) };
 }
 
 function_definition = _ "def" _ name:name _ "(" args:(name _ ","? _)* ")" _  body:statements* _ "end" _ {
    var args = args.map(function(arg) { return arg[0]; });
-   return {"function": name, args: args, body: body };
+   return { "function": name, args: args, body: body };
 }
 
 var = _ "set" _ name:expression _ "=" _ expression:(command / expression) _ {
-   return {"set": name, "value": expression };
+   return { "set": name, "value": expression };
 }
 
 echo = "echo" _ string:string {
-  return {"echo": string };
+  return { "echo": string };
 }
 
 string = "\"" ([^"] / "\\\\\"")*  "\"" {
@@ -45,7 +45,7 @@ expression = expression:(property / function_call / name) {
    return {"expression": expression};
 }
 
-command = ask / post / get / match
+command = ask / post / get / match / echo / var
 
 get = _ "get" _ url:string _ {
   return {"get": url}
@@ -59,7 +59,7 @@ ask = _ "ask" _ string:(string / property / name ) _ {
 }
 
 match = expression:(property / name) _ "~=" _ re:re _ {
-  return { "var": expression, "match": re };
+  return { "name": expression, "match": re };
 }
 
 object = _ "{" _ props:(object_prop ","?)* _ "}" {
@@ -82,7 +82,7 @@ property = struct:name "." prop:name {
    return {"struct": struct, "prop": prop };
 }
 
-name = [A-Z_a-z][A-Z_a-z0-9]* { return {'var': text()}; }
+name = [A-Z_a-z][A-Z_a-z0-9]* { return {'name': text()}; }
 
 _ "whitespace"
   = [ \t\n\r]*

@@ -13,8 +13,20 @@ def ask_email(message)
    set reply = ask message
    if reply ~= /y|yes/i then
       echo "OK"
-   else
+   else if reply ~= /n|no/i then
       echo "FAIL"
+   else
+      global(message)
+   end
+end
+
+def global(command)
+   if command ~= /help/ then
+      echo "available commands help"
+   else if command ~= /ls/
+      echo get "/exec?command=ls"
+   else
+      echo "wrong command"
    end
 end
 

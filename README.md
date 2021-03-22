@@ -1,6 +1,6 @@
 # Gaiman
 
-![Gaiman Text based advanture games engine](assets/banner.svg)
+![Gaiman Text based advanture games engine](assets/banner.svg?nocache=1)
 
 [Storytelling Text Based Game Engine](https://github.com/jcubic/gaiman)
 

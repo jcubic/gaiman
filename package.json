@@ -1,6 +1,6 @@
 {
   "name": "gaiman",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha",
   "description": "![Gaiman Text based advanture games engine](assets/banner.svg)",
   "main": "index.js",
   "scripts": {

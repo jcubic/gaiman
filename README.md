@@ -1,8 +1,10 @@
-# Gaiman
+# Gaiman Engine
 
 ![Gaiman Text based advanture games engine](assets/banner.svg)
 
 [Storytelling Text Based Game Engine](https://github.com/jcubic/gaiman)
+
+Main part of Gaiman is a minimalistic language that generate Text Advanture Games.
 
 ## Examples
 
@@ -57,24 +59,193 @@ end
 ## TODO
 - [ ] Parser
   - [x] variables
+    - [x] strings
+    - [x] regexes
+    - [ ] arrays
+    - [ ] booleans
+    - [ ] integers
+    - [ ] floats
   - [x] property access
-  - [x] if/else if/else statements
+    - [ ] nested property access
+  - [ ] Here docs - for figlet ASCII art
+  - [ ] array indexing
+  - [ ] dicts/structs for data
+  - [x] `if/else` statements
+  - [ ] loop
+    - [ ] `for`..`in`
+    - [ ] `while`
+  - [ ] `do`..`end` blocks
+  - [ ] comments with `#`
   - [x] Functions
-  - [ ] Functions return value
-  - [x] Commands
+    - [ ] Functions `return` keyword
+    - [ ] Functions return functions
+    - [ ] Lambda
+    - [ ] Implementation of `map`/`reduce`/`filter` using gaiman
+    - [ ] standard library
+      - [ ] Array methods `join`/`push`/`pop` (maybe allow all JS methods)
+      - [ ] String methods `split`/`replace`
+      - [ ] `ord`/`chr`
+  - [x] Commands (restricted names)
     - [x] `ask` - set prompt
+    - [x] `echo` - print message
     - [x] `get` - send HTTP GET request
     - [x] `post` - send HTTP POST request
-    - [x] `echo` - print message
     - [x] `set` - save expression or command into variable
+    - [ ] `exists` ... `in` - check if item is in array
+    - [ ] `parse` - parse string to number, boolean or regex
+
+    - [ ] `split` - to create array with string or regex separator
+    - [ ] `join` - return string from array
+    - [ ] `push` - item into array
+    - [ ] `pop` - remote item from
   - [ ] Not operator inside if statements
-  - [ ] comparison operators
+  - [ ] Expressions
     - [x] regex match `~=`
     - [ ] `$1` variables
-- [ ] Compiler to JSON
-- [ ] Unit tests
+    - [ ] comparators `==`/`<=`/`>=`/`<`/`>`
+    - [ ] parentheses for grouping
+    - [ ] `-=`, `+=`, `/=`, `*=` operators ????
+    - [ ] `-`, `+`, `/`, `*` and `%` operators
+- [ ] compiler functions to JavaScript code [escodegen](https://github.com/estools/escodegen).
+- [ ] Compile everything to JavaScript
 - [ ] Interpreter
+- [ ] Unit tests
 - [ ] jQuery Terminal integration
+- [ ] Async Adapters for Web and next for Terminal
+- [ ] XML like syntax for colors `<bold><red>hello</red></bold>`
+- [ ] Hooks to embed JS code ???
+
+TODO: syntax example
+
+```ruby
+
+echo <<GREET
+   ____       _
+  / ___| __ _(_)_ __ ___   __ _ _ __
+ | |  _ / _` | | '_ ` _ \ / _` | '_ \
+ | |_| | (_| | | | | | | | (_| | | | |
+  \____|\__,_|_|_| |_| |_|\__,_|_| |_|
+
+Gaiman Engine
+Copyright (C) 2021 Jakub Jankiewicz <https://jcubic.pl/me>
+Released under GPLv3 license
+GREET
+
+var env = []
+
+var items = ["bottle", "flower"]
+
+set command = ask "? "
+if command ~= /pick (.+)/ then
+   if $1 then
+      if exists $1 in items then
+          env.push($1)
+          pop items
+       else
+          echo "invalid item"
+       end
+    else
+       echo "What do you want topick"
+    end
+end
+
+
+var stop = false
+var count = 0
+while not stop do
+    var command = ask "? "
+    if command ~= /exit/
+        stop = true
+        echo "goodby"
+    else if command ~= /add ([0-9]+)/ then
+        count += parse $1
+        echo "corrent count $count"
+    else
+        echo "your command $command"
+    end
+end
+
+def once(fn)
+    var result = null
+    return lambda(...args)
+        if result == null then
+           result = fn(...args)
+        end
+        return result
+    end
+end
+
+def map(fn, array)
+    var result = []
+    for item in array do
+        result.push(fn(item))
+    end
+    return result
+end
+```
+
+To consider
+* do we need `set` maybe `foo = ??` is enough
+* scope for variales (php with global is not good idea)
+* methods
+* standard library (e.g.: `push`/`pop`/`split`/`join`)
+* functions should be compiled to JavaScript, use 
+
+```
+command = ask "? "
+```
+
+should be compile to:
+
+```
+var command = await term.read('? ')
+```
+
+Compile:
+```
+do
+    var x = 10
+    echo x + x
+end
+x # throw exception x is not defined
+```
+
+to
+```javascript
+{
+    let x = 10
+    term.echo(x + x);
+}
+x
+```
+
+
+## Adapter API
+
+```javascript
+class Adapter {
+    constructor() { }
+    async ask(message) { }
+    echo(string) { }
+    async get(url) { }
+    async post(url, data) { }
+    start() { }
+}
+
+functon is_node() {
+    return typeof process !== 'undefined' &&
+        process.release.name === 'node';
+}
+
+var term;
+if (is_node()) {
+  term = new NodeAdapter();
+} else {
+  term = new WebAdapter();
+}
+term.start()
+```
+
 
 ## Name
 
@@ -92,5 +263,5 @@ Logo use:
 
 ## License
 
-Released under [MIT](http://opensource.org/licenses/MIT) license<br/>
+Released under GPLv3 license<br/>
 Copyright (c) 2021 [Jakub T. Jankiewicz](https://jcubic.pl/me)

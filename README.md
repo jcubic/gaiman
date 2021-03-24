@@ -71,6 +71,9 @@ end
   - [ ] array indexing
   - [ ] dicts/structs for data
   - [x] `if/else` statements
+  - [ ] globals
+    - [ ] argv (process.argv) or null 
+    - [ ] location or null
   - [ ] loop
     - [ ] `for`..`in`
     - [ ] `while`
@@ -130,6 +133,12 @@ Gaiman Engine
 Copyright (C) 2021 Jakub Jankiewicz <https://jcubic.pl/me>
 Released under GPLv3 license
 GREET
+
+if location then
+    echo "Wellcome on this website"
+else
+    echo "Wellcome to this CLI app"
+end
 
 var env = []
 
@@ -213,12 +222,13 @@ x # throw exception x is not defined
 to
 ```javascript
 {
-    let x = 10
-    term.echo(x + x);
+    let $_x = 10
+    term.echo($_x + $_x);
 }
 x
 ```
 
+All names prefixed with `$_` to solve conflicts
 
 ## Adapter API
 
@@ -237,13 +247,16 @@ functon is_node() {
         process.release.name === 'node';
 }
 
-var term;
+var term, $_location, $_argv
 if (is_node()) {
   term = new NodeAdapter();
+  $_argv = process.argv;
 } else {
   term = new WebAdapter();
+  $_location = location;
 }
-term.start()
+
+term.start();
 ```
 
 

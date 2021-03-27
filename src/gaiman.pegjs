@@ -71,7 +71,7 @@ statements = _ statement:(if / function_definition / function_call / command ) _
    return statement
 }
 
-if = _ "if" _ cond:(command / expression) _ "then" _ body:(statements* / _) next:(end / if_rest) _ {
+if = _ "if" _ cond:(command / expression) _ "then" _ body:(statements* / _) next:(end / if_rest / last_else) _ {
   return make_if(cond, body, next);
 }
 
@@ -81,6 +81,13 @@ end = "end" { return null; }
 if_rest = _ "else" _ if_next:if+ _ else_if:else_if? {
     var result = else_if || null;
     console.log({code: if_next.reverse()});
+}
+
+last_else = _ "else" _ body:statements* "end" {
+    return {
+        "type": "BlockStatement",
+        "body": body
+    };
 }
 
 else_if = _ "else" _ "if" _ cond:(command / expression) _ "then" _ body:statements* _ rest:("else" _ statements*)? _ "end" {

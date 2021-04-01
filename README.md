@@ -8,7 +8,7 @@ Main part of Gaiman is a minimalistic language that generate Text Advanture Game
 
 ## Examples
 
-This is basic Gaiman DLS example:
+This is basic Gaiman DSL example:
 
 ```ruby
 def ask_email(message)

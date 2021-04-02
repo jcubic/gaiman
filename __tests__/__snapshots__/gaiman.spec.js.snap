@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`if statements should render base if 1`] = `
+"if ($__m = $__m[1].match(/foo/)) {
+    let command = await term.read('? ');
+    if ($__m = commad.match(/bar/)) {
+        term.echo($__m[1]);
+    }
+}"
+`;

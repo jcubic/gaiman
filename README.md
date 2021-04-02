@@ -2,6 +2,10 @@
 
 ![Gaiman Text based advanture games engine](assets/banner.svg)
 
+[![travis](https://travis-ci.org/jcubic/gaiman.svg?branch=master)](https://travis-ci.org/jcubic/gaiman)
+[![Coverage Status](https://coveralls.io/repos/github/jcubic/gaiman/badge.svg?branch=master)](https://coveralls.io/github/jcubic/gaiman?branch=master)
+[![LICENSE GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/jcubic/gaiman/blob/master/LICENSE)
+
 [Storytelling Text Based Game Engine](https://github.com/jcubic/gaiman)
 
 Main part of Gaiman is a minimalistic language that generate Text Advanture Games.

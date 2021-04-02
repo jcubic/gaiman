@@ -1,6 +1,7 @@
 PEG_JS=./node_modules/.bin/pegjs
 JEST=./node_modules/.bin/jest
 COVERALLS=./node_modules/coveralls/bin/coveralls.js
+CAT=cat
 
 .PHONY: test coveralls
 

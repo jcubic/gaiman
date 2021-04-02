@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@jcubic/lily": "^0.1.0",
+    "coveralls": "^3.1.0",
     "escodegen": "^2.0.0"
   }
 }

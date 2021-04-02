@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - 14.3.0
+before_install:
+  - sudo apt-get -y install graphicsmagick
+install:
+  - npm ci
+script:
+  - make
+  - make test || travis_terminate 1
+after_script:
+  - make coveralls

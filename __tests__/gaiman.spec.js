@@ -12,4 +12,8 @@ describe('if statements', () => {
         var code = await fixture('nested_base_if.gs');
         expect(gaiman(code)).toMatchSnapshot();
     });
+    it('should render if_else', async () => {
+        var code = await fixture('nested_if_else.gs');
+        expect(gaiman(code)).toMatchSnapshot();
+    });
 });

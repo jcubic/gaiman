@@ -8,3 +8,18 @@ exports[`if statements should render base if 1`] = `
     }
 }"
 `;
+
+exports[`if statements should render if_else 1`] = `
+"if ($__m = $__m[1].match(/foo/)) {
+    let command = await term.read('? ');
+    if ($__m = commad.match(/(bar)/g)) {
+        term.echo($__m[1]);
+    } else if ($__m = command.match(/(baz)/g)) {
+        term.echo($__m[1]);
+    } else {
+        term.echo('NOP');
+    }
+} else {
+    term.echo('NOP');
+}"
+`;

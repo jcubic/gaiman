@@ -59,28 +59,34 @@
 }
 
 
-Start = statements:(if* / _) {
+Start = statements:(!"end" _ statements* / _) {
   return {
     "type": "Program",
-    "body": statements
+    "body": statements[2]
   };
   return statements;
 }
 
-statements = _ statement:(if / function_definition / function_call / command ) _ {
+statements = _ statement:(if / command / function_definition / function_call ) _ {
    return statement
 }
 
-if = _ "if" _ cond:(command / expression) _ "then" _ body:(statements* / _) next:(end / if_rest / last_else) _ {
+expression_statement = expression:expression {
+    return  {
+      "type": "ExpressionStatement",
+      "expression": expression
+    };
+}
+
+if = _ "if" _ cond:(command / expression) _ "then" _ body:(statements* / _) next:(end / if_next / last_else) _ {
   return make_if(cond, body, next);
 }
 
 end = "end" { return null; }
 
 
-if_rest = _ "else" _ if_next:if+ _ else_if:else_if? {
-    var result = else_if || null;
-    console.log({code: if_next.reverse()});
+if_next = _ "else" _ if_next:if {
+    return if_next;
 }
 
 last_else = _ "else" _ body:statements* "end" {
@@ -103,20 +109,44 @@ function_definition = _ "def" _ name:name _ "(" args:(name _ ","? _)* ")" _  bod
    return { "function": name, args: args, body: body };
 }
 
-var = _ "set" _ name:expression _ "=" _ expression:(command / expression) _ {
-   return { "set": name, "value": expression };
+var = _ "let" _ name:(variable) _ "=" _ expression:(command / expression) _ {
+    return {
+        "type": "VariableDeclaration",
+        "declarations": [{
+            "type": "VariableDeclarator",
+            "id": name,
+            "init": expression
+        }],
+        "kind": "let"
+    };
 }
 
-echo = "echo" _ expression:(command / expression ) {
-  return { "echo": expression };
+echo = "echo" _ expression:(command / expression) {
+    return {
+        "type": "ExpressionStatement",
+        "expression": {
+            "type": "CallExpression",
+            "callee": {
+                "type": "MemberExpression",
+                "object": make_identifier('term'),
+                "property": make_identifier('echo')
+            },
+            "arguments": [expression]
+        }
+    };
 }
 
 string = "\"" ([^"] / "\\\\\"")*  "\"" {  // "
   return JSON.parse(text());
 }
 
-expression = expression:(property / function_call / name / string) {
-   return {"expression": expression};
+literal = value:(string / integer) {
+   return {"type": "Literal", "value": value };
+}
+
+
+expression = expression:(property / match_var / arithmetic / function_call / name / literal) {
+    return expression;
 }
 
 command = ask / post / get / match / echo / var
@@ -128,8 +158,25 @@ post = _ "post" _ url:string _ data: object _ {
    return {"post": url, data: data }
 }
 
-ask = _ "ask" _ string:(string / property / name ) _ {
-   return {"ask": string};
+ask = _ "ask" _ arg:(literal / property / name ) _ {
+    return  {
+        "type": "AwaitExpression",
+        "argument": {
+            "type": "CallExpression",
+            "callee": {
+                "type": "MemberExpression",
+                "object": {
+                    "type": "Identifier",
+                    "name": "term"
+                },
+                "property": {
+                    "type": "Identifier",
+                    "name": "read"
+                }
+            },
+            "arguments": [arg]
+        }
+    };
 }
 
 match = expression:(match_var / property / variable) _ "~=" _ re:re _ {
@@ -164,6 +211,34 @@ property = struct:name rest:("." name)+ {
     rest = rest.map(arg => arg[1]);
     return property(...[struct].concat(rest).map(make_identifier));
 }
+
+arithmetic
+  = head:term tail:(_ ("+" / "-") _ term)* {
+      return tail.reduce(function(result, element) {
+          return {
+            "type": "BinaryExpression",
+            "operator": element[1],
+            "left": result,
+            "right": element[3]
+          };
+      }, head);
+    }
+
+term
+  = head:factor tail:(_ ("*" / "/") _ factor)* {
+      return tail.reduce(function(result, element) {
+          return {
+            "type": "BinaryExpression",
+            "operator": element[1],
+            "left": result,
+            "right": element[3]
+          };
+      }, head);
+    }
+
+factor
+  = "(" _ expr:arithmetic _ ")" { return expr; }
+  / literal
 
 variable = !keywords variable:name {
   return {

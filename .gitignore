@@ -1,2 +1,4 @@
 node_modules
 _*
+!__tests__
+coverage

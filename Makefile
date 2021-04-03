@@ -13,5 +13,8 @@ parser.js: ./src/gaiman.pegjs
 test:
 	$(JEST) --coverage --testMatch '**/__tests__/*.spec.js'
 
+test-accept-snapshots:
+	$(JEST) --coverage --updateSnapshot --testMatch '**/__tests__/*.spec.js'
+
 coveralls:
 	$(CAT) ./coverage/lcov.info | $(COVERALLS)

@@ -8,12 +8,16 @@ function fixture(name) {
 }
 
 describe('if statements', () => {
-    it('should render base if', async () => {
+    it('should compile base if', async () => {
         var code = await fixture('nested_base_if.gs');
         expect(gaiman(code)).toMatchSnapshot();
     });
-    it('should render if_else', async () => {
+    it('should compile if_else', async () => {
         var code = await fixture('nested_if_else.gs');
+        expect(gaiman(code)).toMatchSnapshot();
+    });
+    it('should compile multiple if_else ', async () => {
+        var code = await fixture('multiple_nested_if_else.gs');
         expect(gaiman(code)).toMatchSnapshot();
     });
 });

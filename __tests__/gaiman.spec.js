@@ -7,21 +7,28 @@ function fixture(name) {
     });
 }
 
+async function test_fixture(filename) {
+    var code = await fixture(filename);
+    expect(gaiman(code)).toMatchSnapshot();
+}
+
 describe('if statements', () => {
     it('should compile base if', async () => {
-        var code = await fixture('nested_base_if.gs');
-        expect(gaiman(code)).toMatchSnapshot();
+        return test_fixture('nested_base_if.gs');
     });
     it('should compile if_else', async () => {
-        var code = await fixture('nested_if_else.gs');
-        expect(gaiman(code)).toMatchSnapshot();
+        return test_fixture('nested_if_else.gs');
     });
     it('should compile multiple if_else ', async () => {
-        var code = await fixture('multiple_nested_if_else.gs');
-        expect(gaiman(code)).toMatchSnapshot();
+        return test_fixture('multiple_nested_if_else.gs');
     });
     it('should compile multiple if_else with expressions', async () => {
-        var code = await fixture('expressions.gs');
-        expect(gaiman(code)).toMatchSnapshot();
+        return test_fixture('expressions.gs');
+    });
+});
+
+describe('functions', () => {
+    it('should compile functions', () => {
+        return test_fixture('functions.gs');
     });
 });

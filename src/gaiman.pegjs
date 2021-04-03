@@ -67,8 +67,12 @@ Start = statements:(!"end" _ statements* / _) {
   return statements;
 }
 
-statements = _ statement:(if / command / function_definition / function_call / expression_statement) _ {
+statements = _ statement:(if / command / return / function_definition / function_call / expression_statement) _ {
    return statement
+}
+
+expression_like = expr:(command / expression) {
+    return expr;
 }
 
 expression_statement = !keywords expression:expression {
@@ -105,11 +109,27 @@ function_call = _ name: name _ "(" names:(name _ ","? _)* ")" _ {
 }
 
 function_definition = _ "def" _ name:name _ "(" args:(name _ ","? _)* ")" _  body:statements* _ "end" _ {
-   var args = args.map(function(arg) { return arg[0]; });
-   return { "function": name, args: args, body: body };
+    var args = args.map(function(arg) { return arg[0]; });
+    return {
+        "type": "FunctionDeclaration",
+        "id": make_identifier(name),
+        "params": args.map(make_identifier),
+        "async": true,
+        "body": {
+            "type": "BlockStatement",
+            "body": body
+        }
+    };
 }
 
-var = _ "let" _ name:(variable) _ "=" _ expression:(command / expression) _ {
+return = _ "return" _ expression:expression_like _ {
+    return {
+        "type": "ReturnStatement",
+        "argument": expression
+    };
+}
+
+var = _ "let" _ name:(variable) _ "=" _ expression:expression_like _ {
     return {
         "type": "VariableDeclaration",
         "declarations": [{
@@ -121,7 +141,7 @@ var = _ "let" _ name:(variable) _ "=" _ expression:(command / expression) _ {
     };
 }
 
-echo = "echo" _ expression:(command / expression) {
+echo = "echo" _ expression:expression_like {
     return {
         "type": "ExpressionStatement",
         "expression": {
@@ -148,7 +168,9 @@ expression = expression:(property / arithmetic / match_var / function_call / nam
     return expression;
 }
 
-command = ask / post / get / match / echo / var
+command = command:(ask / post / get / match / echo / var) {
+    return command;
+}
 
 get = _ "get" _ url:string _ {
   return {"get": url}
@@ -157,7 +179,7 @@ post = _ "post" _ url:string _ data: object _ {
    return {"post": url, data: data }
 }
 
-ask = _ "ask" _ arg:(literal / property / name ) _ {
+ask = _ "ask" _ arg:expression_like _ {
     return  {
         "type": "AwaitExpression",
         "argument": {
@@ -183,7 +205,7 @@ match = expression:(match_var / property / variable) _ "~=" _ re:re _ {
         type: "AssignmentExpression",
         operator: "=",
         left: match_identifer,
-        right: call(property(expression, match_method), re)
+        right: call(property(call(make_identifier('String'), expression), match_method), re)
     };
 }
 
@@ -259,7 +281,7 @@ match_var = "$" num:integer {
 
 integer = [0-9]+ { return parseInt(text(), 10); }
 
-keywords = "if" / "then" / "end" / "else"
+keywords = "if" / "then" / "end" / "else" / "return"
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

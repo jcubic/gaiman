@@ -17,7 +17,9 @@ if (options._.length !== 1) {
         const source = buffer.toString();
         try {
             const ast = parser.parse(source);
-            console.log(JSON.stringify(ast, true, 4));
+            if (options.debug) {
+                console.log(JSON.stringify(ast, true, 4));
+            }
             try {
                 const code = escodegen.generate(ast);
                 if (options.o) {

@@ -67,11 +67,11 @@ Start = statements:(!"end" _ statements* / _) {
   return statements;
 }
 
-statements = _ statement:(if / command / function_definition / function_call ) _ {
+statements = _ statement:(if / command / function_definition / function_call / expression_statement) _ {
    return statement
 }
 
-expression_statement = expression:expression {
+expression_statement = !keywords expression:expression {
     return  {
       "type": "ExpressionStatement",
       "expression": expression
@@ -144,8 +144,7 @@ literal = value:(string / integer) {
    return {"type": "Literal", "value": value };
 }
 
-
-expression = expression:(property / match_var / arithmetic / function_call / name / literal) {
+expression = expression:(property / arithmetic / match_var / function_call / name / literal) {
     return expression;
 }
 
@@ -238,7 +237,7 @@ term
 
 factor
   = "(" _ expr:arithmetic _ ")" { return expr; }
-  / literal
+  / literal / match_var / variable
 
 variable = !keywords variable:name {
   return {
@@ -260,7 +259,7 @@ match_var = "$" num:integer {
 
 integer = [0-9]+ { return parseInt(text(), 10); }
 
-keywords = "if" / "then" / "end"
+keywords = "if" / "then" / "end" / "else"
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

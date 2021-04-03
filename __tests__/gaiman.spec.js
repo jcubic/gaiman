@@ -20,4 +20,8 @@ describe('if statements', () => {
         var code = await fixture('multiple_nested_if_else.gs');
         expect(gaiman(code)).toMatchSnapshot();
     });
+    it('should compile multiple if_else with expressions', async () => {
+        var code = await fixture('expressions.gs');
+        expect(gaiman(code)).toMatchSnapshot();
+    });
 });

@@ -7,7 +7,7 @@ const escodegen = require('escodegen');
 const fs = require('fs');
 const { readFile, writeFile } = fs.promises;
 
-const options = lily(process.argv.slice(2));
+const options = lily(process.argv.slice(2), { boolean: ['debug'] });
 const executable = path.basename(process.argv[1]);
 
 if (options._.length !== 1) {

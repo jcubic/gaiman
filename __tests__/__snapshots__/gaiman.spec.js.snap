@@ -46,3 +46,21 @@ if ($__m = command.match(/foo/)) {
     term.echo('3');
 }"
 `;
+
+exports[`if statements should compile multiple if_else with expressions 1`] = `
+"term.echo('hello' + ' world');
+let command = await term.read('? ');
+if ($__m = command.match(/(foo)/)) {
+    let command = await term.read('? ');
+    let foo = 30 * 30 / 2;
+    10 * 10 + 3;
+    if ($__m = commad.match(/(bar)/)) {
+        term.echo($__m[1] + 'foo');
+        let bar = 10 + 10 * 20;
+        let baz = 30 * 30 / 2;
+    } else {
+        let quux = 30 * 30 / 2 * 3;
+        10 * 10 / 2;
+    }
+}"
+`;

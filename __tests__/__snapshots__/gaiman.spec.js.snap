@@ -5,13 +5,13 @@ exports[`functions should compile function calls 1`] = `
     async function $_global($_message) {
         term.echo($_message);
         if ($$__m = String($_message).match(/hello/)) {
-            $_show_hello();
+            await $_show_hello();
         }
     }
     async function $_show_hello() {
         term.echo(\`hello\`);
     }
-    $_global(\`hello\`);
+    await $_global(\`hello\`);
 }());"
 `;
 

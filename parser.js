@@ -203,7 +203,10 @@ function peg$parse(input, options) {
       peg$c20 = ")",
       peg$c21 = peg$literalExpectation(")", false),
       peg$c22 = function(name, names) {
-          return call(name, ...names.map(name => name[0]));
+          return {
+              "type": "AwaitExpression",
+              "argument": call(name, ...names.map(name => name[0]))
+          };
       },
       peg$c23 = "def",
       peg$c24 = peg$literalExpectation("def", false),

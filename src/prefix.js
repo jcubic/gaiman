@@ -17,7 +17,7 @@ function is_node() {
 
 class WebAdapter {
     constructor() {
-        this._term = $('body').terminal($.noop, { greetings: false });
+        this._term = $('body').terminal($.noop, { greetings: false, exit: false });
     }
     ask(message) {
         return this._term.read(message);

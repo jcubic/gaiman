@@ -2,9 +2,11 @@
 
 const lily = require('@jcubic/lily');
 const path = require('path');
+const util = require('util');
 const parser = require('../parser');
 const escodegen = require('escodegen');
 const fs = require('fs');
+
 const { readFile, writeFile } = fs.promises;
 
 const options = lily(process.argv.slice(2), { boolean: ['debug'] });
@@ -18,7 +20,7 @@ if (options._.length !== 1) {
         try {
             const ast = parser.parse(source);
             if (options.debug) {
-                console.log(JSON.stringify(ast, true, 4));
+                dump(ast);
             }
             try {
                 const code = escodegen.generate(ast);
@@ -29,20 +31,23 @@ if (options._.length !== 1) {
                 }
             } catch (error) {
                 console.log('JS Generation Error: ' + error.message);
+                process.exit(1);
             }
         } catch (error) {
             console.error(format_error(source, error));
+            process.exit(1);
         }
     }).catch(e => {
         console.error(e.message);
+        process.exit(1);
     });
 }
 
 function format_error(code, e) {
-    const output = ['Parse Error: ' + e.message, ''];
-    const lines = code.split('\n');
     try {
+        const lines = code.split('\n');
         const line_number = e.location.start.line - 1;
+        const output = [`Parse Error at line ${line_number}`, e.message, ''];
         const col = e.location.start.column;
         const range = e.location.end.column - col;
         output.push(lines[line_number]);

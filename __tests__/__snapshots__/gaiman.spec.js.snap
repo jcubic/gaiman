@@ -1,37 +1,50 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`functions should compile functions 1`] = `
-"async function foo(arg) {
-    if ($__m = String(arg).match(/foo/)) {
+exports[`functions should compile function calls 1`] = `
+"async function $_global($_message) {
+    term.echo($_message);
+    if ($$__m = String($_message).match(/hello/)) {
+        $_show_hello();
+    }
+}
+async function $_show_hello() {
+    term.echo('hello');
+}
+$_global('hello');"
+`;
+
+exports[`functions should compile function definitions 1`] = `
+"async function $_foo($_arg) {
+    if ($$__m = String($_arg).match(/foo/)) {
         return 10 + 10;
     }
 }
-async function login(username) {
+async function $_login($_username) {
     term.echo('what\\\\'s up?');
-    if ($__m = String(username).match(/root/)) {
-        return await term.read(username + '# ');
+    if ($$__m = String($_username).match(/root/)) {
+        return await term.ask($_username + '# ');
     } else {
-        return await term.read(username + '$ ');
+        return await term.ask($_username + '$ ');
     }
 }"
 `;
 
 exports[`if statements should compile base if 1`] = `
-"if ($__m = String($__m[1]).match(/foo/)) {
-    let command = await term.read('? ');
-    if ($__m = String(commad).match(/bar/)) {
-        term.echo($__m[1]);
+"if ($$__m = String($$__m[1]).match(/foo/)) {
+    let $_command = await term.ask('? ');;
+    if ($$__m = String($_commad).match(/bar/)) {
+        term.echo($$__m[1]);
     }
 }"
 `;
 
 exports[`if statements should compile if_else 1`] = `
-"if ($__m = String($__m[1]).match(/foo/)) {
-    let command = await term.read('? ');
-    if ($__m = String(commad).match(/(bar)/g)) {
-        term.echo($__m[1]);
-    } else if ($__m = String(command).match(/(baz)/g)) {
-        term.echo($__m[1]);
+"if ($$__m = String($$__m[1]).match(/foo/)) {
+    let $_command = await term.ask('? ');;
+    if ($$__m = String($_commad).match(/(bar)/g)) {
+        term.echo($$__m[1]);
+    } else if ($$__m = String($_command).match(/(baz)/g)) {
+        term.echo($$__m[1]);
     } else {
         term.echo('NOP');
     }
@@ -41,22 +54,22 @@ exports[`if statements should compile if_else 1`] = `
 `;
 
 exports[`if statements should compile multiple if_else  1`] = `
-"if ($__m = String($__m[1]).match(/foo/)) {
-    let command = await term.read('? ');
-    if ($__m = String(commad).match(/(bar)/g)) {
-        term.echo($__m[1]);
-    } else if ($__m = String(command).match(/(baz)/g)) {
-        term.echo($__m[1]);
+"if ($$__m = String($$__m[1]).match(/foo/)) {
+    let $_command = await term.ask('? ');;
+    if ($$__m = String($_commad).match(/(bar)/g)) {
+        term.echo($$__m[1]);
+    } else if ($$__m = String($_command).match(/(baz)/g)) {
+        term.echo($$__m[1]);
     } else {
         term.echo('NOP');
     }
 } else {
     term.echo('NOP');
 }
-let command = await term.read('? ');
-if ($__m = String(command).match(/foo/)) {
+let $_command = await term.ask('? ');;
+if ($$__m = String($_command).match(/foo/)) {
     term.echo('1');
-} else if ($__m = String(command).match(/bar/)) {
+} else if ($$__m = String($_command).match(/bar/)) {
     term.echo('2');
 } else {
     term.echo('3');
@@ -65,17 +78,17 @@ if ($__m = String(command).match(/foo/)) {
 
 exports[`if statements should compile multiple if_else with expressions 1`] = `
 "term.echo('hello' + ' world');
-let command = await term.read('? ');
-if ($__m = String(command).match(/(foo)/)) {
-    let command = await term.read('? ');
-    let foo = 30 * 30 / 2;
+let $_command = await term.ask('? ');;
+if ($$__m = String($_command).match(/(foo)/)) {
+    let $_command = await term.ask('? ');;
+    let $_foo = 30 * 30 / 2;;
     10 * 10 + 3;
-    if ($__m = String(commad).match(/(bar)/)) {
-        term.echo($__m[1] + 'foo');
-        let bar = 10 + 10 * 20;
-        let baz = 30 * 30 / 2;
+    if ($$__m = String($_commad).match(/(bar)/)) {
+        term.echo($$__m[1] + 'foo');
+        let $_bar = 10 + 10 * 20;;
+        let $_baz = 30 * 30 / 2;;
     } else {
-        let quux = 30 * 30 / 2 * 3;
+        let $_quux = 30 * 30 / 2 * 3;;
         10 * 10 / 2;
     }
 }"

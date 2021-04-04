@@ -1,8 +1,9 @@
 // Gaiman conversation language
 
 {
-    var $__m; // result of match
-    var match_identifer = make_identifier('$__m');
+    var $$__m; // result of match
+    var variable_prefix = '$_';
+    var match_identifer = make_identifier('$$__m');
     var match_method = make_identifier('match');
 
     function make_if(test, body, alternative) {
@@ -59,61 +60,56 @@
 }
 
 
-Start = statements:(!"end" _ statements* / _) {
+Start = statements:(!"end" _ statement* / _) {
   return {
     "type": "Program",
-    "body": statements[2]
+    "body": statements[2].filter(Boolean)
   };
-  return statements;
 }
 
-statements = _ statement:(if / command / return / function_definition / function_call / expression_statement) _ {
-   return statement
+statement = !"end" _ statement:(comment / if / return / expression_statement / function_definition) _ {
+   return statement;
 }
 
-expression_like = expr:(command / expression) {
-    return expr;
-}
-
-expression_statement = !keywords expression:expression {
+expression_statement = !keyword expression:expression_like {
     return  {
       "type": "ExpressionStatement",
       "expression": expression
     };
 }
 
-if = _ "if" _ cond:(command / expression) _ "then" _ body:(statements* / _) next:(end / if_next / last_else) _ {
-  return make_if(cond, body, next);
+expression_like = expr:(function_call / command / expression) {
+    return expr;
 }
 
 end = "end" { return null; }
+
+if = _ "if" _ cond:expression_like _ "then" _ body:(statement* / _) next:(end / if_next / last_else) _ {
+  return make_if(cond, body.filter(Boolean), next);
+}
 
 
 if_next = _ "else" _ if_next:if {
     return if_next;
 }
 
-last_else = _ "else" _ body:statements* "end" {
+last_else = _ "else" _ body:statement* "end" {
     return {
         "type": "BlockStatement",
-        "body": body
+        "body": body.filter(Boolean)
     };
 }
 
-else_if = _ "else" _ "if" _ cond:(command / expression) _ "then" _ body:statements* _ rest:("else" _ statements*)? _ "end" {
-   return { "cond": cond, "body": body };
+function_call = _ !keyword name:variable _ "(" names:((variable / expression_like) _ ","? _)* ")" _ {
+    return call(name, ...names.map(name => name[0]));
 }
 
-function_call = _ name: name _ "(" names:(name _ ","? _)* ")" _ {
-   return { "call": name, args: names.map(function(name) { return name[0]; }) };
-}
-
-function_definition = _ "def" _ name:name _ "(" args:(name _ ","? _)* ")" _  body:statements* _ "end" _ {
+function_definition = _ "def" _ name:variable _ "(" args:(variable _ ","? _)* ")" _  body:statement* _ "end" _ {
     var args = args.map(function(arg) { return arg[0]; });
     return {
         "type": "FunctionDeclaration",
-        "id": make_identifier(name),
-        "params": args.map(make_identifier),
+        "id": name,
+        "params": args,
         "async": true,
         "body": {
             "type": "BlockStatement",
@@ -141,21 +137,6 @@ var = _ "let" _ name:(variable) _ "=" _ expression:expression_like _ {
     };
 }
 
-echo = "echo" _ expression:expression_like {
-    return {
-        "type": "ExpressionStatement",
-        "expression": {
-            "type": "CallExpression",
-            "callee": {
-                "type": "MemberExpression",
-                "object": make_identifier('term'),
-                "property": make_identifier('echo')
-            },
-            "arguments": [expression]
-        }
-    };
-}
-
 string = "\"" ([^"] / "\\\\\"")*  "\"" {  // "
   return JSON.parse(text());
 }
@@ -168,36 +149,26 @@ expression = expression:(property / arithmetic / match_var / function_call / nam
     return expression;
 }
 
-command = command:(ask / post / get / match / echo / var) {
+command = command:(adapter_command / match / var) {
     return command;
 }
 
-get = _ "get" _ url:string _ {
-  return {"get": url}
-}
-post = _ "post" _ url:string _ data: object _ {
-   return {"post": url, data: data }
-}
+adapter_async_strings = "get" / "post" / "ask" { return text(); }
+adapter_static_strings = "echo" { return text(); }
 
-ask = _ "ask" _ arg:expression_like _ {
+
+adapter_command = async_command / static_command
+
+async_command = _ method:adapter_async_strings _ expr:(adapter_command / expression) _ {
     return  {
         "type": "AwaitExpression",
-        "argument": {
-            "type": "CallExpression",
-            "callee": {
-                "type": "MemberExpression",
-                "object": {
-                    "type": "Identifier",
-                    "name": "term"
-                },
-                "property": {
-                    "type": "Identifier",
-                    "name": "read"
-                }
-            },
-            "arguments": [arg]
-        }
+        "argument": call(property(make_identifier("term"),
+                                  make_identifier(method)), expr)
     };
+}
+
+static_command = _ method:adapter_static_strings _ expr:(adapter_command / expression) _ {
+    return  call(property(make_identifier("term"), make_identifier(method)), expr);
 }
 
 match = expression:(match_var / property / variable) _ "~=" _ re:re _ {
@@ -228,9 +199,9 @@ re = "/" re:([^/] / "\\\\/")* "/" flags:[igsu]* {
         }
     }
 }
-property = struct:name rest:("." name)+ {
+property = struct:variable rest:("." name)+ {
     rest = rest.map(arg => arg[1]);
-    return property(...[struct].concat(rest).map(make_identifier));
+    return property(struct, ...rest.map(make_identifier));
 }
 
 arithmetic
@@ -261,12 +232,15 @@ factor
   = "(" _ expr:arithmetic _ ")" { return expr; }
   / literal / match_var / variable
 
-variable = !keywords variable:name {
-  return {
-    "type": "Identifier",
-    "name": variable
-  }
+scoped = !keyword variable:name {
+  return make_identifier(variable_prefix + variable);
 }
+
+global = !keyword variable:("cookie" / "location" / "argv" / "node") {
+    return make_identifier(variable);
+}
+variable = global / scoped
+
 match_var = "$" num:integer {
     return {
         type: "MemberExpression",
@@ -278,10 +252,11 @@ match_var = "$" num:integer {
         }
     };
 }
+comment = "#" [^\n]* { return null; }
 
 integer = [0-9]+ { return parseInt(text(), 10); }
 
-keywords = "if" / "then" / "end" / "else" / "return"
+keyword = "if" / "then" / "end" / "else" / "return" / "def"
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

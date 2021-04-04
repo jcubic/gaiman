@@ -28,7 +28,10 @@ describe('if statements', () => {
 });
 
 describe('functions', () => {
-    it('should compile functions', () => {
+    it('should compile function definitions', () => {
         return test_fixture('functions.gs');
+    });
+    it('should compile function calls', () => {
+        return test_fixture('function_calls.gs');
     });
 });

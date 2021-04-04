@@ -57,14 +57,52 @@
             arguments: args
         };
     }
+    function create_template_literal(string) {
+        var re = /(\$[A-Z_$a-z][A-Z_a-z0-9]*)/;
+        var expressions = [];
+        var constants = [];
+        string.split(re).map(token => {
+            if (token.match(re)) {
+                expressions.push(make_identifier(token.replace(/^\$/, '$_')));
+            } else {
+                constants.push({
+                    "type": "TemplateElement",
+                    "value": {
+                        "raw": token
+                    }
+                });
+            }
+        });
+        return {
+            type: "TemplateLiteral",
+            expressions,
+            quasis: constants
+        };
+    }
 }
 
 
 Start = statements:(!"end" _ statement* / _) {
-  return {
-    "type": "Program",
-    "body": statements[2].filter(Boolean)
-  };
+    return {
+        "type": "Program",
+        "body": [{
+            "type": "ExpressionStatement",
+            "expression": {
+                "type": "CallExpression",
+                "callee": {
+                    "type": "FunctionExpression",
+                    "id": null,
+                    "async": true,
+                    "params": [],
+                    "body": {
+                        "type": "BlockStatement",
+                        "body": statements[2].filter(Boolean)
+                    }
+                },
+                "arguments": []
+            }
+        }]
+    };
 }
 
 statement = !"end" _ statement:(comment / if / return / expression_statement / function_definition) _ {
@@ -138,14 +176,14 @@ var = _ "let" _ name:(variable) _ "=" _ expression:expression_like _ {
 }
 
 string = "\"" ([^"] / "\\\\\"")*  "\"" {  // "
-  return JSON.parse(text());
+  return create_template_literal(JSON.parse(text()));
 }
 
-literal = value:(string / integer) {
+literal = value:integer {
    return {"type": "Literal", "value": value };
 }
 
-expression = expression:(property / arithmetic / match_var / function_call / name / literal) {
+expression = expression:(property / arithmetic / match_var / function_call / name / string / literal) {
     return expression;
 }
 
@@ -230,7 +268,7 @@ term
 
 factor
   = "(" _ expr:arithmetic _ ")" { return expr; }
-  / literal / match_var / variable
+  / string / literal / match_var / variable
 
 scoped = !keyword variable:name {
   return make_identifier(variable_prefix + variable);

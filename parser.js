@@ -144,10 +144,26 @@ function peg$parse(input, options) {
       peg$c0 = "end",
       peg$c1 = peg$literalExpectation("end", false),
       peg$c2 = function(statements) {
-        return {
-          "type": "Program",
-          "body": statements[2].filter(Boolean)
-        };
+          return {
+              "type": "Program",
+              "body": [{
+                  "type": "ExpressionStatement",
+                  "expression": {
+                      "type": "CallExpression",
+                      "callee": {
+                          "type": "FunctionExpression",
+                          "id": null,
+                          "async": true,
+                          "params": [],
+                          "body": {
+                              "type": "BlockStatement",
+                              "body": statements[2].filter(Boolean)
+                          }
+                      },
+                      "arguments": []
+                  }
+              }]
+          };
       },
       peg$c3 = function(statement) {
          return statement;
@@ -234,7 +250,7 @@ function peg$parse(input, options) {
       peg$c38 = "\\\\\"",
       peg$c39 = peg$literalExpectation("\\\\\"", false),
       peg$c40 = function() {  // "
-        return JSON.parse(text());
+        return create_template_literal(JSON.parse(text()));
       },
       peg$c41 = function(value) {
          return {"type": "Literal", "value": value };
@@ -1452,10 +1468,7 @@ function peg$parse(input, options) {
     var s0, s1;
 
     s0 = peg$currPos;
-    s1 = peg$parsestring();
-    if (s1 === peg$FAILED) {
-      s1 = peg$parseinteger();
-    }
+    s1 = peg$parseinteger();
     if (s1 !== peg$FAILED) {
       peg$savedPos = s0;
       s1 = peg$c41(s1);
@@ -1479,7 +1492,10 @@ function peg$parse(input, options) {
           if (s1 === peg$FAILED) {
             s1 = peg$parsename();
             if (s1 === peg$FAILED) {
-              s1 = peg$parseliteral();
+              s1 = peg$parsestring();
+              if (s1 === peg$FAILED) {
+                s1 = peg$parseliteral();
+              }
             }
           }
         }
@@ -2340,11 +2356,14 @@ function peg$parse(input, options) {
       s0 = peg$FAILED;
     }
     if (s0 === peg$FAILED) {
-      s0 = peg$parseliteral();
+      s0 = peg$parsestring();
       if (s0 === peg$FAILED) {
-        s0 = peg$parsematch_var();
+        s0 = peg$parseliteral();
         if (s0 === peg$FAILED) {
-          s0 = peg$parsevariable();
+          s0 = peg$parsematch_var();
+          if (s0 === peg$FAILED) {
+            s0 = peg$parsevariable();
+          }
         }
       }
     }
@@ -2767,6 +2786,28 @@ function peg$parse(input, options) {
               type: "CallExpression",
               callee: callee,
               arguments: args
+          };
+      }
+      function create_template_literal(string) {
+          var re = /(\$[A-Z_$a-z][A-Z_a-z0-9]*)/;
+          var expressions = [];
+          var constants = [];
+          string.split(re).map(token => {
+              if (token.match(re)) {
+                  expressions.push(make_identifier(token.replace(/^\$/, '$_')));
+              } else {
+                  constants.push({
+                      "type": "TemplateElement",
+                      "value": {
+                          "raw": token
+                      }
+                  });
+              }
+          });
+          return {
+              type: "TemplateLiteral",
+              expressions,
+              quasis: constants
           };
       }
 

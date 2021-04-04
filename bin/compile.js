@@ -5,17 +5,18 @@ const path = require('path');
 const util = require('util');
 const parser = require('../parser');
 const escodegen = require('escodegen');
+const json = require('../package.json');
 const fs = require('fs');
 
-const { readFile, writeFile } = fs.promises;
+const { readFile, writeFile, stat, mkdir } = fs.promises;
 
-const options = lily(process.argv.slice(2), { boolean: ['debug'] });
+const options = lily(process.argv.slice(2), { boolean: ['debug', 'raw'] });
 const executable = path.basename(process.argv[1]);
 
 if (options._.length !== 1) {
-    console.error(`usage: ${executable} -o <output.json> <input.gs>`);
+    console.error(`usage: ${executable} -o <output directory> <input.gs>`);
 } else {
-    readFile(options._[0]).then(buffer => {
+    readFile(options._[0]).then(async buffer => {
         const source = buffer.toString();
         try {
             const ast = parser.parse(source);
@@ -25,7 +26,12 @@ if (options._.length !== 1) {
             try {
                 const code = escodegen.generate(ast);
                 if (options.o) {
-                    return writeFile(options.o, code);
+                    if (!(await directory_exists(options.o))) {
+                        await mkdir(options.o);
+                    }
+                    const output_code = await wrap_code(code);
+                    writeFile(path.join(options.o, 'index.js'), output_code);
+                    writeFile(path.join(options.o, 'index.html'), await get_terminal());
                 } else {
                     console.log(code);
                 }
@@ -66,4 +72,28 @@ function parse(buffer) {
 
 function dump(obj) {
     console.log(util.inspect(obj, { depth: null }));
+}
+
+async function directory_exists(path) {
+    try {
+        var s = await stat(path);
+        return s.isDirectory();
+    } catch(e) {
+        return false;
+    }
+}
+
+async function wrap_code(code) {
+    var prefx = await readFile('./src/prefix.js');
+    var postfix = await readFile('./src/postfix.js');
+    var result = [prefx, code, postfix].join('\n');
+    return add_version(result);
+}
+
+async function get_terminal() {
+    return add_version((await readFile('./src/terminal.html')).toString())
+}
+
+function add_version(code) {
+    return code.replace(/\{\{VER\}\}/, json.version);
 }

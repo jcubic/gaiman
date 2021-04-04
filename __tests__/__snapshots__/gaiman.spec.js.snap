@@ -1,95 +1,107 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`functions should compile function calls 1`] = `
-"async function $_global($_message) {
-    term.echo($_message);
-    if ($$__m = String($_message).match(/hello/)) {
-        $_show_hello();
+"(async function () {
+    async function $_global($_message) {
+        term.echo($_message);
+        if ($$__m = String($_message).match(/hello/)) {
+            $_show_hello();
+        }
     }
-}
-async function $_show_hello() {
-    term.echo('hello');
-}
-$_global('hello');"
+    async function $_show_hello() {
+        term.echo(\`hello\`);
+    }
+    $_global(\`hello\`);
+}());"
 `;
 
 exports[`functions should compile function definitions 1`] = `
-"async function $_foo($_arg) {
-    if ($$__m = String($_arg).match(/foo/)) {
-        return 10 + 10;
+"(async function () {
+    async function $_foo($_arg) {
+        if ($$__m = String($_arg).match(/foo/)) {
+            return 10 + 10;
+        }
     }
-}
-async function $_login($_username) {
-    term.echo('what\\\\'s up?');
-    if ($$__m = String($_username).match(/root/)) {
-        return await term.ask($_username + '# ');
-    } else {
-        return await term.ask($_username + '$ ');
+    async function $_login($_username) {
+        term.echo(\`what's up?\`);
+        if ($$__m = String($_username).match(/root/)) {
+            return await term.ask($_username + \`# \`);
+        } else {
+            return await term.ask($_username + \`$ \`);
+        }
     }
-}"
+}());"
 `;
 
 exports[`if statements should compile base if 1`] = `
-"if ($$__m = String($$__m[1]).match(/foo/)) {
-    let $_command = await term.ask('? ');;
-    if ($$__m = String($_commad).match(/bar/)) {
-        term.echo($$__m[1]);
+"(async function () {
+    if ($$__m = String($$__m[1]).match(/foo/)) {
+        let $_command = await term.ask(\`? \`);;
+        if ($$__m = String($_commad).match(/bar/)) {
+            term.echo($$__m[1]);
+        }
     }
-}"
+}());"
 `;
 
 exports[`if statements should compile if_else 1`] = `
-"if ($$__m = String($$__m[1]).match(/foo/)) {
-    let $_command = await term.ask('? ');;
-    if ($$__m = String($_commad).match(/(bar)/g)) {
-        term.echo($$__m[1]);
-    } else if ($$__m = String($_command).match(/(baz)/g)) {
-        term.echo($$__m[1]);
+"(async function () {
+    if ($$__m = String($$__m[1]).match(/foo/)) {
+        let $_command = await term.ask(\`? \`);;
+        if ($$__m = String($_commad).match(/(bar)/g)) {
+            term.echo($$__m[1]);
+        } else if ($$__m = String($_command).match(/(baz)/g)) {
+            term.echo($$__m[1]);
+        } else {
+            term.echo(\`NOP\`);
+        }
     } else {
-        term.echo('NOP');
+        term.echo(\`NOP\`);
     }
-} else {
-    term.echo('NOP');
-}"
+}());"
 `;
 
 exports[`if statements should compile multiple if_else  1`] = `
-"if ($$__m = String($$__m[1]).match(/foo/)) {
-    let $_command = await term.ask('? ');;
-    if ($$__m = String($_commad).match(/(bar)/g)) {
-        term.echo($$__m[1]);
-    } else if ($$__m = String($_command).match(/(baz)/g)) {
-        term.echo($$__m[1]);
+"(async function () {
+    if ($$__m = String($$__m[1]).match(/foo/)) {
+        let $_command = await term.ask(\`? \`);;
+        if ($$__m = String($_commad).match(/(bar)/g)) {
+            term.echo($$__m[1]);
+        } else if ($$__m = String($_command).match(/(baz)/g)) {
+            term.echo($$__m[1]);
+        } else {
+            term.echo(\`NOP\`);
+        }
     } else {
-        term.echo('NOP');
+        term.echo(\`NOP\`);
     }
-} else {
-    term.echo('NOP');
-}
-let $_command = await term.ask('? ');;
-if ($$__m = String($_command).match(/foo/)) {
-    term.echo('1');
-} else if ($$__m = String($_command).match(/bar/)) {
-    term.echo('2');
-} else {
-    term.echo('3');
-}"
+    let $_command = await term.ask(\`? \`);;
+    if ($$__m = String($_command).match(/foo/)) {
+        term.echo(\`1\`);
+    } else if ($$__m = String($_command).match(/bar/)) {
+        term.echo(\`2\`);
+    } else {
+        term.echo(\`3\`);
+    }
+}());"
 `;
 
 exports[`if statements should compile multiple if_else with expressions 1`] = `
-"term.echo('hello' + ' world');
-let $_command = await term.ask('? ');;
-if ($$__m = String($_command).match(/(foo)/)) {
-    let $_command = await term.ask('? ');;
-    let $_foo = 30 * 30 / 2;;
-    10 * 10 + 3;
-    if ($$__m = String($_commad).match(/(bar)/)) {
-        term.echo($$__m[1] + 'foo');
-        let $_bar = 10 + 10 * 20;;
-        let $_baz = 30 * 30 / 2;;
-    } else {
-        let $_quux = 30 * 30 / 2 * 3;;
-        10 * 10 / 2;
+"(async function () {
+    term.echo(\`hello\` + \` world\`);
+    let $_command = await term.ask(\`? \`);;
+    if ($$__m = String($_command).match(/(foo)/)) {
+        let $_command = await term.ask(\`? \`);;
+        let $_foo = 30 * 30 / 2;;
+        10 * 10 + 3;
+        if ($$__m = String($_commad).match(/(bar)/)) {
+            term.echo($$__m[1] + \`foo\`);
+            let $_bar = 10 + 10 * 20;;
+            let $_baz = 30 * 30 / 2;;
+        } else {
+            let $_quux = 30 * 30 / 2 * 3;;
+            10 * 10 / 2;
+        }
     }
-}"
+}());"
 `;

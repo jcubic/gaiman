@@ -116,7 +116,7 @@ expression_statement = !keyword expression:expression_like {
     };
 }
 
-expression_like = expr:(function_call / command / expression) {
+expression_like = expr:(function_call / set / command / expression) {
     return expr;
 }
 
@@ -182,8 +182,11 @@ string = "\"" ([^"] / "\\\\\"")*  "\"" {  // "
   return create_template_literal(JSON.parse(text()));
 }
 
-literal = value:integer {
+literal = value:(integer / boolean) {
    return {"type": "Literal", "value": value };
+}
+boolean = value:("true" / "false") {
+    return value === "true";
 }
 
 expression = expression:(property / arithmetic / match_var / function_call / name / string / literal) {
@@ -281,6 +284,37 @@ global = !keyword variable:("cookie" / "location" / "argv" / "node") {
     return make_identifier(variable);
 }
 variable = global / scoped
+
+set = set_cookie / set_local
+
+set_cookie = "cookie." name:name _ "=" _ expr:expression {
+    return {
+        "type": "AssignmentExpression",
+        "operator": "=",
+        "left": property(
+            make_identifier('document'),
+            make_identifier('cookie')
+        ),
+        "right": {
+            "type": "BinaryExpression",
+            "operator": "+",
+            "left": {
+                "type": "Literal",
+                "value": name + "="
+            },
+            "right": call(make_identifier('String'), expr)
+        }
+    };
+}
+
+set_local = left:(property / scoped) _ "=" _  right:expression {
+    return {
+        "type": "AssignmentExpression",
+        "operator": "=",
+        "left": left,
+        "right": right
+    };
+}
 
 match_var = "$" num:integer {
     return {

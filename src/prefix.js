@@ -5,7 +5,9 @@ function parse_cookies(cookies) {
     const result = {};
     cookies.split(/\s*;\s*/).forEach(function(pair) {
         pair = pair.split(/\s*=\s*/);
-        result[pair[0]] = pair.splice(1).join('=');
+        var name = decodeURIComponent(pair[0]);
+        var value = decodeURIComponent(pair.splice(1).join('='));
+        result[name] = value;
     });
     return result;
 }

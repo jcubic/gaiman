@@ -8,7 +8,23 @@
 
 [Storytelling Text Based Game Engine](https://github.com/jcubic/gaiman)
 
-Main part of Gaiman is a minimalistic language that generate Text Advanture Games.
+Main part of Gaiman is a minimalist language that generate
+[Text Adventure Games](https://en.wikipedia.org/wiki/Interactive_fiction).
+
+## Installation
+
+```
+npm install -g gaiman
+```
+
+## Usage
+
+```
+gaiman -o directory input.gs
+```
+
+This will compile your source file and generate `dir/index.html` and `dir/index.js` files.
+And you can open generated html file in browser and run the game.
 
 ## Examples
 
@@ -16,7 +32,7 @@ This is basic Gaiman DSL example:
 
 ```ruby
 def ask_email(message)
-   set reply = ask message
+   let reply = ask message
    if reply ~= /y|yes/i then
       echo "OK"
    else if reply ~= /n|no/i then
@@ -43,14 +59,14 @@ if cookie.visited then
     echo "Will contact with with any updates"
   else
     echo "Do you want me to contact you with updates?"
-    set confirm = ask "yes/no: "
+    let confirm = ask "yes/no: "
     if confirm ~= /y|yes/i then
       echo "what is your name?"
-      set command = ask "name: "
+      let command = ask "name: "
       if command then
-        set user = command
-        set cookie.user = command
-        set response = post "/register" { name: user, email: email }
+        let user = command
+        let cookie.user = command
+        let response = post "/register" { name: user, email: email }
         if response then
           echo "Welcome $user. You're successfully registered"
         end
@@ -66,7 +82,7 @@ end
     - [x] strings
     - [x] regexes
     - [ ] arrays
-    - [ ] booleans
+    - [x] booleans
     - [ ] integers
     - [ ] floats
   - [x] property access
@@ -76,15 +92,19 @@ end
   - [ ] dicts/structs for data
   - [x] `if/else` statements
   - [ ] globals
-    - [ ] argv (process.argv) or null 
+    - [x] cookie
+      - [x] set cookie
+    - [ ] argv (process.argv) or null
     - [ ] location or null
-  - [ ] loop
+      - [ ] access nested properties
+      - [ ] set location and redirect
+  - [ ] loops
     - [ ] `for`..`in`
     - [ ] `while`
   - [ ] `do`..`end` blocks
-  - [ ] comments with `#`
+  - [x] comments with `#`
   - [x] Functions
-    - [ ] Functions `return` keyword
+    - [x] Functions `return` keyword
     - [ ] Functions return functions
     - [ ] Lambda
     - [ ] Implementation of `map`/`reduce`/`filter` using gaiman
@@ -97,7 +117,7 @@ end
     - [x] `echo` - print message
     - [x] `get` - send HTTP GET request
     - [x] `post` - send HTTP POST request
-    - [x] `set` - save expression or command into variable
+    - [x] `let` - save expression or command into variable
     - [ ] `exists` ... `in` - check if item is in array
     - [ ] `parse` - parse string to number, boolean or regex
 
@@ -108,17 +128,17 @@ end
   - [ ] Not operator inside if statements
   - [ ] Expressions
     - [x] regex match `~=`
-    - [ ] `$1` variables
+    - [x] `$1` variables
     - [ ] comparators `==`/`<=`/`>=`/`<`/`>`
     - [ ] parentheses for grouping
     - [ ] `-=`, `+=`, `/=`, `*=` operators ????
     - [ ] `-`, `+`, `/`, `*` and `%` operators
-- [ ] compiler functions to JavaScript code [escodegen](https://github.com/estools/escodegen).
-- [ ] Compile everything to JavaScript
-- [ ] Interpreter
-- [ ] Unit tests
-- [ ] jQuery Terminal integration
-- [ ] Async Adapters for Web and next for Terminal
+- [x] compiler functions to JavaScript code [escodegen](https://github.com/estools/escodegen).
+- [x] Compile everything to JavaScript
+- [x] Unit tests
+- [x] jQuery Terminal integration
+- [x] Async Adapters for Web
+- [ ] Async Adapters for Terminal
 - [ ] XML like syntax for colors `<bold><red>hello</red></bold>`
 - [ ] Hooks to embed JS code ???
 

@@ -5,7 +5,9 @@ function parse_cookies(cookies) {
     const result = {};
     cookies.split(/\s*;\s*/).forEach(function(pair) {
         pair = pair.split(/\s*=\s*/);
-        result[pair[0]] = pair.splice(1).join('=');
+        var name = decodeURIComponent(pair[0]);
+        var value = decodeURIComponent(pair.splice(1).join('='));
+        result[name] = value;
     });
     return result;
 }
@@ -57,6 +59,7 @@ if (is_node()) {
         if ($$__m = String($_confirm).match(/yes/i)) {
             await $_ask_color();
         }
+        term.echo(`Ok, have a nice day`);
     }
     term.echo(`Welcome stranger, can you tell me what is your name?`);
     let $_name = await term.ask(`name? `);;

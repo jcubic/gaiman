@@ -15,6 +15,7 @@ def ask_color()
     if confirm ~= /yes/i then
       ask_color()
     end
+    echo "Ok, have a nice day"
 end
 
 echo "Welcome stranger, can you tell me what is your name?"

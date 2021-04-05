@@ -7,8 +7,8 @@ CAT=cat
 
 all: parser.js
 
-parser.js: ./src/gaiman.pegjs
-	$(PEG_JS) -o parser.js ./src/gaiman.pegjs
+parser.js: ./src/grammar.pegjs
+	$(PEG_JS) -o parser.js ./src/grammar.pegjs
 
 test:
 	$(JEST) --coverage --testMatch '**/__tests__/*.spec.js'

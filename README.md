@@ -114,7 +114,9 @@ end
       - [ ] `ord`/`chr`
   - [x] Commands (restricted names)
     - [x] `ask` - set prompt
+      - [ ] `ask*` - set prompt with animation
     - [x] `echo` - print message
+      - [ ] `echo*` - print message with animation
     - [x] `get` - send HTTP GET request
     - [x] `post` - send HTTP POST request
     - [x] `let` - save expression or command into variable

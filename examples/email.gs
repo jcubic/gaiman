@@ -1,4 +1,3 @@
-
 def prompt_email()
   echo "What is your email"
   let email = ask "email? "

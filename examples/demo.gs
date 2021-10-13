@@ -14,8 +14,9 @@ def ask_color()
     let confirm = ask "yes/no? "
     if confirm ~= /yes/i then
       ask_color()
+    else
+      echo "Ok, have a nice day"
     end
-    echo "Ok, have a nice day"
 end
 
 echo "Welcome stranger, can you tell me what is your name?"

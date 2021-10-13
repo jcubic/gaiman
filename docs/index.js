@@ -58,8 +58,9 @@ if (is_node()) {
         let $_confirm = await term.ask(`yes/no? `);;
         if ($$__m = String($_confirm).match(/yes/i)) {
             await $_ask_color();
+        } else {
+            term.echo(`Ok, have a nice day`);
         }
-        term.echo(`Ok, have a nice day`);
     }
     term.echo(`Welcome stranger, can you tell me what is your name?`);
     let $_name = await term.ask(`name? `);;

@@ -3,12 +3,15 @@ JEST=./node_modules/.bin/jest
 COVERALLS=./node_modules/coveralls/bin/coveralls.js
 CAT=cat
 
-.PHONY: test coveralls
+.PHONY: test coveralls demo
 
 all: parser.js
 
 parser.js: ./src/grammar.pegjs
 	$(PEG_JS) -o parser.js ./src/grammar.pegjs
+
+demo:
+	$(gaiman) -o docs/ examples/demo.gs
 
 test:
 	$(JEST) --coverage --testMatch '**/__tests__/*.spec.js'

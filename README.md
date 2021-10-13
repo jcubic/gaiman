@@ -100,6 +100,7 @@ end
       - [ ] set location and redirect
   - [ ] loops
     - [ ] `for`..`in`
+    - [ ] `do`..`while`
     - [ ] `while`
   - [ ] `do`..`end` blocks
   - [x] comments with `#`

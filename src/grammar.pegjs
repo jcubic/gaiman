@@ -138,7 +138,7 @@ last_else = _ "else" _ body:statement* "end" {
     };
 }
 
-function_call = _ !keyword name:variable _ "(" names:((variable / expression_like) _ ","? _)* ")" _ {
+function_call = _ !keyword name:variable _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
     return {
         "type": "AwaitExpression",
         "argument": call(name, ...names.map(name => name[0]))

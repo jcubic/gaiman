@@ -79,6 +79,25 @@
             quasis: constants
         };
     }
+    // move error location without mutation
+    function move_location(loc, start, end) {
+    	const { start: loc_start, end: loc_end } = loc;
+    	const new_loc = {
+        	...loc,
+            start: {
+            	...loc_start,
+            	column: loc_start.column + start,
+                offset: loc_start.offset + start
+            },
+            end: {
+            	...loc_end,
+                column: loc_end.column + end,
+                offset: loc_end.offset + end
+            }
+        };
+        console.log(new_loc);
+        return new_loc;
+    }
 }
 
 
@@ -116,7 +135,7 @@ expression_statement = !keyword expression:expression_like {
     };
 }
 
-expression_like = expr:(function_call / set / command / expression) {
+expression_like = expr:(set / command / expression / function_call) {
     return expr;
 }
 
@@ -146,6 +165,12 @@ function_call = _ !keyword name:variable _ "(" names:((expression_like / variabl
 }
 
 function_definition = _ "def" _ name:variable _ "(" args:(variable _ ","? _)* ")" _  body:statement* _ "end" _ {
+	const fn_name = name.name.replace(/\$_/, '');
+    if (["echo", "ask", "get"].includes(fn_name)) {
+        const error = new Error(`invalid function name, '${fn_name}' is reseved command`);
+        error.location = move_location(location(), 4, fn_name.length + 1);
+    	throw error;
+    }
     var args = args.map(function(arg) { return arg[0]; });
     return {
         "type": "FunctionDeclaration",
@@ -274,7 +299,12 @@ term
 
 factor
   = "(" _ expr:arithmetic _ ")" { return expr; }
-  / string / literal / match_var / variable
+  / function_call / string / literal / match_var / variable 
+
+
+any_name = variable:name {
+  return make_identifier(variable_prefix + variable);
+}
 
 scoped = !keyword variable:name {
   return make_identifier(variable_prefix + variable);
@@ -283,6 +313,7 @@ scoped = !keyword variable:name {
 global = !keyword variable:("cookie" / "location" / "argv" / "node") {
     return make_identifier(variable);
 }
+
 variable = global / scoped
 
 set = set_cookie / set_local

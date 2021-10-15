@@ -9,11 +9,11 @@ ROLLUP=./node_modules/.bin/rollup
 
 all: parser.umd.js
 
-parser.js: ./src/grammar.pegjs
+parser.js: Makefile ./src/grammar.pegjs
 	$(PEG) -o parser.js ./src/grammar.pegjs
 
 parser.umd.js: parser.js
-	$(ROLLUP) parser.js --file parser.umd.js --format umd --name 'gaiman'
+	$(ROLLUP) -c
 
 demo:
 	$(GAIMAN) -o docs/demo/ examples/demo.gs

@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/jcubic/gaiman#readme",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.0.0",
     "coveralls": "^3.1.1",
     "jest": "^27.2.5",
     "peggy": "^1.2.0",

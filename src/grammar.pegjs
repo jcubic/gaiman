@@ -221,7 +221,7 @@ command = command:(adapter_command / match / var) {
     return command;
 }
 
-adapter_async_strings = "get" / "post" / "ask" { return text(); }
+adapter_async_strings = "get" / "post" / "ask" / "sleep" { return text(); }
 
 adapter_static_strings = "echo" { return text(); }
 

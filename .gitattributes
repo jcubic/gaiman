@@ -1,3 +1,5 @@
 parser.js binary
+parser.umd.js binary
+docs/demo/* binary
 package-lock.json binary
 __tests__/__snapshots__/* binary

@@ -24,6 +24,15 @@ class WebAdapter {
     ask(message) {
         return this._term.read(message);
     }
+    sleep(timeout) {
+        this._term.pause();
+        return new Promise(resolve => {
+            setTimeout(() => {
+                this._term.resume();
+                resolve();
+            }, Number(timeout));
+        });
+    }
     echo(string) {
         this._term.echo(string);
     }

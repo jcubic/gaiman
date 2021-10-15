@@ -61,7 +61,7 @@ function format_error(code, e) {
         return output.join('\n');
     } catch (ex) {
         // ignore errors
-        console.error(e);
+        // console.error(e);
     }
     return '';
 }

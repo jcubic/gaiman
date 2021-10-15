@@ -33,7 +33,7 @@ class WebAdapter {
     async post(url, data) { }
 }
 
-var cookie, argv, term;
+var cookie, argv, term, $$__m;
 if (is_node()) {
     argv = process.argv;
 } else {

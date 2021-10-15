@@ -123,7 +123,7 @@ end
     - [x] `let` - save expression or command into variable
     - [ ] `exists` ... `in` - check if item is in array
     - [ ] `parse` - parse string to number, boolean or regex
-
+    - [ ] `sleep` - pause the terminal using setimeout
     - [ ] `split` - to create array with string or regex separator
     - [ ] `join` - return string from array
     - [ ] `push` - item into array

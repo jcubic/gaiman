@@ -46,11 +46,11 @@ if (is_node()) {
         term.echo(`Pick color?`);
         let $_color = await term.ask(`color? `);;
         if ($$__m = String($_color).match(/red/i)) {
-            term.echo(`I like red, it remiding me of sun at sunset`);
+            term.echo(`I like red, it reminding me of the sun at sunset`);
         } else if ($$__m = String($_color).match(/blue/i)) {
-            term.echo(`I like blue, it remind me of sky`);
+            term.echo(`I like blue, it reminds me of the sky`);
         } else if ($$__m = String($_color).match(/black/i)) {
-            term.echo(`I like black it remind me of the darkest night`);
+            term.echo(`I like black it reminds me of the darkest night`);
         } else {
             term.echo(`sorry I only know red, blue and black colors`);
         }

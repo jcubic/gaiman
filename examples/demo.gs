@@ -2,11 +2,11 @@ def ask_color()
     echo "Pick color?"
     let color = ask "color? "
     if color ~= /red/i then
-      echo "I like red, it remiding me of sun at sunset"
+      echo "I like red, it reminding me of the sun at sunset"
     else if color ~= /blue/i then
-      echo "I like blue, it remind me of sky"
+      echo "I like blue, it reminds me of the sky"
     else if color ~= /black/i then
-      echo "I like black it remind me of the darkest night"
+      echo "I like black it reminds me of the darkest night"
     else
       echo "sorry I only know red, blue and black colors"
     end

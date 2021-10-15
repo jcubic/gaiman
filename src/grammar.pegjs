@@ -227,7 +227,7 @@ adapter_static_strings = "echo" { return text(); }
 
 adapter_command = async_command / static_command
 
-async_command = _ method:adapter_async_strings _ expr:(adapter_command / expression) _ {
+async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / expression) _ {
     return  {
         "type": "AwaitExpression",
         "argument": call(property(make_identifier("term"),

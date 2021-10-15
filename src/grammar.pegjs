@@ -101,7 +101,6 @@
     }
 }
 
-
 Start = statements:(!"end" _ statement* / _) {
     return {
         "type": "Program",
@@ -145,7 +144,6 @@ end = "end" { return null; }
 if = _ "if" _ cond:expression_like _ "then" _ body:(statement* / _) next:(end / if_next / last_else) _ {
   return make_if(cond, body.filter(Boolean), next);
 }
-
 
 if_next = _ "else" _ if_next:if {
     return if_next;
@@ -224,8 +222,8 @@ command = command:(adapter_command / match / var) {
 }
 
 adapter_async_strings = "get" / "post" / "ask" { return text(); }
-adapter_static_strings = "echo" { return text(); }
 
+adapter_static_strings = "echo" { return text(); }
 
 adapter_command = async_command / static_command
 
@@ -300,8 +298,7 @@ term
 
 factor
   = "(" _ expr:arithmetic _ ")" { return expr; }
-  / function_call / string / literal / match_var / variable 
-
+  / function_call / string / literal / match_var / variable
 
 any_name = variable:name {
   return make_identifier(variable_prefix + variable);
@@ -369,10 +366,15 @@ heredoc = "<<<" beginMarker "\n" text:content endMarker {
         value: text.replace(re, '')
     };
 }
+
 __ = (!"\n" !" " .)
+
 marker 'Marker' = $__+
+
 beginMarker = m:marker { heredoc_begin = m; }
-endMarker = "\n" "\s"* end:marker &{ return heredoc_begin === end; }
+
+endMarker = "\n" " "* end:marker &{ return heredoc_begin === end; }
+
 content = $(!endMarker .)*
 
 comment = "#" [^\n]* { return null; }

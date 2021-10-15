@@ -48,32 +48,10 @@ iframe {
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/lib/codemirror.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/mode/ruby/ruby.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/src/codemirror.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery.splitter"></script>
-    <script>
-$(function() {
-    const media_query = 'screen and (max-width: 900px)';
-    const small = matchMedia(media_query).matches
-    const orientation = small ? 'horizontal' : 'vertical';
-    $('main').split({
-        orientation
-    });
-    const repo = 'https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/'
-    const code = `${repo}examples/demo.gs`;
-    let editor;
-    fetch(code).then(res => res.text()).then(code => {
-        editor = CodeMirror($('.editor')[0], {
-            value: code,
-            theme: 'seti',
-            lineWrapping: true,
-            lineNumbers: true,
-            readOnly: true,
-            indentUnit: 4,
-            language: 'ruby'
-        });
-    });
-});
-    </script>
+    <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/idb-keyval.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/parser.umd.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
@@ -81,5 +59,50 @@ $(function() {
     <iframe src="./demo/"></iframe>
     <aside class="editor"></aside>
 </main>
+<script>
+ // ref: https://www.freecodecamp.org/news/javascript-debounce-example/
+ function debounce(func, timeout = 300) {
+     let timer;
+     return (...args) => {
+         clearTimeout(timer);
+         timer = setTimeout(() => { func.apply(this, args); }, timeout);
+     };
+ }
+ (async function($) {
+     const media_query = 'screen and (max-width: 900px)';
+     const small = matchMedia(media_query).matches
+     const orientation = small ? 'horizontal' : 'vertical';
+     $('main').split({
+         orientation
+     });
+     const repo = 'https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/';
+     const prefix = await fetch(`${repo}src/prefix.js`).then(res => res.text());
+     const postfix = await fetch(`${repo}src/postfix.js`).then(res => res.text());
+     const SOURCE_FILE = '_gaiman_source';
+     const OUTPUT_FILE = '_gaiman_output';
+     const { get, set } = idbKeyval;
+     let code = await get(SOURCE_FILE);
+     if (!code) {
+         const res = await fetch(`${repo}examples/demo.gs`);
+         code = await res.text();
+     }
+     const editor = CodeMirror($('.editor')[0], {
+         value: code,
+         theme: 'seti',
+         lineWrapping: true,
+         lineNumbers: true,
+         readOnly: true,
+         indentUnit: 4,
+         language: 'gaiman'
+     });
+     editor.on('change', debounce(() => {
+         const code = editor.getValue();
+         set(SOURCE_FILE, code);
+         const output = prefix + parser.parse(code) + postfix;
+         console.log(output);
+         set(OUTPUT_FILE, output);
+     }));
+ })(jQuery);
+</script>
 </body>
 </html>

@@ -95,7 +95,6 @@
                 offset: loc_end.offset + end
             }
         };
-        console.log(new_loc);
         return new_loc;
     }
 }

@@ -12,7 +12,7 @@ parser.js: ./src/grammar.pegjs
 	$(PEG) -o parser.js ./src/grammar.pegjs
 
 demo:
-	$(GAIMAN) -o docs/ examples/demo.gs
+	$(GAIMAN) -o docs/demo/ examples/demo.gs
 
 test:
 	$(JEST) --coverage --testMatch '**/__tests__/*.spec.js'

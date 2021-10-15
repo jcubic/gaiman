@@ -21,14 +21,29 @@ main {
 iframe {
     border: none;
 }
-iframe, aside {
-    height: 100%;
-}
-aside {
-    background: rebeccapurple;
-}
 .CodeMirror {
     height: 100%;
+}
+@media screen and (min-width: 900px) {
+    iframe, aside {
+        height: 100%;
+    }
+}
+.CodeMirror-vscrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: var(--background, #000);
+}
+.CodeMirror-vscrollbar::-webkit-scrollbar-thumb {
+    background: var(--color, #aaa);
+}
+.CodeMirror-vscrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color, #aaa);
+}
+.CodeMirror-vscrollbar {
+    scrollbar-color: #aaa #000;
+    scrollbar-color: var(--color, #aaa) var(--background, #000);
+    scrollbar-width: thin;
 }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
@@ -37,8 +52,11 @@ aside {
     <script src="https://cdn.jsdelivr.net/npm/jquery.splitter"></script>
     <script>
 $(function() {
+    const media_query = 'screen and (max-width: 900px)';
+    const small = matchMedia(media_query).matches
+    const orientation = small ? 'horizontal' : 'vertical';
     $('main').split({
-        orientation: 'vertical',
+        orientation
     });
     const repo = 'https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/'
     const code = `${repo}examples/demo.gs`;

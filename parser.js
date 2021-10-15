@@ -473,7 +473,7 @@ function peg$parse(input, options) {
   var peg$f32 = function(text) {
       const loc = location();
       const min = loc.start.column - 1;
-      const re = new RegExp(`^\\s{${min}}`, 'mg');
+      const re = new RegExp(`^ {${min}}`, 'mg');
       return {
           type: 'Literal',
           value: text.replace(re, '')

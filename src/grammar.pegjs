@@ -360,7 +360,7 @@ match_var = "$" num:integer {
 heredoc = "<<<" beginMarker "\n" text:content endMarker {
     const loc = location();
     const min = loc.start.column - 1;
-    const re = new RegExp(`^\\s{${min}}`, 'mg');
+    const re = new RegExp(`^ {${min}}`, 'mg');
     return {
         type: 'Literal',
         value: text.replace(re, '')

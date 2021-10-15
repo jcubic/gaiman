@@ -211,6 +211,12 @@ function peg$parse(input, options) {
       peg$c23 = "def",
       peg$c24 = peg$literalExpectation("def", false),
       peg$c25 = function(name, args, body) {
+      	const fn_name = name.name.replace(/\$_/, '');
+          if (["echo", "ask", "get"].includes(fn_name)) {
+              const error = new Error(`invalid function name, '${fn_name}' is reseved command`);
+              error.location = move_location(location(), 4, fn_name.length + 1);
+          	throw error;
+          }
           var args = args.map(function(arg) { return arg[0]; });
           return {
               "type": "FunctionDeclaration",
@@ -717,13 +723,13 @@ function peg$parse(input, options) {
     var s0, s1;
 
     s0 = peg$currPos;
-    s1 = peg$parsefunction_call();
+    s1 = peg$parseset();
     if (s1 === peg$FAILED) {
-      s1 = peg$parseset();
+      s1 = peg$parsecommand();
       if (s1 === peg$FAILED) {
-        s1 = peg$parsecommand();
+        s1 = peg$parseexpression();
         if (s1 === peg$FAILED) {
-          s1 = peg$parseexpression();
+          s1 = peg$parsefunction_call();
         }
       }
     }
@@ -2430,17 +2436,34 @@ function peg$parse(input, options) {
       s0 = peg$FAILED;
     }
     if (s0 === peg$FAILED) {
-      s0 = peg$parsestring();
+      s0 = peg$parsefunction_call();
       if (s0 === peg$FAILED) {
-        s0 = peg$parseliteral();
+        s0 = peg$parsestring();
         if (s0 === peg$FAILED) {
-          s0 = peg$parsematch_var();
+          s0 = peg$parseliteral();
           if (s0 === peg$FAILED) {
-            s0 = peg$parsevariable();
+            s0 = peg$parsematch_var();
+            if (s0 === peg$FAILED) {
+              s0 = peg$parsevariable();
+            }
           }
         }
       }
     }
+
+    return s0;
+  }
+
+  function peg$parseany_name() {
+    var s0, s1;
+
+    s0 = peg$currPos;
+    s1 = peg$parsename();
+    if (s1 !== peg$FAILED) {
+      peg$savedPos = s0;
+      s1 = peg$c91(s1);
+    }
+    s0 = s1;
 
     return s0;
   }
@@ -3003,6 +3026,24 @@ function peg$parse(input, options) {
               expressions,
               quasis: constants
           };
+      }
+      // move error location without mutation
+      function move_location(loc, start, end) {
+      	const { start: loc_start, end: loc_end } = loc;
+      	const new_loc = {
+          	...loc,
+              start: {
+              	...loc_start,
+              	column: loc_start.column + start,
+                  offset: loc_start.offset + start
+              },
+              end: {
+              	...loc_end,
+                  column: loc_end.column + end,
+                  offset: loc_end.offset + end
+              }
+          };
+          return new_loc;
       }
 
 

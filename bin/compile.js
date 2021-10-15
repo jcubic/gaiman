@@ -52,11 +52,11 @@ if (options._.length !== 1) {
 function format_error(code, e) {
     try {
         const lines = code.split('\n');
-        const line_number = e.location.start.line - 1;
+        const line_number = e.location.start.line;
         const output = [`Parse Error at line ${line_number}`, e.message, ''];
         const col = e.location.start.column;
         const range = e.location.end.column - col;
-        output.push(lines[line_number]);
+        output.push(lines[line_number - 1]);
         output.push(' '.repeat(col - 1) + '^'.repeat(range));
         return output.join('\n');
     } catch (ex) {

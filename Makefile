@@ -3,13 +3,17 @@ JEST=./node_modules/.bin/jest
 COVERALLS=./node_modules/coveralls/bin/coveralls.js
 CAT=cat
 GAIMAN=./bin/compile.js
+ROLLUP=./node_modules/.bin/rollup
 
 .PHONY: test coveralls demo
 
-all: parser.js
+all: parser.umd.js
 
 parser.js: ./src/grammar.pegjs
 	$(PEG) -o parser.js ./src/grammar.pegjs
+
+parser.umd.js: parser.js
+	$(ROLLUP) parser.js --file parser.umd.js --format umd --name 'gaiman'
 
 demo:
 	$(GAIMAN) -o docs/demo/ examples/demo.gs

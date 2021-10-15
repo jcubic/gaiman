@@ -1,6 +1,8 @@
 // Gaiman conversation language
 
 {
+
+    var heredoc_begin = null;
     var $$__m; // result of match
     var variable_prefix = '$_';
     var match_identifer = make_identifier('$$__m');
@@ -81,16 +83,16 @@
     }
     // move error location without mutation
     function move_location(loc, start, end) {
-    	const { start: loc_start, end: loc_end } = loc;
-    	const new_loc = {
-        	...loc,
+        const { start: loc_start, end: loc_end } = loc;
+        const new_loc = {
+            ...loc,
             start: {
-            	...loc_start,
-            	column: loc_start.column + start,
+                ...loc_start,
+                column: loc_start.column + start,
                 offset: loc_start.offset + start
             },
             end: {
-            	...loc_end,
+                ...loc_end,
                 column: loc_end.column + end,
                 offset: loc_end.offset + end
             }
@@ -164,11 +166,11 @@ function_call = _ !keyword name:variable _ "(" names:((expression_like / variabl
 }
 
 function_definition = _ "def" _ name:variable _ "(" args:(variable _ ","? _)* ")" _  body:statement* _ "end" _ {
-	const fn_name = name.name.replace(/\$_/, '');
+    const fn_name = name.name.replace(/\$_/, '');
     if (["echo", "ask", "get"].includes(fn_name)) {
         const error = new Error(`invalid function name, '${fn_name}' is reseved command`);
         error.location = move_location(location(), 4, fn_name.length + 1);
-    	throw error;
+        throw error;
     }
     var args = args.map(function(arg) { return arg[0]; });
     return {
@@ -213,7 +215,7 @@ boolean = value:("true" / "false") {
     return value === "true";
 }
 
-expression = expression:(property / arithmetic / match_var / function_call / name / string / literal) {
+expression = expression:(heredoc / property / arithmetic / match_var / function_call / name / string / literal) {
     return expression;
 }
 
@@ -357,6 +359,22 @@ match_var = "$" num:integer {
         }
     };
 }
+
+heredoc = "<<<" beginMarker "\n" text:content endMarker {
+    const loc = location();
+    const min = loc.start.column - 1;
+    const re = new RegExp(`^\\s{${min}}`, 'mg');
+    return {
+        type: 'Literal',
+        value: text.replace(re, '')
+    };
+}
+__ = (!"\n" !" " .);
+marker 'Marker' = $__+;
+beginMarker = m:marker { heredoc_begin = m; };
+endMarker = "\n" _ end:marker &{ return heredoc_begin === end; };
+content = $(!endMarker .)*;
+
 comment = "#" [^\n]* { return null; }
 
 integer = [0-9]+ { return parseInt(text(), 10); }

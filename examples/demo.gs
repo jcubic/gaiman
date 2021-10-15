@@ -19,6 +19,18 @@ def ask_color()
     end
 end
 
+echo <<<GREET
+   ____       _
+  / ___| __ _(_)_ __ ___   __ _ _ __
+ | |  _ / _` | | '_ ` _ \ / _` | '_ \
+ | |_| | (_| | | | | | | | (_| | | | |
+  \____|\__,_|_|_| |_| |_|\__,_|_| |_|
+
+Gaiman Engine
+Copyright (C) 2021 Jakub Jankiewicz <https://jcubic.pl/me>
+Released under GPLv3 license
+GREET
+
 echo "Welcome stranger, can you tell me what is your name?"
 let name = ask "name? "
 if name then

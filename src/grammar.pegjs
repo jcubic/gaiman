@@ -369,11 +369,11 @@ heredoc = "<<<" beginMarker "\n" text:content endMarker {
         value: text.replace(re, '')
     };
 }
-__ = (!"\n" !" " .);
-marker 'Marker' = $__+;
-beginMarker = m:marker { heredoc_begin = m; };
-endMarker = "\n" _ end:marker &{ return heredoc_begin === end; };
-content = $(!endMarker .)*;
+__ = (!"\n" !" " .)
+marker 'Marker' = $__+
+beginMarker = m:marker { heredoc_begin = m; }
+endMarker = "\n" "\s"* end:marker &{ return heredoc_begin === end; }
+content = $(!endMarker .)*
 
 comment = "#" [^\n]* { return null; }
 

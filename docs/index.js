@@ -62,7 +62,7 @@ if (is_node()) {
             term.echo(`Ok, have a nice day`);
         }
     }
-    term.echo('   ____       _\n  / ___| __ _(_)_ __ ___   __ _ _ __\n | |  _ / _` | | \'_ ` _ \\ / _` | \'_ \\\n | |_| | (_| | | | | | | | (_| | | | |\n  \\____|\\__,_|_|_| |_| |_|\\__,_|_| |_|\n\nGaiman Engine\nCopyright (C) 2021 Jakub Jankiewicz <https://jcubic.pl/me>\nReleased under GPLv3 license');
+    term.echo('   ____       _\n  / ___| __ _(_)_ __ ___   __ _ _ __\n | |  _ / _` | | \'_ ` _ \\ / _` | \'_ \\\n | |_| | (_| | | | | | | | (_| | | | |\n  \\____|\\__,_|_|_| |_| |_|\\__,_|_| |_|\n\nGaiman Engine\nCopyright (C) 2021 Jakub Jankiewicz <https://jcubic.pl/me>\nReleased under GPLv3 license\n');
     term.echo(`Welcome stranger, can you tell me what is your name?`);
     let $_name = await term.ask(`name? `);;
     if ($_name) {

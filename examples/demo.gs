@@ -29,6 +29,7 @@ echo <<<GREET
 Gaiman Engine
 Copyright (C) 2021 Jakub Jankiewicz <https://jcubic.pl/me>
 Released under GPLv3 license
+
 GREET
 
 echo "Welcome stranger, can you tell me what is your name?"

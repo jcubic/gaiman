@@ -19,7 +19,8 @@ function wordObj(words) {
 
 var keywordList = [
   "ask", "def", "echo", "else", "end", "false", "for", "get", "if", "in",
-  "let", "not", "or", "post", "return", "then", "true", "while", "throw", "lambda", 
+  "let", "not", "or", "post", "return", "sleep", "then", "true", "while",
+  "throw", "lambda",
 ], keywords = wordObj(keywordList);
 
 var indentWords = wordObj(["def", "for", "while", "until", "then"]);

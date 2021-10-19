@@ -167,11 +167,11 @@ else
     echo "Wellcome to this CLI app"
 end
 
-var env = []
+let env = []
 
-var items = ["bottle", "flower"]
+let items = ["bottle", "flower"]
 
-set command = ask "? "
+let command = ask "? "
 if command ~= /pick (.+)/ then
    if $1 then
       if exists $1 in items then
@@ -186,10 +186,10 @@ if command ~= /pick (.+)/ then
 end
 
 
-var stop = false
-var count = 0
+let stop = false
+let count = 0
 while not stop do
-    var command = ask "? "
+    let command = ask "? "
     if command ~= /exit/
         stop = true
         echo "goodby"
@@ -202,7 +202,7 @@ while not stop do
 end
 
 def once(fn)
-    var result = null
+    let result = null
     return lambda(...args)
         if result == null then
            result = fn(...args)
@@ -212,7 +212,7 @@ def once(fn)
 end
 
 def map(fn, array)
-    var result = []
+    let result = []
     for item in array do
         result.push(fn(item))
     end
@@ -223,7 +223,7 @@ end
 To consider
 * do we need `set` maybe `foo = ??` is enough
 * scope for variales (php with global is not good idea)
-* methods
+* methods (JS Array/String)
 * standard library (e.g.: `push`/`pop`/`split`/`join`)
 * functions should be compiled to JavaScript, use 
 
@@ -237,10 +237,12 @@ should be compile to:
 var command = await term.read('? ')
 ```
 
+> NOTE: should there be implicit var? Maybe force using let to declare variables.
+
 Compile:
 ```
 do
-    var x = 10
+    let x = 10
     echo x + x
 end
 x # throw exception x is not defined

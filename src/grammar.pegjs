@@ -99,6 +99,9 @@
         };
         return new_loc;
     }
+    var async_commands = ["ask", "get", "post", "sleep"];
+    var sync_commands = ["echo"];
+    var available_commands = async_commands.concat(sync_commands);
 }
 
 Start = statements:(!"end" _ statement* / _) {
@@ -165,9 +168,9 @@ function_call = _ !keyword name:variable _ "(" names:((expression_like / variabl
 
 function_definition = _ "def" _ name:variable _ "(" args:(variable _ ","? _)* ")" _  body:statement* _ "end" _ {
     const fn_name = name.name.replace(/\$_/, '');
-    if (["echo", "ask", "get"].includes(fn_name)) {
-        const error = new Error(`invalid function name, '${fn_name}' is reseved command`);
-        error.location = move_location(location(), 4, fn_name.length + 1);
+    if (available_commands.includes(fn_name)) {
+        const error = new Error(`invalid function name, '${fn_name}' is a command`);
+        error.location = move_location(location(), 4, fn_name.length + 4);
         throw error;
     }
     var args = args.map(function(arg) { return arg[0]; });
@@ -221,9 +224,11 @@ command = command:(adapter_command / match / var) {
     return command;
 }
 
-adapter_async_strings = "get" / "post" / "ask" / "sleep" { return text(); }
+any_word = word:$[a-z]+ { return word; }
 
-adapter_static_strings = "echo" { return text(); }
+adapter_async_strings = word:any_word &{ return async_commands.includes(word); } { return word; }
+
+adapter_static_strings = word:any_word &{ return sync_commands.includes(word); } { return word; }
 
 adapter_command = async_command / static_command
 

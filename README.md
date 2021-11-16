@@ -106,6 +106,7 @@ end
   - [x] comments with `#`
   - [x] Functions
     - [x] Functions `return` keyword
+    - [ ] `*args` -> rest and spread
     - [ ] Functions return functions
     - [ ] Lambda
     - [ ] Implementation of `map`/`reduce`/`filter` using gaiman
@@ -114,10 +115,11 @@ end
       - [ ] String methods `split`/`replace`
       - [ ] `ord`/`chr`
   - [x] Commands (restricted names)
+    - [ ] command with predicates for advanced usage e.g. `echo<anim, ...>`
     - [x] `ask` - set prompt
-      - [ ] `ask*` - set prompt with animation
+      - [ ] `ask<anim>` - set prompt with animation
     - [x] `echo` - print message
-      - [ ] `echo*` - print message with animation
+      - [ ] `echo<anim>` - print message with animation
     - [x] `get` - send HTTP GET request
     - [x] `post` - send HTTP POST request
     - [x] `let` - save expression or command into variable
@@ -143,7 +145,17 @@ end
 - [x] Async Adapters for Web
 - [ ] Async Adapters for Terminal
 - [ ] XML like syntax for colors `<bold><red>hello</red></bold>`
-- [ ] Hooks to embed JS code ???
+- [ ] Hooks to embed JS code
+
+```ruby
+@pragma inject
+function sum(...args) {
+   return args.reduce((a, b) => a + b);
+}
+@end
+
+echo sum(1, 2, 3);
+```
 
 TODO: syntax example
 

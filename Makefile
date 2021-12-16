@@ -12,7 +12,7 @@ all: parser.umd.js
 parser.js: Makefile ./src/grammar.pegjs
 	$(PEG) -o parser.js ./src/grammar.pegjs
 
-parser.umd.js: parser.js
+parser.umd.js: parser.js index.js
 	$(ROLLUP) -c
 
 demo:

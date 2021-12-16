@@ -68,6 +68,21 @@ iframe {
          timer = setTimeout(() => { func.apply(this, args); }, timeout);
      };
  }
+ if ('serviceWorker' in navigator) {
+     navigator.serviceWorker.register('sw.js', {scope})
+              .then(function(reg) {
+                  reg.addEventListener('updatefound', function() {
+                      var installingWorker = reg.installing;
+                      console.log('A new service worker is being installed:',
+                                  installingWorker);
+                  });
+                  // registration worked
+                  console.log('Registration succeeded. Scope is ' + reg.scope);
+              }).catch(function(error) {
+                  // registration failed
+                  console.log('Registration failed with ' + error);
+              });
+ }
  (async function($) {
      const media_query = 'screen and (max-width: 900px)';
      const small = matchMedia(media_query).matches

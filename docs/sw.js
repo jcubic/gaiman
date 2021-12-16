@@ -11,9 +11,16 @@
  *
  */
 
-self.addEventListener('install', function(evt) {
-    self.skipWaiting();
-    self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js');
+self.addEventListener('install', function(event) {
+    //self.skipWaiting();
+    event.waitUntil(
+        self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js')
+    );
+});
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js')
+    );
 });
 
 const mime = {
@@ -80,7 +87,7 @@ function error500(error) {
         '<body>',
         '<h1>500 Server Error</h1>',
         '<p>Service worker give 500 error</p>',
-        `<p>${error.message}</p>`,
+        `<p>${error.message || error}</p>`,
         '</body>',
         '</html>'
     ];

@@ -13,38 +13,52 @@
 
 self.addEventListener('install', function(evt) {
     self.skipWaiting();
-    self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm');
+    self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js');
 });
+
+const mime = {
+    html: 'text/html',
+    css: 'text/css',
+    js: 'application/javascript'
+};
+
+function getMime(type) {
+    const result = mime[type];
+    if (result) {
+        return result;
+    }
+    return 'text/plain';
+}
+
 
 self.addEventListener('fetch', function (event) {
     event.respondWith(new Promise(function(resolve, reject) {
-        function sendFile(path) {
-            fs.readFile(path, function(err, buffer) {
-                if (err) {
-                    err.fn = 'readFile(' + path + ')';
-                    return reject(err);
-                }
-                resolve(new Response(buffer));
-            });
-        }
         var url = event.request.url;
-        var m = url.match(/__idb__(.*)/);
+        var m = url.match(/__idb__\/([^?]+)(?:\?.*$)?/);
         function redirect_dir() {
             return resolve(Response.redirect(url + '/', 301));
         }
-        if (m && self.fs) {
-            var key = m[1];
+        let key;
+        if (m) {
+            key = m[1];
             if (key === '') {
                 return redirect_dir();
             }
-            console.log('serving ' + key + ' from indexedDB using idb-keyval');
-            var value = get(key);
-            if (!value) {
-                return resolve(textResponse(error404(path)));
-            }
-            resolve(new Response(buffer));
+            m = key.match(/\.([^.]+)$/);
+            const extension = m && m[1];
+            const mime = getMime(extension);
+            console.log(`Serving ${key} from indexedDB using idb-keyval as ${mime}`);
+            idbKeyval.get(key).then(value => {
+                if (!value) {
+                    return resolve(error404(key));
+                }
+                resolve(textResponse(value, { type: getMime(extension) }));
+            }).catch(error => {
+                resolve(error500());
+            });
         } else {
-            if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin') {
+            if (event.request.cache === 'only-if-cached' &&
+                event.request.mode !== 'same-origin') {
                 return;
             }
             //request = credentials: 'include'
@@ -52,11 +66,29 @@ self.addEventListener('fetch', function (event) {
         }
     }));
 });
-function textResponse(string) {
+function textResponse(string, { init, type = 'text/html' } = {}) {
     var blob = new Blob([string], {
-        type: 'text/html'
+        type
     });
-    return new Response(blob);
+    return new Response(blob, init);
+}
+
+function error500() {
+    var output = [
+        '<!DOCTYPE html>',
+        '<html>',
+        '<body>',
+        '<h1>500 Server Error</h1>',
+        `<p>Service worker give 500 error`,
+        '</body>',
+        '</html>'
+    ];
+    return textResponse(output.join('\n'), {
+        init: {
+            status: 500,
+            statusText: '500 Server Error'
+        }
+    });
 }
 
 function error404(path) {
@@ -65,9 +97,14 @@ function error404(path) {
         '<html>',
         '<body>',
         '<h1>404 File Not Found</h1>',
-        `<p>File ${path} not found in browserfs`,
+        `<p>File ${path} not found in indexedDB`,
         '</body>',
         '</html>'
     ];
-    return output.join('\n');
+    return textResponse(output.join('\n'), {
+        init: {
+            status: 404,
+            statusText: '404 Page Not Found'
+        }
+    });
 }

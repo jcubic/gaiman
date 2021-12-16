@@ -136,10 +136,10 @@ end
       - [ ] size
       - [ ] font
       - [ ] cursor
-    - [ ] Animation commands
-      - [ ] prompt*
-      - [ ] input*
-      - [ ] echo*
+    - [x] Animation commands
+      - [x] prompt*
+      - [x] input*
+      - [x] echo*
   - [ ] Not operator inside if statements
   - [ ] Expressions
     - [x] regex match `~=`

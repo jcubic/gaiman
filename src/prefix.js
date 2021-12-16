@@ -36,6 +36,15 @@ class WebAdapter {
     echo(string) {
         this._term.echo(string);
     }
+    echo_animate(string, delay) {
+        this._term.echo(string, { typing: true, delay: 200 });
+    }
+    prompt_animate(string, delay) {
+        this._term.set_prompt(string, { typing: true, delay: 200 });
+    }
+    input_animate(string, delay) {
+        this._term.typing('enter', delay, string);
+    }
     get(url) {
         return fetch(url).then(res => res.text());
     }

@@ -7375,15 +7375,15 @@
 	var _shasum = "5e32b12833e8aa8fa35e1bf0befa89380484c7dd";
 	var _spec = "escodegen@^2.0.0";
 	var _where = "/home/users/jankiewj/projects/jcubic/gaiman";
-	var bin = {
+	var bin$1 = {
 		esgenerate: "bin/esgenerate.js",
 		escodegen: "bin/escodegen.js"
 	};
-	var bugs = {
+	var bugs$1 = {
 		url: "https://github.com/estools/escodegen/issues"
 	};
 	var bundleDependencies = false;
-	var dependencies = {
+	var dependencies$1 = {
 		esprima: "^4.0.1",
 		estraverse: "^5.2.0",
 		esutils: "^2.0.2",
@@ -7391,8 +7391,8 @@
 		"source-map": "~0.6.1"
 	};
 	var deprecated = false;
-	var description = "ECMAScript code generator";
-	var devDependencies = {
+	var description$1 = "ECMAScript code generator";
+	var devDependencies$1 = {
 		acorn: "^7.3.1",
 		bluebird: "^3.4.7",
 		"bower-registry-client": "^1.0.0",
@@ -7414,9 +7414,9 @@
 		"escodegen.js",
 		"package.json"
 	];
-	var homepage = "http://github.com/estools/escodegen";
-	var license = "BSD-2-Clause";
-	var main = "escodegen.js";
+	var homepage$1 = "http://github.com/estools/escodegen";
+	var license$1 = "BSD-2-Clause";
+	var main$1 = "escodegen.js";
 	var maintainers = [
 		{
 			name: "Yusuke Suzuki",
@@ -7424,15 +7424,15 @@
 			url: "http://github.com/Constellation"
 		}
 	];
-	var name = "escodegen";
+	var name$1 = "escodegen";
 	var optionalDependencies = {
 		"source-map": "~0.6.1"
 	};
-	var repository = {
+	var repository$1 = {
 		type: "git",
 		url: "git+ssh://git@github.com/estools/escodegen.git"
 	};
-	var scripts = {
+	var scripts$1 = {
 		build: "cjsify -a path: tools/entry-point.js > escodegen.browser.js",
 		"build-min": "cjsify -ma path: tools/entry-point.js > escodegen.browser.min.js",
 		lint: "gulp lint",
@@ -7440,7 +7440,7 @@
 		test: "gulp travis",
 		"unit-test": "gulp test"
 	};
-	var version = "2.0.0";
+	var version$2 = "2.0.0";
 	var require$$3 = {
 		_from: _from,
 		_id: _id,
@@ -7454,24 +7454,24 @@
 		_shasum: _shasum,
 		_spec: _spec,
 		_where: _where,
-		bin: bin,
-		bugs: bugs,
+		bin: bin$1,
+		bugs: bugs$1,
 		bundleDependencies: bundleDependencies,
-		dependencies: dependencies,
+		dependencies: dependencies$1,
 		deprecated: deprecated,
-		description: description,
-		devDependencies: devDependencies,
+		description: description$1,
+		devDependencies: devDependencies$1,
 		engines: engines,
 		files: files,
-		homepage: homepage,
-		license: license,
-		main: main,
+		homepage: homepage$1,
+		license: license$1,
+		main: main$1,
 		maintainers: maintainers,
-		name: name,
+		name: name$1,
 		optionalDependencies: optionalDependencies,
-		repository: repository,
-		scripts: scripts,
-		version: version
+		repository: repository$1,
+		scripts: scripts$1,
+		version: version$2
 	};
 
 	/*
@@ -10123,11 +10123,71 @@
 	/* vim: set sw=4 ts=4 et tw=80 : */
 	}(escodegen$1));
 
+	var name = "gaiman";
+	var version$1 = "0.1.0-alpha";
+	var description = "![Gaiman Text based advanture games engine](assets/banner.svg)";
+	var main = "index.js";
+	var scripts = {
+		build: "pegjs -o parser.js src/gaiman.pegjs"
+	};
+	var bin = {
+		gaiman: "bin/compile.js"
+	};
+	var repository = {
+		type: "git",
+		url: "git+https://github.com/jcubic/gaiman.git"
+	};
+	var keywords = [
+	];
+	var author = "Jakub T. Jankiewicz <jcubic@onet.pl>";
+	var license = "GPL-3.0";
+	var bugs = {
+		url: "https://github.com/jcubic/gaiman/issues"
+	};
+	var homepage = "https://github.com/jcubic/gaiman#readme";
+	var devDependencies = {
+		"@rollup/plugin-commonjs": "^21.0.0",
+		"@rollup/plugin-json": "^4.1.0",
+		"@rollup/plugin-node-resolve": "^13.1.1",
+		coveralls: "^3.1.1",
+		jest: "^27.2.5",
+		peggy: "^1.2.0",
+		rollup: "^2.58.0",
+		"rollup-plugin-node-resolve": "^5.2.0"
+	};
+	var dependencies = {
+		"@jcubic/lily": "^0.3.0",
+		escodegen: "^2.0.0"
+	};
+	var require$$2 = {
+		name: name,
+		version: version$1,
+		description: description,
+		main: main,
+		scripts: scripts,
+		bin: bin,
+		repository: repository,
+		keywords: keywords,
+		author: author,
+		license: license,
+		bugs: bugs,
+		homepage: homepage,
+		devDependencies: devDependencies,
+		dependencies: dependencies
+	};
+
 	const parser = parser$1;
 	const escodegen = escodegen$1;
 
-	var gaiman = function(code) {
+	const { version } = require$$2;
+
+	function parse(code) {
 	    return escodegen.generate(parser.parse(code));
+	}
+
+	var gaiman = {
+	  parse,
+	  version
 	};
 
 	return gaiman;

@@ -54,7 +54,7 @@ self.addEventListener('fetch', function (event) {
                 }
                 resolve(textResponse(value, { type: getMime(extension) }));
             }).catch(error => {
-                resolve(error500());
+                resolve(error500(error));
             });
         } else {
             if (event.request.cache === 'only-if-cached' &&
@@ -73,13 +73,14 @@ function textResponse(string, { init, type = 'text/html' } = {}) {
     return new Response(blob, init);
 }
 
-function error500() {
+function error500(error) {
     var output = [
         '<!DOCTYPE html>',
         '<html>',
         '<body>',
         '<h1>500 Server Error</h1>',
-        `<p>Service worker give 500 error`,
+        '<p>Service worker give 500 error</p>',
+        `<p>${error.message}</p>`,
         '</body>',
         '</html>'
     ];

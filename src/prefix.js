@@ -17,9 +17,32 @@ function is_node() {
         process.release.name === 'node';
 }
 
+function is_iframe() {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+
 class WebAdapter {
     constructor() {
-        this._term = $('body').terminal($.noop, { greetings: false, exit: false });
+        var body = $('body');
+        var options = body.css('--options');
+        if (typeof options === 'undefined') {
+            options = {};
+        } else {
+            try {
+                options = JSON.parse(options);
+            } catch(e) {
+                console.warn('Gaiman: Invalid --option CSS variable');
+                options = {};
+            }
+        }
+        this._term = body.terminal($.noop, $.extend({
+            greetings: false,
+            exit: false
+        }, options));
     }
     ask(message) {
         return this._term.read(message);

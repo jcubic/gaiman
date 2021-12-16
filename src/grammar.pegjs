@@ -99,8 +99,8 @@
         };
         return new_loc;
     }
-    var async_commands = ["ask", "get", "post", "sleep"];
-    var sync_commands = ["echo"];
+    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*"];
+    var sync_commands = ["echo", "prompt", "input"];
     var available_commands = async_commands.concat(sync_commands);
 }
 
@@ -212,6 +212,7 @@ string = "\"" ([^"] / "\\\\\"")*  "\"" {  // "
 literal = value:(integer / boolean) {
    return {"type": "Literal", "value": value };
 }
+
 boolean = value:("true" / "false") {
     return value === "true";
 }
@@ -226,17 +227,19 @@ command = command:(adapter_command / match / var) {
 
 any_word = word:$[a-z]+ { return word; }
 
-adapter_async_strings = word:any_word &{ return async_commands.includes(word); } { return word; }
+async_command_name = word:$([a-z]+"*"?)  { return word; }
+
+adapter_async_strings = word:async_command_name &{ return async_commands.includes(word); } { return word; }
 
 adapter_static_strings = word:any_word &{ return sync_commands.includes(word); } { return word; }
 
 adapter_command = async_command / static_command
 
-async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / expression) _ {
+async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / expression) _ args:factor* _ {
     return  {
         "type": "AwaitExpression",
         "argument": call(property(make_identifier("term"),
-                                  make_identifier(method)), expr)
+                                  make_identifier(method.replace(/\*$/, '_animate'))), expr, ...args)
     };
 }
 
@@ -309,7 +312,7 @@ any_name = variable:name {
   return make_identifier(variable_prefix + variable);
 }
 
-scoped = !keyword variable:name {
+scoped = !keyword variable:name &{ return !available_commands.includes(variable) } {
   return make_identifier(variable_prefix + variable);
 }
 

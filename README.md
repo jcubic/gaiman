@@ -117,9 +117,9 @@ end
   - [x] Commands (restricted names)
     - [ ] command with predicates for advanced usage e.g. `echo<anim, ...>`
     - [x] `ask` - set prompt
-      - [ ] `ask<anim>` - set prompt with animation
+      - [ ] `ask*` - set prompt with animation
     - [x] `echo` - print message
-      - [ ] `echo<anim>` - print message with animation
+      - [ ] explicit `"\n"`
     - [x] `get` - send HTTP GET request
     - [x] `post` - send HTTP POST request
     - [x] `let` - save expression or command into variable
@@ -130,6 +130,16 @@ end
     - [ ] `join` - return string from array
     - [ ] `push` - item into array
     - [ ] `pop` - remote item from
+    - [ ] style commands (some ingored in Node)
+      - [ ] color
+      - [ ] background
+      - [ ] size
+      - [ ] font
+      - [ ] cursor
+    - [ ] Animation commands
+      - [ ] prompt*
+      - [ ] input*
+      - [ ] echo*
   - [ ] Not operator inside if statements
   - [ ] Expressions
     - [x] regex match `~=`

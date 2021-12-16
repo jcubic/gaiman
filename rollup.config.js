@@ -1,7 +1,7 @@
 import commonjs from '@rollup/plugin-commonjs';
 
 const config = {
-  input: 'parser.js',
+  input: 'index.js',
   output: {
     file: 'parser.umd.js',
     format: 'umd',

@@ -318,7 +318,7 @@ arithmetic
     }
 
 term
-  = head:factor tail:(_ ("*" / "/") _ factor)* {
+  = head:factor tail:(_ ("*" / "/" / "%") _ factor)* {
       return tail.reduce(function(result, element) {
           return {
             "type": "BinaryExpression",

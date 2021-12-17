@@ -1,5 +1,14 @@
-// Gaiman conversation language
-
+/*    ______      _
+ *   / ____/___ _(_)___ ___  ____ _____
+ *  / / __/ __ `/ / __ `__ \/ __ `/ __ \
+ * / /_/ / /_/ / / / / / / / /_/ / / / /
+ * \____/\__,_/_/_/ /_/ /_/\__,_/_/ /_/
+ *
+ * Storytelling Text Based Game Engine
+ * Copyrigth (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
+ *
+ * Released under GNU GPL v3 or later
+ */
 {
 
     var heredoc_begin = null;
@@ -235,7 +244,10 @@ adapter_static_strings = word:any_word &{ return sync_commands.includes(word); }
 
 adapter_command = async_command / static_command
 
-async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / expression) _ args:factor* _ {
+async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / expression) _ args:(
+    factor+ / '' {
+      error(`Command ${method} require at least two arguments`);
+    }) _ {
     return  {
         "type": "AwaitExpression",
         "argument": call(property(make_identifier("term"),

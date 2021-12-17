@@ -10,9 +10,11 @@
  * Released under the MIT license
  *
  */
+self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js');
+
+/*
 self.addEventListener('install', function(event) {
     self.skipWaiting();
-    self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js');
     self.idb = idbKeyval;
 });
 
@@ -23,6 +25,7 @@ self.addEventListener('activate', function(event) {
         self.idb = idbKeyval;
     }
 });
+*/
 
 const mime = {
     html: 'text/html',
@@ -48,9 +51,6 @@ self.addEventListener('fetch', function (event) {
         }
         let key;
         if (m) {
-            if (!self.idb) {
-                return resolve(error404(key));
-            }
             key = m[1];
             if (key === '') {
                 return redirect_dir();
@@ -59,7 +59,7 @@ self.addEventListener('fetch', function (event) {
             const extension = m && m[1];
             const mime = getMime(extension);
             //console.log(`Serving ${key} from indexedDB using idb-keyval as ${mime}`);
-            idb.get(key).then(value => {
+            idbKeyval.get(key).then(value => {
                 if (!value) {
                     return resolve(error404(key));
                 }

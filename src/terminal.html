@@ -8,11 +8,20 @@
     <![endif]-->
     <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/xml_formatting.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/js-polyfills/keyboard.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/wcwidth.js"></script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/js-polyfills/keyboard.js,gh/jcubic/static/js/wcwidth.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content="Gaiman {{VER}}"/>
+    <style>
+      :root {
+          --color: #ccc;
+          --background: black;
+          --animation: terminal-blink;
+          --font: monospace;
+          --options: {};  /* JSON config for jQuery Terminal */
+      }
+    </style>
 </head>
 <body>
 <script src="index.js"></script>

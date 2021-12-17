@@ -236,27 +236,40 @@ command = command:(adapter_command / match / var) {
 
 any_word = word:$[a-z]+ { return word; }
 
-async_command_name = word:$([a-z]+"*"?)  { return word; }
+animation_command_name = word:$([a-z]+ "*") { return word; }
 
-adapter_async_strings = word:async_command_name &{ return async_commands.includes(word); } { return word; }
+async_command_name = word:$[a-z]+ { return word; }
+
+adapter_async_strings = word:async_command_name &{ return async_commands.includes(word) } { return word; }
+
+adapter_anim_strings = word:animation_command_name &{ return async_commands.includes(word) } { return word; }
 
 adapter_static_strings = word:any_word &{ return sync_commands.includes(word); } { return word; }
 
-adapter_command = async_command / static_command
+adapter_command = animation_commands / async_command / static_command
 
-async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / expression) _ args:(
-    factor+ / '' {
+animation_commands = _ method:adapter_anim_strings _ expr:(adapter_command / expression) _ args:(
+    ("," _ expression)+ / '' {
       error(`Command ${method} require at least two arguments`);
     }) _ {
     return  {
         "type": "AwaitExpression",
         "argument": call(property(make_identifier("term"),
-                                  make_identifier(method.replace(/\*$/, '_animate'))), expr, ...args)
+                                  make_identifier(method.replace(/\*$/, '_animate'))), expr, ...args.map(x => x[2]))
     };
 }
 
-static_command = _ method:adapter_static_strings _ expr:(adapter_command / expression) _ {
-    return  call(property(make_identifier("term"), make_identifier(method)), expr);
+
+async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / expression) _ args:("," _ expression _)* {
+    return  {
+        "type": "AwaitExpression",
+        "argument": call(property(make_identifier("term"),
+                                  make_identifier(method), expr, ...args.map(x => x[2])))
+    };
+}
+
+static_command = _ method:adapter_static_strings _ expr:(adapter_command / expression) _ args:("," _ expression)* {
+    return call(property(make_identifier("term"), make_identifier(method)), expr, ...args.map(x => x[2]));
 }
 
 match = expression:(match_var / property / variable) _ "~=" _ re:re _ {

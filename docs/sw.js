@@ -50,7 +50,7 @@ self.addEventListener('fetch', function (event) {
             m = key.match(/\.([^.]+)$/);
             const extension = m && m[1];
             const mime = getMime(extension);
-            console.log(`Serving ${key} from indexedDB using idb-keyval as ${mime}`);
+            //console.log(`Serving ${key} from indexedDB using idb-keyval as ${mime}`);
             idb.get(key).then(value => {
                 if (!value) {
                     return resolve(error404(key));

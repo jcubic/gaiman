@@ -51,6 +51,21 @@
             declarations: declarations
         };
     }
+    function expression_fold(type) {
+        return function fold(head, tail, mapping) {
+             return tail.reduce(function(result, element) {
+                var opertator = mapping ? mapping[element[1]] : element[1];
+                return {
+                    "type": type,
+                    "operator": opertator,
+                    "left": result,
+                    "right": element[3]
+                };
+            }, head);
+        }
+    }
+    var binary_fold = expression_fold("BinaryExpression");
+    var logical_fold = expression_fold("LogicalExpression");
     function property(...args) {
         return args.reduce(function(result, item) {
             return {
@@ -226,7 +241,7 @@ boolean = value:("true" / "false") {
     return value === "true";
 }
 
-expression = expression:(heredoc / property / arithmetic / match_var / function_call / name / string / literal) {
+expression = expression:(heredoc / property / math_expression / match_var / function_call / name / string / literal) {
     return expression;
 }
 
@@ -305,32 +320,49 @@ property = struct:variable rest:("." name)+ {
     return property(struct, ...rest.map(make_identifier));
 }
 
-arithmetic
-  = head:term tail:(_ ("+" / "-") _ term)* {
-      return tail.reduce(function(result, element) {
-          return {
-            "type": "BinaryExpression",
-            "operator": element[1],
-            "left": result,
-            "right": element[3]
-          };
-      }, head);
+math_expression = unary / or
+
+unary
+  = "not" SP expression:or _ {
+    return {
+        "type": "UnaryExpression",
+        "operator": "!",
+        "argument": expression
+    };
+  }
+
+or
+  = head:and tail:(SP "or" SP and)* {
+      return logical_fold(head, tail, {"or": "||"});
+  }
+
+and
+  = head:equal tail:(SP "and" SP equal)* {
+      return logical_fold(head, tail, {"and": "&&"});
+  }
+
+equal
+  = head:binary tail:(_ ("==" / "!=") _ binary)* {
+      return binary_fold(head, tail);
     }
 
-term
+binary
+  = head:plus_minus tail:(_ ("<" / ">" / "<=" / ">=") _ plus_minus)* {
+      return binary_fold(head, tail);
+    }
+
+plus_minus
+  = head:mul_div tail:(_ ("+" / "-") _ mul_div)* {
+      return binary_fold(head, tail);
+    }
+
+mul_div
   = head:factor tail:(_ ("*" / "/" / "%") _ factor)* {
-      return tail.reduce(function(result, element) {
-          return {
-            "type": "BinaryExpression",
-            "operator": element[1],
-            "left": result,
-            "right": element[3]
-          };
-      }, head);
+      return binary_fold(head, tail);
     }
 
 factor
-  = "(" _ expr:arithmetic _ ")" { return expr; }
+  = "(" _ expr:math_expression _ ")" { return expr; }
   / function_call / string / literal / match_var / variable
 
 any_name = variable:name {
@@ -369,10 +401,10 @@ set_cookie = "cookie." name:name _ "=" _ expr:expression {
     };
 }
 
-set_local = left:(property / scoped) _ "=" _  right:expression {
+set_local = left:(property / scoped) _ operator:("=" !"=") _  right:expression {
     return {
         "type": "AssignmentExpression",
-        "operator": "=",
+        "operator": operator,
         "left": left,
         "right": right
     };
@@ -418,5 +450,8 @@ keyword = "if" / "then" / "end" / "else" / "return" / "def"
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 
-_ "whitespace"
+_ "optional whitespace"
   = [ \t\n\r]* { return []; }
+
+SP "whitespace"
+  = [ \t\n\r]+

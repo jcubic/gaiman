@@ -141,11 +141,11 @@ end
       - [x] input*
       - [x] echo*
       - [x] ask*
-  - [ ] Not operator inside if statements
+  - [x] Not operator inside if statements
   - [ ] Expressions
     - [x] regex match `~=`
     - [x] `$1` variables
-    - [ ] comparators `==`/`<=`/`>=`/`<`/`>`
+    - [x] comparators `==`/`<=`/`>=`/`<`/`>`
     - [x] parentheses for grouping
     - [ ] `-=`, `+=`, `/=`, `*=` operators ????
     - [x] `-`, `+`, `/`, `*` and `%` operators
@@ -248,7 +248,7 @@ To consider
 * scope for variales (php with global is not good idea)
 * methods (JS Array/String)
 * standard library (e.g.: `push`/`pop`/`split`/`join`)
-* functions should be compiled to JavaScript, use 
+* functions should be compiled to JavaScript, use
 
 ```
 command = ask "? "
@@ -310,6 +310,21 @@ if (is_node()) {
 
 term.start();
 ```
+
+
+## Operator precedence
+
+| Operator  | Description                              |
+|-----------|------------------------------------------|
+| []        | array and object access (TODO)           |
+| ()        | parentheses grouping                     |
+| * / %     | Multiplication, division, modulo         |
+| + -       | Addition (or concatenation), subtraction |
+| < > <= >= | boolean compare                          |
+| == !=     | equal, not equal                         |
+| and       | Boolean and                              |
+| or        | Boolean or                               |
+| not       | Boolean not                              |
 
 
 ## Name

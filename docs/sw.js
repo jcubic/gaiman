@@ -40,9 +40,6 @@ function getMime(type) {
 
 
 self.addEventListener('fetch', function (event) {
-    if (!self.idb) {
-        console.log({meme, idb: self.idb});
-    }
     event.respondWith(new Promise(function(resolve, reject) {
         var url = event.request.url;
         var m = url.match(/__idb__\/([^?]+)(?:\?.*$)?/);

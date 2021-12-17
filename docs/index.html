@@ -121,7 +121,9 @@ iframe {
          let output = prefix + gaiman.parse(code) + postfix;
          output = output.replace(/\{\{VER\}\}/g, gaiman.version);
          set(OUTPUT_FILE, output);
-         load();
+         if (init) {
+             setTimeout(load, 1000);
+         }
      }
      function load() {
          if (has_worker) {
@@ -144,9 +146,10 @@ iframe {
          language: 'gaiman'
      });
      if (init) {
-         compile();
+         compile(init);
+     } else {
+         load();
      }
-     load();
      editor.on('change', debounce(compile, 800));
  })(jQuery);
 </script>

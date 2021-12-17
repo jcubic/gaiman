@@ -10,13 +10,18 @@
  * Released under the MIT license
  *
  */
-
 self.addEventListener('install', function(event) {
-    //self.skipWaiting();
-    event.waitUntil(
-       self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js')
-    );
+    self.skipWaiting();
+    self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js');
     self.idb = idbKeyval;
+});
+
+self.addEventListener('activate', function(event) {
+    if (typeof idb === 'undefined') {
+        self.skipWaiting();
+        self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js');
+        self.idb = idbKeyval;
+    }
 });
 
 const mime = {
@@ -35,6 +40,9 @@ function getMime(type) {
 
 
 self.addEventListener('fetch', function (event) {
+    if (!self.idb) {
+        console.log({meme, idb: self.idb});
+    }
     event.respondWith(new Promise(function(resolve, reject) {
         var url = event.request.url;
         var m = url.match(/__idb__\/([^?]+)(?:\?.*$)?/);
@@ -43,6 +51,9 @@ self.addEventListener('fetch', function (event) {
         }
         let key;
         if (m) {
+            if (!self.idb) {
+                return resolve(error404(key));
+            }
             key = m[1];
             if (key === '') {
                 return redirect_dir();

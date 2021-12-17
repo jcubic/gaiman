@@ -117,7 +117,6 @@ end
   - [x] Commands (restricted names)
     - [ ] command with predicates for advanced usage e.g. `echo<anim, ...>`
     - [x] `ask` - set prompt
-      - [ ] `ask*` - set prompt with animation
     - [x] `echo` - print message
       - [ ] explicit `"\n"`
     - [x] `get` - send HTTP GET request
@@ -130,6 +129,7 @@ end
     - [ ] `join` - return string from array
     - [ ] `push` - item into array
     - [ ] `pop` - remote item from
+    - [ ] Optional parenthesis for `echo* (get "https://jcubic.pl"), 100`
     - [ ] style commands (some ingored in Node)
       - [ ] color
       - [ ] background
@@ -140,14 +140,15 @@ end
       - [x] prompt*
       - [x] input*
       - [x] echo*
+      - [x] ask*
   - [ ] Not operator inside if statements
   - [ ] Expressions
     - [x] regex match `~=`
     - [x] `$1` variables
     - [ ] comparators `==`/`<=`/`>=`/`<`/`>`
-    - [ ] parentheses for grouping
+    - [x] parentheses for grouping
     - [ ] `-=`, `+=`, `/=`, `*=` operators ????
-    - [ ] `-`, `+`, `/`, `*` and `%` operators
+    - [x] `-`, `+`, `/`, `*` and `%` operators
 - [x] compiler functions to JavaScript code [escodegen](https://github.com/estools/escodegen).
 - [x] Compile everything to JavaScript
 - [x] Unit tests

@@ -14,13 +14,9 @@
 self.addEventListener('install', function(event) {
     //self.skipWaiting();
     event.waitUntil(
-        self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js')
+       self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js')
     );
-});
-self.addEventListener('activate', (event) => {
-    event.waitUntil(
-        self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js')
-    );
+    self.idb = idbKeyval;
 });
 
 const mime = {
@@ -55,7 +51,7 @@ self.addEventListener('fetch', function (event) {
             const extension = m && m[1];
             const mime = getMime(extension);
             console.log(`Serving ${key} from indexedDB using idb-keyval as ${mime}`);
-            idbKeyval.get(key).then(value => {
+            idb.get(key).then(value => {
                 if (!value) {
                     return resolve(error404(key));
                 }

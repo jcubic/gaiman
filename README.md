@@ -154,7 +154,7 @@ end
 - [x] jQuery Terminal integration
 - [x] Async Adapters for Web
 - [ ] Async Adapters for Terminal
-- [ ] XML like syntax for colors `<bold><red>hello</red></bold>`
+- [x] XML like syntax for colors `<bold><red>hello</red></bold>` (added xml formatting)
 - [ ] Hooks to embed JS code
 
 ```ruby

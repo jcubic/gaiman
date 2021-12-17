@@ -215,7 +215,7 @@ var = _ "let" _ name:(variable) _ "=" _ expression:expression_like _ {
 }
 
 string = "\"" ([^"] / "\\\\\"")*  "\"" {  // "
-  return create_template_literal(JSON.parse(text()));
+  return create_template_literal(JSON.parse(text().replace(/\n/g, '\\n')));
 }
 
 literal = value:(integer / boolean) {
@@ -264,7 +264,7 @@ async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / exp
     return  {
         "type": "AwaitExpression",
         "argument": call(property(make_identifier("term"),
-                                  make_identifier(method), expr, ...args.map(x => x[2])))
+                                  make_identifier(method)), expr, ...args.map(x => x[2]))
     };
 }
 

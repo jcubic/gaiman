@@ -362,7 +362,7 @@
 	      };
 	  };
 	  var peg$f12 = function() {  // "
-	    return create_template_literal(JSON.parse(text()));
+	    return create_template_literal(JSON.parse(text().replace(/\n/g, '\\n')));
 	  };
 	  var peg$f13 = function(value) {
 	     return {"type": "Literal", "value": value };
@@ -393,7 +393,7 @@
 	      return  {
 	          "type": "AwaitExpression",
 	          "argument": call(property(make_identifier("term"),
-	                                    make_identifier(method), expr, ...args.map(x => x[2])))
+	                                    make_identifier(method)), expr, ...args.map(x => x[2]))
 	      };
 	  };
 	  var peg$f23 = function(method, expr, args) {

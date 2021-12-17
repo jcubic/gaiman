@@ -59,9 +59,6 @@ class WebAdapter {
     ask_animate(message) {
         return this._term.read(message, { typing: true, delay: 200 });
     }
-    ask_animate(string, delay) {
-        return this._term.read(message);
-    }
     echo_animate(string, delay) {
         return this._term.echo(string, { typing: true, delay: 200 });
     }

@@ -3332,7 +3332,7 @@ function peg$parse(input, options) {
           };
           return new_loc;
       }
-      var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*"];
+      var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*"];
       var sync_commands = ["echo", "prompt", "input"];
       var available_commands = async_commands.concat(sync_commands);
 

@@ -44,9 +44,6 @@ class WebAdapter {
             exit: false
         }, options));
     }
-    ask(message) {
-        return this._term.read(message);
-    }
     sleep(timeout) {
         this._term.pause();
         return new Promise(resolve => {
@@ -58,6 +55,12 @@ class WebAdapter {
     }
     echo(string) {
         this._term.echo(string);
+    }
+    ask_animate(message) {
+        return this._term.read(message, { typing: true, delay: 200 });
+    }
+    ask_animate(string, delay) {
+        return this._term.read(message);
     }
     echo_animate(string, delay) {
         return this._term.echo(string, { typing: true, delay: 200 });

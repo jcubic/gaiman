@@ -56,14 +56,14 @@ class WebAdapter {
     echo(string) {
         this._term.echo(string);
     }
-    ask_animate(message) {
-        return this._term.read(message, { typing: true, delay: 200 });
+    ask_animate(message, delay) {
+        return this._term.read(message, { typing: true, delay });
     }
     echo_animate(string, delay) {
-        return this._term.echo(string, { typing: true, delay: 200 });
+        return this._term.echo(string, { typing: true, delay });
     }
     prompt_animate(string, delay) {
-        return this._term.set_prompt(string, { typing: true, delay: 200 });
+        return this._term.set_prompt(string, { typing: true, delay });
     }
     input_animate(string, delay) {
         return this._term.typing('enter', delay, string);

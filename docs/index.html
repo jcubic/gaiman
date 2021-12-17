@@ -97,8 +97,11 @@ iframe {
               });
  }
  (async function($) {
-     await worker;
      const has_worker = !!worker;
+     if (has_worker) {
+         frame.src = 'about:blank'
+     }
+     await worker;
      const media_query = 'screen and (max-width: 900px)';
      const small = matchMedia(media_query).matches
      const orientation = small ? 'horizontal' : 'vertical';

@@ -115,12 +115,15 @@ iframe {
      const SOURCE_FILE = '_gaiman_source.gs';
      const OUTPUT_FILE = '_gaiman_output.js';
      const { get, set } = idbKeyval;
-     function compile() {
+     function compile(init) {
          const code = editor.getValue();
          set(SOURCE_FILE, code);
          let output = prefix + gaiman.parse(code) + postfix;
          output = output.replace(/\{\{VER\}\}/g, gaiman.version);
          set(OUTPUT_FILE, output);
+     }
+     function update() {
+         compile();
          load();
      }
      function load() {
@@ -144,11 +147,10 @@ iframe {
          language: 'gaiman'
      });
      if (init) {
-         compile(init);
-     } else {
-         load();
+         compile();
      }
-     editor.on('change', debounce(compile, 800));
+     load();
+     editor.on('change', debounce(update, 800));
  })(jQuery);
 </script>
 </body>

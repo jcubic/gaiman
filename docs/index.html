@@ -254,6 +254,9 @@
     <li>
       <button id="reset" class="btn">Reset</button>
     </li>
+    <li>
+      <button id="download" class="btn">Download</button>
+    </li>
   </ul>
 </div>
 <script>
@@ -422,6 +425,15 @@
      cm.scrollTo(left, top);
  }
 
+ function download(blob, filename) {
+     const url = URL.createObjectURL(blob);
+     const $li = $(`<a href="${url}" download="${filename}">download</a>`).hide();
+     $li.appendTo('body');
+     $li[0].click();
+     $li.removee();
+     URL.revokeObjectURL(url);
+ }
+
  (async function($) {
      const has_worker = !!worker;
      if (has_worker) {
@@ -457,6 +469,16 @@
          update_editor(state.editors.input, code);
          return false;
      });
+     $('#download').on('click', function() {
+         var zip = new JSZip();
+         var game = zip.folder("gaiman");
+         game.file("index.js", state.output_full);
+         game.file("index.html", html);
+         zip.generateAsync({ type:"blob" }).then(function(content) {
+             download(content, "gaiman.zip");
+         });
+     });
+
      const { get, set } = idbKeyval;
 
      const DEV_MODE = 'gaiman__dev__mode';
@@ -479,7 +501,8 @@
      };
      window.state = state;
 
-     const prefix = await fetch_text(`${repo}src/prefix.js`);
+     const html = add_version(await fetch_text(`${repo}src/terminal.html`));
+     const prefix = add_version(await fetch_text(`${repo}src/prefix.js`));
      const postfix = await fetch_text(`${repo}src/postfix.js`);
 
      let parse = (code) => gaiman.parse(code);
@@ -549,9 +572,11 @@
      }
 
      function update_code() {
-         var ver = gaiman.version;
          state.output_full = prefix + state.output + postfix;
-         state.output_full = state.output_full.replace(/\{\{VER\}\}/g, ver);
+     }
+
+     function add_version(code) {
+         return code.replace(/\{\{VER\}\}/g, gaiman.version);
      }
 
      function compile() {
@@ -594,5 +619,6 @@
      }
  })(jQuery);
 </script>
+<script src="https://cdn.jsdelivr.net/npm/jszip"></script>
 </body>
 </html>

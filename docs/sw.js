@@ -12,21 +12,6 @@
  */
 self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js');
 
-/*
-self.addEventListener('install', function(event) {
-    self.skipWaiting();
-    self.idb = idbKeyval;
-});
-
-self.addEventListener('activate', function(event) {
-    if (typeof idb === 'undefined') {
-        self.skipWaiting();
-        self.importScripts('https://cdn.jsdelivr.net/npm/idb-keyval/dist/umd.js');
-        self.idb = idbKeyval;
-    }
-});
-*/
-
 const mime = {
     html: 'text/html',
     css: 'text/css',

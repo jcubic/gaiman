@@ -9,7 +9,7 @@ function fixture(name) {
 
 async function test_fixture(filename) {
     var code = await fixture(filename);
-    expect(gaiman(code)).toMatchSnapshot();
+    expect(gaiman.compile(code)).toMatchSnapshot();
 }
 
 describe('if statements', () => {

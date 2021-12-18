@@ -12,7 +12,7 @@
 const parser = require('./parser');
 const escodegen = require('escodegen');
 
-const { version } = require('package.json');
+const { version } = require('./package.json');
 
 function parse(code) {
     return parser.parse(code);

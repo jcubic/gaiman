@@ -12,7 +12,6 @@
  * Released under GNU GPL v3 or later
  */
 {
-
     var heredoc_begin = null;
     var $$__m; // result of match
     var variable_prefix = '$_';

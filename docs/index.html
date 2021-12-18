@@ -16,7 +16,7 @@
          margin: 0;
      }
      main {
-         height: 100vh;
+         height: calc(100vh - 27px);
      }
      iframe {
          border: none;
@@ -96,13 +96,19 @@
      }
      .config {
          position: fixed;
-         bottom: 0;
+         bottom: 27px;
          right: 0;
+         pointer-events: none;
          padding: 10px 20px;
          border-radius: 5px 0 0 0;
          color: gray;
-         background: black;
+         background: rgba(0, 0, 0, 0.5);
+         font-family: sans-serif;
+         text-align: right;
          z-index: 100;
+     }
+     .config ul {
+         pointer-events: visible;
      }
      .config li {
          display: block;
@@ -168,6 +174,29 @@
          position:relative;
          top:1px;
      }
+     footer {
+         padding: 5px 0;
+         font-family: monospace;
+         text-align: center;
+         background: var(--background, #000);
+         color: var(--color, #ccc);
+         border-top: 2px solid grey;
+     }
+     footer p {
+         margin: 0;
+     }
+     footer  a[href] {
+         color: #3377FF;
+         color: var(--link-color, #3377FF);
+         cursor: pointer;
+     }
+     footer  a[href]:hover {
+         background-color: #3377FF;
+         background-color: var(--link-color, #3377FF) !important;
+         color: #000;
+         color: var(--background, #000) !important;
+         text-decoration: none;
+     }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/lib/codemirror.js"></script>
@@ -207,6 +236,9 @@
     </div>
   </aside>
 </main>
+<footer>
+  <p>Copyright (C) <a href="https://jakub.jankiewicz.org">Jakub T. Jankiewicz</a></p>
+</footer>
 <div class="config">
   <ul>
     <li>
@@ -215,6 +247,10 @@
     <li>
       <label for="developer_mode">Dev Mode</label>
       <input type="checkbox" id="developer_mode"/>
+    </li>
+    <li class="hidden dev">
+      <label for="full_output">Full JS Output</label>
+      <input type="checkbox" id="full_output"/>
     </li>
   </ul>
 </div>
@@ -314,7 +350,7 @@
          theme: 'seti',
          lineWrapping: true,
          lineNumbers: true,
-         extraKeys: { Tab: betterTab },
+         extraKeys: { Tab: better_tab },
          readOnly: true,
          indentUnit: 4,
          mode: 'javascript'
@@ -366,7 +402,7 @@
      return output.join('\n');
  }
 
- function betterTab(cm) {
+ function better_tab(cm) {
      if (cm.somethingSelected()) {
          cm.indentSelection("add");
      } else {
@@ -400,6 +436,9 @@
      var $dev_toggle = $('#developer_mode').on('change', function() {
          toggle_dev_mode(this.checked);
      });
+     var $full_mode_toggle = $('#full_output').on('change', function() {
+         toggle_full_output_mode(this.checked);
+     });
      $('.errors').on('click', '.close', function() {
          $(this).closest('li').remove();
      });
@@ -407,105 +446,144 @@
          parse = (code) => gaiman.parse(code);
          grammar = await fetch_text(`${repo}src/grammar.peg`);
          code = await fetch_text(`${repo}examples/demo.gs`);
-         editor.grammar.setValue(grammar);
-         editor.input.setValue(code);
-         //update();
+         state.editors.grammar.setValue(grammar);
+         state.editors.input.setValue(code);
          return false;
      });
+     const { get, set } = idbKeyval;
+
      const DEV_MODE = 'gaiman__dev__mode';
-     const REF = await hash('master');
-     let dev_mode = ls.get(DEV_MODE);
-     function toggle_dev_mode(enable) {
-         dev_mode = enable;
-         ls.set(DEV_MODE, dev_mode);
-         $('.dev').toggleClass('hidden', !dev_mode);
-         if (enable) {
-             if (!editor_splitter) {
-                 editor_splitter = $('.editor_wrapper').split({
-                     orientation: 'horizontal'
-                 });
-                 $('.gaiman_code .CodeMirror').cm_refresh();
-             }
-         } else if (editor_splitter) {
-             editor_splitter.destroy();
-             editor_splitter = null;
-         }
-     }
-     if (dev_mode !== undefined) {
-         toggle_dev_mode(dev_mode);
-         $dev_toggle.prop('checked', dev_mode);
-     }
-     const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`
-     const prefix = await fetch_text(`${repo}src/prefix.js`);
-     const postfix = await fetch_text(`${repo}src/postfix.js`);
+     const FULL_MODE = 'gaiman__full_output';
+     const SELECTED_TAB = 'gaiman__selected_tab';
      const SOURCE_FILE = '_gaiman_source.gs';
      const GRAMMAR_FILE = '_gaiman_grammar.peg';
      const OUTPUT_FILE = '_gaiman_output.js';
-     const { get, set } = idbKeyval;
+
+     const REF = await hash('master');
+     const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`
+     const state = {
+         dev_mode: ls.get(DEV_MODE),
+         selected_tab: ls.get(SELECTED_TAB),
+         full_output_mode: ls.get(FULL_MODE),
+         editors: {},
+         grammar: await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`),
+         code: await get_file(SOURCE_FILE, `${repo}examples/demo.gs`),
+         ast: {}
+     };
+
+     const prefix = await fetch_text(`${repo}src/prefix.js`);
+     const postfix = await fetch_text(`${repo}src/postfix.js`);
+
      let parse = (code) => gaiman.parse(code);
-     function compile() {
-         code = editor.input.getValue();
-         parse_error();
-         try {
-             if (parse) {
-                 ast = parse(code);
-                 output = gaiman.generate(ast);
-                 output_full = prefix + output + postfix;
-                 output_full = output_full.replace(/\{\{VER\}\}/g, gaiman.version);
-             }
-         } catch(e) {
-             output = '';
-             parse_error(code, e);
-         }
-     }
-     function set_idb() {
-         set(SOURCE_FILE, code);
-         set(OUTPUT_FILE, output_full);
-         set(GRAMMAR_FILE, grammar);
-     }
-     function update() {
-         compile();
-         set_idb();
-         load();
-     }
-     function load() {
-         if (has_worker && output) {
-             frame.src = './gaiman.html?' + Date.now();
-             editor.output.setValue(output);
-             editor.ast.setValue(to_json(ast || {}));
-         }
-     }
-     let output_full, output, ast;
-     let grammar = await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`);
-     let code = await get_file(SOURCE_FILE, `${repo}examples/demo.gs`);
-     const editor = {};
-     editor.input = make_editor('.gaiman_code', code, {
+
+     state.editors.input = make_editor('.gaiman_code', state.code, {
          readOnly: !has_worker,
          mode: 'gaiman'
      });
      compile();
-     editor.output = make_editor('.output', output);
-     editor.ast = make_editor('.ast', to_json(ast || {}));
-     editor.grammar = make_editor('.gaiman_grammar', grammar, {
+     state.editors.output = make_editor('.output', state.output);
+     state.editors.ast = make_editor('.ast', to_json(state.ast || {}));
+     state.editors.grammar = make_editor('.gaiman_grammar', state.grammar, {
          readOnly: false,
          mode: 'pegjs'
      });
      set_idb();
      load();
-     editor.input.on('change', debounce(update, 800));
-     editor.grammar.on('change', debounce(function() {
-         grammar = editor.grammar.getValue();
-         clear_error('.gaiman_grammar');
-         try {
-             const parser = peggy.generate(grammar);
-             parse = (code) => parser.parse(code);
-             update();
-         } catch(e) {
-             parse = null;
-             error('.gaiman_grammar', e.message);
-             set(GRAMMAR_FILE, grammar);
+     state.editors.input.on('change', debounce(update, 800));
+     state.editors.grammar.on('change', debounce(function() {
+         if (state.dev_mode) {
+             state.grammar = editors.grammar.getValue();
+             clear_error('.gaiman_grammar');
+             try {
+                 const parser = peggy.generate(state.grammar);
+                 parse = (code) => parser.parse(code);
+                 update();
+             } catch(e) {
+                 parse = null;
+                 error('.gaiman_grammar', e.message);
+                 set(GRAMMAR_FILE, state.grammar);
+             }
          }
      }, 800));
+
+     if (state.dev_mode !== undefined) {
+         toggle_dev_mode(state.dev_mode);
+         $dev_toggle.prop('checked', state.dev_mode);
+         if (state.full_output_mode !== undefined) {
+             toggle_full_output_mode(state.full_output_mode);
+             $full_mode_toggle.prop('checked', state.full_output_mode);
+         }
+     }
+
+     function toggle_dev_mode(enable) {
+         state.dev_mode = enable;
+         ls.set(DEV_MODE, state.dev_mode);
+         $('.dev').toggleClass('hidden', !state.dev_mode);
+         if (enable) {
+             if (!editor_splitter) {
+                 editor_splitter = $('.editor_wrapper').split({
+                     orientation: 'horizontal'
+                 });
+             }
+         } else if (editor_splitter) {
+             editor_splitter.destroy();
+             editor_splitter = null;
+             tab_activate($('.tabs li:not(.dev):eq(0)'));
+         }
+         $('.editor_wrapper .CodeMirror').cm_refresh();
+     }
+
+     function toggle_full_output_mode(enable) {
+         state.full_output_mode = enable;
+         const { full_output_mode, output_full, output } = state;
+         ls.set(FULL_MODE, full_output_mode);
+         state.editors.output.setValue(full_output_mode ? output_full : output);
+     }
+
+     function update_code() {
+         var ver = gaiman.version;
+         state.output_full = prefix + state.output + postfix;
+         state.output_full = state.output_full.replace(/\{\{VER\}\}/g, ver);
+     }
+
+     function compile() {
+         state.code = state.editors.input.getValue();
+         parse_error();
+         try {
+             if (parse) {
+                 state.ast = parse(state.code);
+                 state.output = gaiman.generate(state.ast);
+                 update_code();
+             }
+         } catch(e) {
+             state.output = '';
+             parse_error(state.code, e);
+         }
+     }
+
+     function set_idb() {
+         set(SOURCE_FILE, state.code);
+         set(OUTPUT_FILE, state.output_full);
+         set(GRAMMAR_FILE, state.grammar);
+     }
+
+     function update() {
+         compile();
+         set_idb();
+         load();
+     }
+
+     function load() {
+         if (has_worker && state.output) {
+             frame.src = './gaiman.html?' + Date.now();
+             if (state.full_output) {
+                 state.editors.output.setValue(state.output_full);
+             } else {
+                 state.editors.output.setValue(state.output);
+             }
+             state.editors.ast.setValue(to_json(state.ast || {}));
+         }
+     }
  })(jQuery);
 </script>
 </body>

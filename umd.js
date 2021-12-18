@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Sat, 18 Dec 2021 17:56:24 GMT
+ * Buid time: Sat, 18 Dec 2021 20:31:14 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -3611,7 +3611,6 @@
 
 	    return s0;
 	  }
-
 
 
 	      var heredoc_begin = null;

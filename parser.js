@@ -3767,7 +3767,6 @@ function peg$parse(input, options) {
   }
 
 
-
       var heredoc_begin = null;
       var $$__m; // result of match
       var variable_prefix = '$_';

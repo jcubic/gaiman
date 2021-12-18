@@ -416,6 +416,12 @@
      }
  }
 
+ function update_editor(cm, code) {
+     const { left, top } = cm.getScrollInfo();
+     cm.setValue(code);
+     cm.scrollTo(left, top);
+ }
+
  (async function($) {
      const has_worker = !!worker;
      if (has_worker) {
@@ -447,8 +453,8 @@
          parse = (code) => gaiman.parse(code);
          grammar = await fetch_text(`${repo}src/grammar.peg`);
          code = await fetch_text(`${repo}examples/demo.gs`);
-         state.editors.grammar.setValue(grammar);
-         state.editors.input.setValue(code);
+         update_editor(state.editors.grammar, grammar);
+         update_editor(state.editors.input, code);
          return false;
      });
      const { get, set } = idbKeyval;
@@ -471,6 +477,7 @@
          code: await get_file(SOURCE_FILE, `${repo}examples/demo.gs`),
          ast: {}
      };
+     window.state = state;
 
      const prefix = await fetch_text(`${repo}src/prefix.js`);
      const postfix = await fetch_text(`${repo}src/postfix.js`);
@@ -538,7 +545,7 @@
          state.full_output_mode = enable;
          const { full_output_mode, output_full, output } = state;
          ls.set(FULL_MODE, full_output_mode);
-         state.editors.output.setValue(full_output_mode ? output_full : output);
+         update_editor(state.editors.output, full_output_mode ? output_full : output);
      }
 
      function update_code() {
@@ -578,11 +585,11 @@
          if (has_worker && state.output) {
              frame.src = './gaiman.html?' + Date.now();
              if (state.full_output) {
-                 state.editors.output.setValue(state.output_full);
+                 update_editor(state.editors.output, state.output_full);
              } else {
-                 state.editors.output.setValue(state.output);
+                 update_editor(state.editors.output, state.output);
              }
-             state.editors.ast.setValue(to_json(state.ast || {}));
+             update_editor(state.editors.ast, to_json(state.ast || {}));
          }
      }
  })(jQuery);

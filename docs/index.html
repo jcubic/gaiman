@@ -192,6 +192,7 @@
          timer = setTimeout(() => { func.apply(this, args); }, timeout);
      };
  }
+
  async function hash(branch) {
      try {
          var url = `https://api.github.com/repos/jcubic/gaiman/commits?sha=${branch}`;
@@ -202,6 +203,7 @@
          return branch;
      }
  }
+
  function tab_activate(li) {
      var $li = $(li);
      var index = $li.index();
@@ -217,6 +219,7 @@
          $cm.get(0).CodeMirror.refresh();
      }
  }
+
  var worker;
  if ('serviceWorker' in navigator) {
      var scope = location.pathname.replace(/\/[^\/]+$/, '/');
@@ -234,6 +237,7 @@
                   console.log('Registration failed with ' + error);
               });
  }
+
  var ls = {
      get: function(name) {
          var value = localStorage.getItem(name);
@@ -246,9 +250,11 @@
          localStorage.setItem(name, value);
      }
  };
+
  function fetch_text(url) {
      return fetch(url).then(res => res.text());
  }
+
  async function get_file(token, url) {
      let result = await idbKeyval.get(token);
      if (!result) {
@@ -256,9 +262,11 @@
      }
      return result;
  }
+
  function to_json(object) {
      return JSON.stringify(object, true, 2);
  }
+
  function make_editor(element, code, options) {
      var $node = $(element);
      const settings = $.extend({
@@ -266,12 +274,14 @@
          theme: 'seti',
          lineWrapping: true,
          lineNumbers: true,
+         extraKeys: { Tab: betterTab },
          readOnly: true,
          indentUnit: 4,
          mode: 'javascript'
      }, options);
      return CodeMirror($node.get(0), settings);
  }
+
  function error(editor, message) {
      var $editor = $(editor);
      var ul = $editor.find('.errors ul');
@@ -286,10 +296,12 @@
          $li.appendTo(ul)
      }
  }
+
  function clear_error(editor) {
      var $editor = $(editor);
      $editor.find('.errors ul').empty();
  }
+
  function parse_error(code, e) {
      if (!code) {
          clear_error('.gaiman_code');
@@ -297,6 +309,7 @@
          error('.gaiman_code', format_error(code, e));
      }
  }
+
  function format_error(code, e) {
      const output = ['Parse Error: ' + e.message, ''];
      if (e.location) {
@@ -312,6 +325,20 @@
      }
      return output.join('\n');
  }
+
+ function betterTab(cm) {
+     if (cm.somethingSelected()) {
+         cm.indentSelection("add");
+     } else {
+         var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+         cm.replaceSelection(
+             cm.getOption("indentWithTabs")? "\t" : spaces,
+             "end",
+             "+input"
+         );
+     }
+ }
+
  (async function($) {
      const has_worker = !!worker;
      if (has_worker) {
@@ -369,10 +396,12 @@
      function compile(init) {
          code = editor.input.getValue();
          try {
-             ast = parse(code);
-             output = prefix + gaiman.generate(ast) + postfix;
-             output = output.replace(/\{\{VER\}\}/g, gaiman.version);
-             parse_error();
+             if (parse) {
+                 ast = parse(code);
+                 output = prefix + gaiman.generate(ast) + postfix;
+                 output = output.replace(/\{\{VER\}\}/g, gaiman.version);
+                 parse_error();
+             }
          } catch(e) {
              output = '';
              parse_error(code, e);
@@ -421,6 +450,7 @@
              update();
              clear_error('.gaiman_grammar');
          } catch(e) {
+             parse = null;
              error('.gaiman_grammar', e.message);
              set(GRAMMAR_FILE, grammar);
          }

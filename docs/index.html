@@ -115,15 +115,13 @@ iframe {
      const SOURCE_FILE = '_gaiman_source.gs';
      const OUTPUT_FILE = '_gaiman_output.js';
      const { get, set } = idbKeyval;
-     function compile(init) {
+     function compile() {
          const code = editor.getValue();
          set(SOURCE_FILE, code);
          let output = prefix + gaiman.parse(code) + postfix;
          output = output.replace(/\{\{VER\}\}/g, gaiman.version);
          set(OUTPUT_FILE, output);
-         if (init) {
-             setTimeout(load, 1000);
-         }
+         load();
      }
      function load() {
          if (has_worker) {

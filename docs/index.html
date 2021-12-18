@@ -20,9 +20,52 @@ main {
 }
 iframe {
     border: none;
+    display: block;
 }
 .CodeMirror {
     height: 100%;
+}
+:root {
+    --tab-bg: #1d1e22;
+    --tab-color: #aaaebc;
+    --tab-border-color: #34363e;
+    --tab-color-active: #1236f7;
+}
+.tabs > ul {
+    list-style: none;
+    margin: 0;
+    padding: 5px 10px 0 5px;
+    background: black;
+    font-family: sans-serif;
+    border-bottom: 2px solid grey
+}
+.tabs > ul li {
+    background: var(--tab-bg);
+    color: var(--tab-color);
+    border-top: 3px solid var(--tab-border-color);
+    border-radius: 3px 3px 0 0;
+    display: inline-block;
+}
+.tabs > .content > :not(.active) {
+    display: none;
+}
+.tabs > .content {
+    height: calc(100% - 40px);
+}
+.tabs > .content > * {
+    width: 100%;
+    height: 100%;
+}
+.tabs > ul li.active {
+    border-top-color: var(--tab-color-active);
+    margin-bottom: -2px;
+    padding-bottom: 2px;
+}
+.tabs > ul li a, .tabs > ul li a:hover {
+    color: inherit;
+    display: block;
+    padding: 6px 18px;
+    text-decoration: none;
 }
 @media screen and (min-width: 900px) {
     iframe, aside {
@@ -48,15 +91,27 @@ iframe {
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/lib/codemirror.js"></script>
+    <srcipt src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/mode/javascript/javascript.js"></srcipt>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/src/codemirror.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery.splitter"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/idb-keyval.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/parser.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/umd.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
 <main>
-    <iframe id="frame" src="./demo/"></iframe>
+  <div class="tabs">
+    <ul>
+      <li class="active"><a href="#">Preview</a></li>
+      <li><a href="#">&lt;code&gt;</a></li>
+      <li><a href="#">AST</a></li>
+    </ul>
+    <div class="content">
+      <iframe class="active" id="frame" src="./demo/"></iframe>
+      <div class="output"></div>
+      <div class="ast"></div>
+    </div>
+  </div>
     <aside class="editor"></aside>
 </main>
 <a href="https://github.com/jcubic/gaiman" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#70B7FD; color:#fff; position: absolute; z-index: 10; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
@@ -77,6 +132,21 @@ iframe {
          return data[0].sha;
      } catch(e) {
          return branch;
+     }
+ }
+ function tab_activate(li) {
+     var $li = $(li);
+     var index = $li.index();
+     $li.addClass('active').siblings().removeClass('active');
+     var $content = $li.closest('ul').next();
+     var $tab = $content.children()
+                        .eq(index)
+                        .addClass('active');
+     $tab.siblings()
+         .removeClass('active');
+     var $cm = $tab.find('.CodeMirror');
+     if ($cm.length) {
+         $cm.get(0).CodeMirror.refresh();
      }
  }
  var worker;
@@ -108,6 +178,11 @@ iframe {
      $('main').split({
          orientation
      });
+     $('.tabs').on('click', 'li', function() {
+         var self = $(this);
+         tab_activate(this);
+         return false;
+     });
      const REF = await hash('master');
      const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`
      const prefix = await fetch(`${repo}src/prefix.js`).then(res => res.text());
@@ -115,42 +190,64 @@ iframe {
      const SOURCE_FILE = '_gaiman_source.gs';
      const OUTPUT_FILE = '_gaiman_output.js';
      const { get, set } = idbKeyval;
+     let output, code, ast;
      function compile(init) {
-         const code = editor.getValue();
-         set(SOURCE_FILE, code);
-         let output = prefix + gaiman.parse(code) + postfix;
+         code = input_editor.getValue();
+         ast = gaiman.parse(code);
+         output = prefix + gaiman.generate(ast) + postfix;
          output = output.replace(/\{\{VER\}\}/g, gaiman.version);
+     }
+     function set_idb() {
+         set(SOURCE_FILE, code);
          set(OUTPUT_FILE, output);
      }
      function update() {
          compile();
+         set_idb();
          load();
      }
      function load() {
          if (has_worker) {
              frame.src = './gaiman.html?' + Date.now();
+             output_editor.setValue(output);
+             ast_editor.setValue(to_json(ast));
          }
      }
-     let code = await get(SOURCE_FILE);
-     const init = !code;
+     const init_code = await get(SOURCE_FILE);
+     const init = !init_code;
      if (init) {
          const res = await fetch(`${repo}examples/demo.gs`);
          code = await res.text();
+     } else {
+         code = init_code;
      }
-     const editor = CodeMirror($('.editor')[0], {
-         value: code,
-         theme: 'seti',
-         lineWrapping: true,
-         lineNumbers: true,
+     function to_json(object) {
+         return JSON.stringify(object, true, 2);
+     }
+     function editor(element, code, options) {
+         var $node = $(element);
+         return CodeMirror($node.get(0), $.extend({
+             value: code,
+             theme: 'seti',
+             lineWrapping: true,
+             lineNumbers: true,
+             readOnly: true,
+             indentUnit: 4,
+             language: 'javascript'
+         }, options));
+     }
+     const input_editor = editor('.editor', code, {
          readOnly: !has_worker,
-         indentUnit: 4,
          language: 'gaiman'
      });
+     compile();
+     const output_editor = editor('.output', output);
+     const ast_editor = editor('.ast', to_json(ast));
      if (init) {
-         compile();
+         set_idb();
      }
      load();
-     editor.on('change', debounce(update, 800));
+     input_editor.on('change', debounce(update, 800));
  })(jQuery);
 </script>
 </body>

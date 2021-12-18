@@ -490,7 +490,7 @@ function peg$parse(input, options) {
   var peg$f38 = function(left, operator, right) {
       return {
           "type": "AssignmentExpression",
-          "operator": operator,
+          "operator": operator[0],
           "left": left,
           "right": right
       };
@@ -3765,6 +3765,7 @@ function peg$parse(input, options) {
 
     return s0;
   }
+
 
 
       var heredoc_begin = null;

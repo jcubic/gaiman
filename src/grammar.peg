@@ -12,6 +12,7 @@
  * Released under GNU GPL v3 or later
  */
 {
+
     var heredoc_begin = null;
     var $$__m; // result of match
     var variable_prefix = '$_';
@@ -433,7 +434,7 @@ set_cookie = "cookie." name:name _ "=" _ expr:expression {
 set_local = left:(property / scoped) _ operator:("=" !"=") _  right:expression {
     return {
         "type": "AssignmentExpression",
-        "operator": operator,
+        "operator": operator[0],
         "left": left,
         "right": right
     };

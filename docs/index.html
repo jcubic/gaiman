@@ -25,6 +25,10 @@
      .CodeMirror {
          height: 100%;
      }
+     .editor, iframe {
+         width: 100%;
+         height: 100%;
+     }
      .hidden {
          display: none !important;
      }
@@ -54,10 +58,6 @@
      }
      .tabs > .content {
          height: calc(100% - 40px);
-     }
-     .tabs > .content > * {
-         width: 100%;
-         height: 100%;
      }
      .tabs > ul li.active {
          border-top-color: var(--tab-color-active);
@@ -99,10 +99,51 @@
          color: gray;
          background: black;
      }
+     .errors {
+         color: white;
+         position: absolute;
+         bottom: 0;
+         right: 0;
+         left: 0;
+         margin: 10px;
+         z-index: 100;
+     }
+     .errors ul {
+         list-style: none;
+         margin: 0;
+         padding: 0;
+     }
+     .errors li {
+         background: #CA1919;
+         font-family: monospace;
+         padding: 5px 20px 5px 10px;
+         margin: 5px 0;
+         box-shadow: 1px 2px 11px 2px rgba(0,0,0,0.42);
+     }
+     .errors .message {
+         white-space: pre-wrap;
+     }
+     .errors .close {
+         cursor: pointer;
+         position: absolute;
+         top: 10px;
+         right: 5px;
+         background: black;
+         width: 16px;
+         height: 16px;
+         line-height: 14px;
+         font-size: 16px;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         border-radius: 50%;
+     }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/lib/codemirror.js"></script>
-    <srcipt src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/mode/javascript/javascript.js"></srcipt>
+    <script src="https://cdn.jsdelivr.net/npm/peggy"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/mode/javascript/javascript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/mode/pegjs/pegjs.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/src/codemirror.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery.splitter"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/idb-keyval.js"></script>
@@ -119,11 +160,22 @@
     </ul>
     <div class="content">
       <iframe class="active" id="frame" src="./demo/"></iframe>
-      <div class="output dev"></div>
-      <div class="ast dev"></div>
+      <div class="output editor dev"></div>
+      <div class="ast editor dev"></div>
     </div>
   </div>
-  <aside class="editor"></aside>
+  <aside class="editor_wrapper">
+    <div class="gaiman_grammar editor dev hidden">
+      <div class="errors">
+        <ul></ul>
+      </div>
+    </div>
+    <div class="gaiman_code editor">
+      <div class="errors">
+        <ul></ul>
+      </div>
+    </div>
+  </aside>
 </main>
 <div class="config">
   <label for="developer_mode">Dev Mode</label>
@@ -193,6 +245,63 @@
          localStorage.setItem(name, value);
      }
  };
+ function fetch_text(url) {
+     return fetch(url).then(res => res.text());
+ }
+ async function get_file(token, url) {
+     let result = await idbKeyval.get(token);
+     if (!result) {
+         result = await fetch_text(url);
+     }
+     return result;
+ }
+ function to_json(object) {
+     return JSON.stringify(object, true, 2);
+ }
+ function make_editor(element, code, options) {
+     var $node = $(element);
+     const settings = $.extend({
+         value: code,
+         theme: 'seti',
+         lineWrapping: true,
+         lineNumbers: true,
+         readOnly: true,
+         indentUnit: 4,
+         mode: 'javascript'
+     }, options);
+     return CodeMirror($node.get(0), settings);
+ }
+ function error(editor, message) {
+     var $editor = $(editor);
+     var ul = $editor.find('.errors ul');
+     var found = ul.find('> li').filter(function() {
+         return $(this).data('message') === message;
+     });
+     if (!found.length) {
+         $(`<li>
+              <span class="message">${message}</span>
+              <span class="close">&times;</span>
+           </li>`).appendTo(ul).data('message', message);
+     }
+ }
+ function parse_error(code, e) {
+      error('.gaiman_code', format_error(code, e));
+ }
+ function format_error(code, e) {
+     const output = ['Parse Error: ' + e.message, ''];
+     if (e.location) {
+         try {
+             output.push('Error in line ' + e.location.start.line);
+             const lines = code.split('\n');
+             const line_number = e.location.start.line - 1;
+             output.push(lines[line_number]);
+             output.push(mark_error_char(e.location));
+         } catch (e) {
+             // ignore errors in print
+         }
+     }
+     return output.join('\n');
+ }
  (async function($) {
      const has_worker = !!worker;
      if (has_worker) {
@@ -205,6 +314,7 @@
      $('main').split({
          orientation
      });
+     let editor_splitter;
      $('.tabs').on('click', 'li', function() {
          var self = $(this);
          tab_activate(this);
@@ -213,6 +323,9 @@
      var $dev_toggle = $('#developer_mode').on('change', function() {
          toggle_dev_mode(this.checked);
      });
+     $('.errors').on('click', '.close', function() {
+         $(this).closest('li').remove();
+     });
      const DEV_MODE = 'gaiman__dev__mode';
      const REF = await hash('master');
      let dev_mode = ls.get(DEV_MODE);
@@ -220,27 +333,44 @@
          dev_mode = enable;
          ls.set(DEV_MODE, dev_mode);
          $('.dev').toggleClass('hidden', !dev_mode);
+         if (enable) {
+             if (!editor_splitter) {
+                 editor_splitter = $('.editor_wrapper').split({
+                     orientation: 'horizontal'
+                 });
+             }
+         } else if (editor_splitter) {
+             editor_splitter.destroy();
+             editor_splitter = null;
+         }
      }
      if (dev_mode !== undefined) {
          toggle_dev_mode(dev_mode);
          $dev_toggle.prop('checked', dev_mode);
      }
      const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`
-     const prefix = await fetch(`${repo}src/prefix.js`).then(res => res.text());
-     const postfix = await fetch(`${repo}src/postfix.js`).then(res => res.text());
+     const prefix = await fetch_text(`${repo}src/prefix.js`);
+     const postfix = await fetch_text(`${repo}src/postfix.js`);
      const SOURCE_FILE = '_gaiman_source.gs';
+     const GRAMMAR_FILE = '_gaiman_grammar.peg';
      const OUTPUT_FILE = '_gaiman_output.js';
      const { get, set } = idbKeyval;
-     let output, code, ast;
+     let parse = (code) => gaiman.parse(code);
      function compile(init) {
-         code = input_editor.getValue();
-         ast = gaiman.parse(code);
-         output = prefix + gaiman.generate(ast) + postfix;
-         output = output.replace(/\{\{VER\}\}/g, gaiman.version);
+         code = editor.input.getValue();
+         try {
+             ast = parse(code);
+             output = prefix + gaiman.generate(ast) + postfix;
+             output = output.replace(/\{\{VER\}\}/g, gaiman.version);
+         } catch(e) {
+             output = '';
+             parse_error(code, e);
+         }
      }
      function set_idb() {
          set(SOURCE_FILE, code);
          set(OUTPUT_FILE, output);
+         set(GRAMMAR_FILE, grammar);
      }
      function update() {
          compile();
@@ -248,47 +378,35 @@
          load();
      }
      function load() {
-         if (has_worker) {
+         if (has_worker && output) {
              frame.src = './gaiman.html?' + Date.now();
-             output_editor.setValue(output);
-             ast_editor.setValue(to_json(ast));
+             editor.output.setValue(output);
+             editor.ast.setValue(to_json(ast || {}));
          }
      }
-     const init_code = await get(SOURCE_FILE);
-     const init = !init_code;
-     if (init) {
-         const res = await fetch(`${repo}examples/demo.gs`);
-         code = await res.text();
-     } else {
-         code = init_code;
-     }
-     function to_json(object) {
-         return JSON.stringify(object, true, 2);
-     }
-     function editor(element, code, options) {
-         var $node = $(element);
-         return CodeMirror($node.get(0), $.extend({
-             value: code,
-             theme: 'seti',
-             lineWrapping: true,
-             lineNumbers: true,
-             readOnly: true,
-             indentUnit: 4,
-             language: 'javascript'
-         }, options));
-     }
-     const input_editor = editor('.editor', code, {
+     let output, ast;
+     let grammar = await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`);
+     let code = await get_file(SOURCE_FILE, `${repo}examples/demo.gs`);
+     const editor = {};
+     editor.input = make_editor('.gaiman_code', code, {
          readOnly: !has_worker,
-         language: 'gaiman'
+         mode: 'gaiman'
      });
      compile();
-     const output_editor = editor('.output', output);
-     const ast_editor = editor('.ast', to_json(ast));
-     if (init) {
-         set_idb();
-     }
+     editor.output = make_editor('.output', output);
+     editor.ast = make_editor('.ast', to_json(ast || {}));
+     editor.grammar = make_editor('.gaiman_grammar', grammar, {
+         readOnly: false,
+         mode: 'pegjs'
+     });
+     set_idb();
      load();
-     input_editor.on('change', debounce(update, 800));
+     editor.input.on('change', debounce(update, 800));
+     editor.grammar.on('change', debounce(function() {
+         const parser = peggy.generate(editor.grammar.getValue());
+         parse = (code) => parser.parse(code);
+         compile();
+     }, 800));
  })(jQuery);
 </script>
 </body>

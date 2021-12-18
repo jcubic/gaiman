@@ -9,8 +9,8 @@ ROLLUP=./node_modules/.bin/rollup
 
 all: umd.js
 
-parser.js: Makefile ./src/grammar.pegjs
-	$(PEG) -o parser.js ./src/grammar.pegjs
+parser.js: Makefile ./src/grammar.peg
+	$(PEG) -o parser.js ./src/grammar.peg
 
 umd.js: parser.js index.js rollup.config.js ./src/banner.js
 	$(ROLLUP) -c

@@ -404,12 +404,12 @@
      let parse = (code) => gaiman.parse(code);
      function compile(init) {
          code = editor.input.getValue();
+         parse_error();
          try {
              if (parse) {
                  ast = parse(code);
                  output = prefix + gaiman.generate(ast) + postfix;
                  output = output.replace(/\{\{VER\}\}/g, gaiman.version);
-                 parse_error();
              }
          } catch(e) {
              output = '';
@@ -453,11 +453,11 @@
      editor.input.on('change', debounce(update, 800));
      editor.grammar.on('change', debounce(function() {
          grammar = editor.grammar.getValue();
+         clear_error('.gaiman_grammar');
          try {
              const parser = peggy.generate(grammar);
              parse = (code) => parser.parse(code);
              update();
-             clear_error('.gaiman_grammar');
          } catch(e) {
              parse = null;
              error('.gaiman_grammar', e.message);

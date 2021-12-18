@@ -33,7 +33,7 @@ let greetings = <<<GREET
                 GREET
 
 echo greetings
-sleep 1000
+sleep 100
 echo "Welcome stranger, can you tell me what is your name?"
 
 let name = ask "name? "

@@ -10985,12 +10985,22 @@
 	const { version } = require$$2;
 
 	function parse(code) {
-	    return escodegen.generate(parser.parse(code));
+	    return parser.parse(code);
+	}
+
+	function compile(code) {
+	    return generate(parse(code));
+	}
+
+	function generate(ast) {
+	    return escodegen.generate(ast);
 	}
 
 	var gaiman = {
-	  parse,
-	  version
+	    generate,
+	    compile,
+	    parse,
+	    version
 	};
 
 	return gaiman;

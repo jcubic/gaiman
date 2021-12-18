@@ -15,10 +15,20 @@ const escodegen = require('escodegen');
 const { version } = require('package.json');
 
 function parse(code) {
-    return escodegen.generate(parser.parse(code));
+    return parser.parse(code);
+}
+
+function compile(code) {
+    return generate(parse(code));
+}
+
+function generate(ast) {
+    return escodegen.generate(ast);
 }
 
 module.exports = {
-  parse,
-  version
+    generate,
+    compile,
+    parse,
+    version
 };

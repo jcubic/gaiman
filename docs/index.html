@@ -10,6 +10,7 @@
     <![endif]-->
     <link href="https://cdn.jsdelivr.net/npm/jquery.splitter/css/jquery.splitter.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/lib/codemirror.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/addon/search/matchesonscrollbar.css,npm/codemirror@5.x.x/addon/dialog/dialog.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/theme/seti.css" rel="stylesheet"/>
     <style>
      body {
@@ -200,9 +201,10 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/lib/codemirror.js"></script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/addon/search/search.js,npm/codemirror@5.x.x/addon/search/matchesonscrollbar.js,npm/codemirror@5.x.x/addon/search/searchcursor.js,npm/codemirror@5.x.x/addon/search/jump-to-line.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/addon/dialog/dialog.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/peggy"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/mode/javascript/javascript.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/mode/pegjs/pegjs.js"></script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/mode/javascript/javascript.js,npm/codemirror@5.x.x/mode/pegjs/pegjs.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/src/codemirror.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery.splitter"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/idb-keyval.js"></script>
@@ -349,7 +351,7 @@
          theme: 'seti',
          lineWrapping: true,
          lineNumbers: true,
-         extraKeys: { Tab: better_tab },
+         extraKeys: { Tab: better_tab, "Alt-F": "findPersistent" },
          readOnly: true,
          indentUnit: 4,
          mode: 'javascript'

@@ -53,6 +53,9 @@ class WebAdapter {
             }, Number(timeout));
         });
     }
+    error(message) {
+        this._term.error(message);
+    }
     echo(string) {
         this._term.echo(string);
     }

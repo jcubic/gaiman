@@ -114,6 +114,7 @@
          padding: 0;
      }
      .errors li {
+         position: relative;
          background: #CA1919;
          font-family: monospace;
          padding: 5px 20px 5px 10px;
@@ -126,7 +127,7 @@
      .errors .close {
          cursor: pointer;
          position: absolute;
-         top: 10px;
+         top: 5px;
          right: 5px;
          background: black;
          width: 16px;
@@ -278,14 +279,23 @@
          return $(this).data('message') === message;
      });
      if (!found.length) {
-         $(`<li>
+         var $li = $(`<li>
               <span class="message">${message}</span>
               <span class="close">&times;</span>
-           </li>`).appendTo(ul).data('message', message);
+           </li>`).data('message', message);
+         $li.appendTo(ul)
      }
  }
+ function clear_error(editor) {
+     var $editor = $(editor);
+     $editor.find('.errors ul').empty();
+ }
  function parse_error(code, e) {
-      error('.gaiman_code', format_error(code, e));
+     if (!code) {
+         clear_error('.gaiman_code');
+     } else {
+         error('.gaiman_code', format_error(code, e));
+     }
  }
  function format_error(code, e) {
      const output = ['Parse Error: ' + e.message, ''];
@@ -362,6 +372,7 @@
              ast = parse(code);
              output = prefix + gaiman.generate(ast) + postfix;
              output = output.replace(/\{\{VER\}\}/g, gaiman.version);
+             parse_error();
          } catch(e) {
              output = '';
              parse_error(code, e);
@@ -403,9 +414,16 @@
      load();
      editor.input.on('change', debounce(update, 800));
      editor.grammar.on('change', debounce(function() {
-         const parser = peggy.generate(editor.grammar.getValue());
-         parse = (code) => parser.parse(code);
-         compile();
+         grammar = editor.grammar.getValue();
+         try {
+             const parser = peggy.generate(grammar);
+             parse = (code) => parser.parse(code);
+             update();
+             clear_error('.gaiman_grammar');
+         } catch(e) {
+             error('.gaiman_grammar', e.message);
+             set(GRAMMAR_FILE, grammar);
+         }
      }, 800));
  })(jQuery);
 </script>

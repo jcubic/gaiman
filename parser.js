@@ -749,9 +749,12 @@ function peg$parse(input, options) {
         if (s3 === peg$FAILED) {
           s3 = peg$parsereturn();
           if (s3 === peg$FAILED) {
-            s3 = peg$parseexpression_statement();
+            s3 = peg$parsevar();
             if (s3 === peg$FAILED) {
-              s3 = peg$parsefunction_definition();
+              s3 = peg$parseexpression_statement();
+              if (s3 === peg$FAILED) {
+                s3 = peg$parsefunction_definition();
+              }
             }
           }
         }
@@ -1453,9 +1456,6 @@ function peg$parse(input, options) {
     s1 = peg$parseadapter_command();
     if (s1 === peg$FAILED) {
       s1 = peg$parsematch();
-      if (s1 === peg$FAILED) {
-        s1 = peg$parsevar();
-      }
     }
     if (s1 !== peg$FAILED) {
       peg$savedPos = s0;

@@ -151,7 +151,7 @@ Start = statements:(!"end" _ statement* / _) {
     };
 }
 
-statement = !"end" _ statement:(comment / if / return / expression_statement / function_definition) _ {
+statement = !"end" _ statement:(comment / if / return / var / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -245,7 +245,7 @@ expression = expression:(heredoc / property / math_expression / match_var / func
     return expression;
 }
 
-command = command:(adapter_command / match / var) {
+command = command:(adapter_command / match) {
     return command;
 }
 

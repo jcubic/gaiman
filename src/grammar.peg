@@ -168,7 +168,9 @@ Start = statements:(!"end" _ statement* / _) {
                     "params": [],
                     "body": {
                         "type": "BlockStatement",
-                        "body": statements[2].filter(Boolean)
+                        "body": [
+                            try_catch(statements[2].filter(Boolean))
+                        ]
                     }
                 },
                 "arguments": []

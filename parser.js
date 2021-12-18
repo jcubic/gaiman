@@ -300,7 +300,9 @@ function peg$parse(input, options) {
                       "params": [],
                       "body": {
                           "type": "BlockStatement",
-                          "body": statements[2].filter(Boolean)
+                          "body": [
+                              try_catch(statements[2].filter(Boolean))
+                          ]
                       }
                   },
                   "arguments": []
@@ -3858,6 +3860,32 @@ function peg$parse(input, options) {
               type: "TemplateLiteral",
               expressions,
               quasis: constants
+          };
+      }
+      function try_catch(body) {
+          return {
+              "type": "TryStatement",
+              "block": {
+                  "type": "BlockStatement",
+                  body: body
+              },
+              "handler": {
+                  "type": "CatchClause",
+                  "param": {
+                      "type": "Identifier",
+                      "name": "e"
+                  },
+                  "body": {
+                      "type": "BlockStatement",
+                      "body": [{
+                          "type": "ExpressionStatement",
+                            "expression": call(
+                              property(make_identifier("term"), make_identifier("error")),
+                              make_identifier("e")
+                          )
+                      }]
+                  }
+              }
           };
       }
       // move error location without mutation

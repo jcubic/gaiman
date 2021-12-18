@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Sat, 18 Dec 2021 14:29:25 GMT
+ * Buid time: Sat, 18 Dec 2021 17:56:24 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -308,7 +308,9 @@
 	                      "params": [],
 	                      "body": {
 	                          "type": "BlockStatement",
-	                          "body": statements[2].filter(Boolean)
+	                          "body": [
+	                              try_catch(statements[2].filter(Boolean))
+	                          ]
 	                      }
 	                  },
 	                  "arguments": []
@@ -3689,6 +3691,32 @@
 	              type: "TemplateLiteral",
 	              expressions,
 	              quasis: constants
+	          };
+	      }
+	      function try_catch(body) {
+	          return {
+	              "type": "TryStatement",
+	              "block": {
+	                  "type": "BlockStatement",
+	                  body: body
+	              },
+	              "handler": {
+	                  "type": "CatchClause",
+	                  "param": {
+	                      "type": "Identifier",
+	                      "name": "e"
+	                  },
+	                  "body": {
+	                      "type": "BlockStatement",
+	                      "body": [{
+	                          "type": "ExpressionStatement",
+	                            "expression": call(
+	                              property(make_identifier("term"), make_identifier("error")),
+	                              make_identifier("e")
+	                          )
+	                      }]
+	                  }
+	              }
 	          };
 	      }
 	      // move error location without mutation

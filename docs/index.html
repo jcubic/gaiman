@@ -526,7 +526,7 @@
      state.editors.input.on('change', debounce(update, 800));
      state.editors.grammar.on('change', debounce(function() {
          if (state.dev_mode) {
-             state.grammar = editors.grammar.getValue();
+             state.grammar = state.editors.grammar.getValue();
              clear_error('.gaiman_grammar');
              try {
                  const parser = peggy.generate(state.grammar);

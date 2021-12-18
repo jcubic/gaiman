@@ -25,6 +25,71 @@ function is_iframe() {
     }
 }
 
+const map_supported = 'Map' in this;
+
+
+function map_dict() {
+    return {
+        make(init = {}) {
+            return new Map(Object.entries(init));
+        },
+        set(object, ...rest) {
+            while (rest.length > 2) {
+                const prop = rest.shift();
+                if (object instanceof Map) {
+                    object = object.get(prop);
+                } else {
+                    object = object[prop];
+                }
+            }
+            const prop = rest.shift();
+            const value = rest.shift();
+            if (object instanceof Map) {
+                object.set(prop, value);
+            } else {
+                object[prop] = value;
+            }
+        },
+        get(object, ...rest) {
+            while (rest.length) {
+                const arg = rest.shift();
+                if (object instanceof Map) {
+                    object = object.get(arg);
+                } else {
+                    object = object[arg];
+                }
+            }
+            return object;
+        }
+    };
+}
+
+function simple_dict() {
+    return {
+        make(init = {}) {
+            return init;
+        },
+        set(object, ...rest) {
+            while (rest.length > 2) {
+                const prop = rest.shift();
+                object = object[prop];
+            }
+            const prop = rest.shift();
+            const value = rest.shift();
+            object[prop] = value;
+        },
+        get(object, ...rest) {
+            while (rest.length) {
+                const arg = rest.shift();
+                object = object[arg];
+            }
+            return object;
+        }
+    };
+}
+
+const dict = map_supported ? map_dict() : simple_dict();
+
 class WebAdapter {
     constructor() {
         var body = $('body');

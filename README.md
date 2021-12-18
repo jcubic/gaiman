@@ -28,7 +28,16 @@ And you can open generated html file in browser and run the game.
 
 ## Examples
 
-This is basic Gaiman DSL example:
+
+This is Hello world Gaiman DLS example:
+
+```
+echo* "Hi, What is your name?", 50
+let name = ask "name? "
+echo "Hello $name, nice to meet you."
+```
+
+More advanced example:
 
 ```ruby
 def ask_email(message)
@@ -75,6 +84,10 @@ if cookie.visited then
   end
 end
 ```
+
+## Live Demo
+
+See [Gaiman Playground](https://jcubic.github.io/gaiman/)
 
 ## Operator precedence
 

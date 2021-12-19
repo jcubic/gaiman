@@ -31,7 +31,7 @@ And you can open generated html file in browser and run the game.
 
 This is Hello world Gaiman DLS example:
 
-```
+```ruby
 echo* "Hi, What is your name?", 50
 let name = ask "name? "
 echo "Hello $name, nice to meet you."

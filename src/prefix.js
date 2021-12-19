@@ -140,7 +140,7 @@ class WebAdapter {
         return this._term.typing('enter', delay, string);
     }
     parse(input) {
-        return $.termial.parse_arguments(input);
+        return $.terminal.parse_arguments(input);
     }
     post(url, data = {}) {
         const form = new FormData();

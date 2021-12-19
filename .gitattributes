@@ -1,3 +1,4 @@
+*.peg linguist-language=PEG.js
 parser.js binary
 parser.umd.js binary
 docs/demo/* binary

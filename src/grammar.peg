@@ -412,7 +412,7 @@ and
 
 equal
   = head:binary tail:(_ ("==" / "!=") _ binary)* {
-      return binary_fold(head, tail);
+      return binary_fold(head, tail, {"==": "===", "!=": "!=="});
     }
 
 binary

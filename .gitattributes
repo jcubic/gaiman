@@ -1,9 +1,7 @@
 *.peg linguist-language=PEG.js
-./umd*.js linguist-generated
-./parser.js linguist-generated
 *.gs linguist-detectable
 parser.js binary
-parser.umd.js binary
+umd.* binary
 docs/demo/* binary
 package-lock.json binary
 __tests__/__snapshots__/* binary

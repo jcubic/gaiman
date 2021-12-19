@@ -522,6 +522,7 @@
          readOnly: !has_worker,
          mode: 'gaiman'
      });
+     make_parser();
      compile();
      state.editors.output = make_editor('.output', state.output);
      state.editors.ast = make_editor('.ast', to_json(state.ast || {}));
@@ -537,8 +538,7 @@
              state.grammar = state.editors.grammar.getValue();
              clear_error('.gaiman_grammar');
              try {
-                 const parser = peggy.generate(state.grammar);
-                 parse = (code) => parser.parse(code);
+                 make_parser();
                  update();
              } catch(e) {
                  parse = null;
@@ -554,6 +554,13 @@
          if (state.full_output_mode !== undefined) {
              toggle_full_output_mode(state.full_output_mode);
              $full_mode_toggle.prop('checked', state.full_output_mode);
+         }
+     }
+
+     function make_parser() {
+         if (state.dev_mode) {
+             const parser = peggy.generate(state.grammar);
+             parse = (code) => parser.parse(code);
          }
      }
 

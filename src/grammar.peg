@@ -53,6 +53,26 @@
             declarations: declarations
         };
     }
+    function for_loop(variable, iterator, body) {
+        return {
+            "type": "ForOfStatement",
+            "await": false,
+            "left": {
+                "type": "VariableDeclaration",
+                "declarations": [{
+                    "type": "VariableDeclarator",
+                    "id": variable,
+                    "init": null
+                }],
+                "kind": "let"
+            },
+            "right": iterator,
+            "body": {
+                "type": "BlockStatement",
+                "body": body
+            }
+        };
+    }
     function expression_fold(type) {
         return function fold(head, tail, mapping) {
              return tail.reduce(function(result, element) {
@@ -181,7 +201,7 @@ Start = statements:(!"end" _ statement* / _) {
     };
 }
 
-statement = !"end" _ statement:(comment / if / return / var / expression_statement / function_definition) _ {
+statement = !"end" _ statement:(comment / if / for_loop / return / var / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -213,7 +233,11 @@ last_else = _ "else" _ body:statement* "end" {
     };
 }
 
-function_call = _ !keyword name:variable _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
+for_loop = "for" SP name:variable SP "in" SP iterator:(expression_like / variable) _ "do" _ body:statement* _ "end" _ {
+    return for_loop(name, iterator, body);
+}
+
+function_call = _ name:variable _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
     return {
         "type": "AwaitExpression",
         "argument": call(name, ...names.map(name => name[0]))
@@ -395,7 +419,7 @@ any_name = variable:name {
   return make_identifier(variable_prefix + variable);
 }
 
-scoped = !keyword variable:name &{ return !available_commands.includes(variable) } {
+scoped = variable:name &{ return !available_commands.includes(variable) } {
   return make_identifier(variable_prefix + variable);
 }
 
@@ -403,7 +427,7 @@ global = !keyword variable:("cookie" / "location" / "argv" / "node") {
     return make_identifier(variable);
 }
 
-variable = global / scoped
+variable = !keyword variable:(global / scoped) { return variable; }
 
 set = set_cookie / set_local
 
@@ -472,7 +496,7 @@ comment = "#" [^\n]* { return null; }
 
 integer = [0-9]+ { return parseInt(text(), 10); }
 
-keyword = "if" / "then" / "end" / "else" / "return" / "def"
+keyword = "if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for"
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

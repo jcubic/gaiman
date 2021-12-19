@@ -14,17 +14,23 @@ async function test_fixture(filename) {
 }
 
 describe('if statements', () => {
-    it('should compile base if', async () => {
+    it('should compile base if', () => {
         return test_fixture('nested_base_if.gs');
     });
-    it('should compile if_else', async () => {
+    it('should compile if_else', () => {
         return test_fixture('nested_if_else.gs');
     });
-    it('should compile multiple if_else ', async () => {
+    it('should compile multiple if_else ', () => {
         return test_fixture('multiple_nested_if_else.gs');
     });
-    it('should compile multiple if_else with expressions', async () => {
+    it('should compile multiple if_else with expressions', () => {
         return test_fixture('expressions.gs');
+    });
+});
+
+describe('for loop', () => {
+    it('should parse for loops', () => {
+        return test_fixture('for_loop.gs');
     });
 });
 

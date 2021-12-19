@@ -11,6 +11,21 @@ exports[`expressions should use command as part of expression 1`] = `
 }());"
 `;
 
+exports[`for loop should parse for loops 1`] = `
+"(async function () {
+    try {
+        for (let $_chr of \`hello\`) {
+            term.echo($_chr);
+        }
+        for (let $_chr of location.href) {
+            term.echo($_chr);
+        }
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
 exports[`functions should compile function calls 1`] = `
 "(async function () {
     try {

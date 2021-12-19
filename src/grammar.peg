@@ -271,13 +271,9 @@ boolean = value:("true" / "false") {
     return value === "true";
 }
 
-expression = expression:(heredoc / property / math_expression / match_var / function_call / name / string / literal) {
-    return expression;
-}
+expression = heredoc / property / math_expression / match_var / function_call / name / string / literal
 
-command = command:(adapter_command / match) {
-    return command;
-}
+command = adapter_command / match
 
 any_word = word:$[a-z]+ { return word; }
 
@@ -392,7 +388,7 @@ mul_div
     }
 
 factor
-  = "(" _ expr:math_expression _ ")" { return expr; }
+  = "(" _ expr:(math_expression / adapter_command ) _ ")" { return expr; }
   / function_call / string / literal / match_var / variable
 
 any_name = variable:name {

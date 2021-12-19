@@ -1,3 +1,4 @@
+/* global: require, describe, it, expect */
 const gaiman = require('..');
 const fs = require('fs');
 
@@ -33,5 +34,11 @@ describe('functions', () => {
     });
     it('should compile function calls', () => {
         return test_fixture('function_calls.gs');
+    });
+});
+
+describe('expressions', () => {
+    it('should use command as part of expression', () => {
+        return test_fixture('expressio_commands.gs');
     });
 });

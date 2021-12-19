@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`expressions should use command as part of expression 1`] = `
+"(async function () {
+    try {
+        await term.echo_animate(await term.get(\`https://jcubic.pl/file.txt\`), 100);
+        term.echo(\`<white>\` + await term.ask(\`? \`) + \`</white>\`);
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
 exports[`functions should compile function calls 1`] = `
 "(async function () {
     try {

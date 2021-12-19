@@ -182,7 +182,7 @@
         return new_loc;
     }
     var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*"];
-    var sync_commands = ["echo", "prompt", "input"];
+    var sync_commands = ["echo", "prompt", "input", "parse"];
     var available_commands = async_commands.concat(sync_commands);
 }
 
@@ -416,7 +416,7 @@ equal
     }
 
 binary
-  = head:plus_minus tail:(_ ("<" / ">" / "<=" / ">=") _ plus_minus)* {
+  = head:plus_minus tail:(_ ("<=" / ">=" / "<" / ">") _ plus_minus)* {
       return binary_fold(head, tail);
     }
 

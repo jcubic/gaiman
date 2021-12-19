@@ -41,6 +41,9 @@ describe('functions', () => {
     it('should compile function calls', () => {
         return test_fixture('function_calls.gs');
     });
+    it('should create factorial function', () => {
+        return test_fixture('factorial.gs');
+    });
 });
 
 describe('expressions', () => {

@@ -249,6 +249,13 @@ while_loop = "while" SP test:expression SP "do" _ body:statement* _ "end" _ {
     return while_loop(test, body);
 }
 
+array = "[" values:((expression_like / variable) _ ","? _)* "]" {
+    return {
+        "type": "ArrayExpression",
+        "elements": values.map(value => value[0])
+    };
+}
+
 function_call = _ !keyword name:variable _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
     return {
         "type": "AwaitExpression",
@@ -307,7 +314,7 @@ boolean = value:("true" / "false") {
     return value === "true";
 }
 
-expression = heredoc / property / math_expression / match_var / function_call / name / string / literal
+expression = heredoc / property / math_expression / match_var / array / function_call / name / string / literal
 
 command = adapter_command / match
 

@@ -47,4 +47,7 @@ describe('expressions', () => {
     it('should use command as part of expression', () => {
         return test_fixture('expressio_commands.gs');
     });
+    it('should parse arrays', () => {
+        return test_fixture('arrays.gs');
+    });
 });

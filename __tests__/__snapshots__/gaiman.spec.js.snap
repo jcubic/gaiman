@@ -1,5 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`expressions should parse arrays 1`] = `
+"(async function () {
+    try {
+        let $_x = [
+            1,
+            2,
+            3,
+            4
+        ];
+        for (let $_word of [
+                \`lorem\`,
+                \`ipsum\`,
+                \`dolor\`
+            ]) {
+            term.echo($_word);
+        }
+        for (let $_i of [
+                1,
+                2,
+                3
+            ]) {
+            term.echo($_i);
+        }
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
 exports[`expressions should use command as part of expression 1`] = `
 "(async function () {
     try {

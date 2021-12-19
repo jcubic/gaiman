@@ -139,10 +139,22 @@ class WebAdapter {
     input_animate(string, delay) {
         return this._term.typing('enter', delay, string);
     }
+    parse(input) {
+        return $.termial.parse_arguments(input);
+    }
+    post(url, data = {}) {
+        const form = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+            form.append(key, value);
+        });
+        return fetch(url, {
+            method: 'POST',
+            body: form
+        }).then(res => res.text());
+    }
     get(url) {
         return fetch(url).then(res => res.text());
     }
-    async post(url, data) { }
 }
 
 var cookie, argv, term, $$__m;

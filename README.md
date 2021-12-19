@@ -85,7 +85,7 @@ if cookie.visited then
 end
 ```
 
-More exmaples in [examples directory](https://github.com/jcubic/gaiman/tree/master/examples)
+More examples in [examples directory](https://github.com/jcubic/gaiman/tree/master/examples)
 
 ## Live Demo
 

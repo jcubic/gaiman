@@ -73,6 +73,16 @@
             }
         };
     }
+    function while_loop(test, body) {
+        return {
+            "type": "WhileStatement",
+            "test": test,
+            "body": {
+                "type": "BlockStatement",
+                "body": body
+            }
+        };
+    }
     function expression_fold(type) {
         return function fold(head, tail, mapping) {
              return tail.reduce(function(result, element) {
@@ -201,7 +211,7 @@ Start = statements:(!"end" _ statement* / _) {
     };
 }
 
-statement = !"end" _ statement:(comment / if / for_loop / return / var / expression_statement / function_definition) _ {
+statement = !"end" _ statement:(comment / if / for_loop / while_loop / return / var / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -212,9 +222,7 @@ expression_statement = !keyword expression:expression_like {
     };
 }
 
-expression_like = expr:(set / command / expression / function_call) {
-    return expr;
-}
+expression_like = set / command / expression / function_call
 
 end = "end" { return null; }
 
@@ -233,11 +241,15 @@ last_else = _ "else" _ body:statement* "end" {
     };
 }
 
-for_loop = "for" SP name:variable SP "in" SP iterator:(expression_like / variable) _ "do" _ body:statement* _ "end" _ {
+for_loop = "for" SP !keyword name:variable SP "in" SP iterator:(expression_like / variable) _ "do" _ body:statement* _ "end" _ {
     return for_loop(name, iterator, body);
 }
 
-function_call = _ name:variable _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
+while_loop = "while" SP test:expression SP "do" _ body:statement* _ "end" _ {
+    return while_loop(test, body);
+}
+
+function_call = _ !keyword name:variable _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
     return {
         "type": "AwaitExpression",
         "argument": call(name, ...names.map(name => name[0]))
@@ -419,7 +431,7 @@ any_name = variable:name {
   return make_identifier(variable_prefix + variable);
 }
 
-scoped = variable:name &{ return !available_commands.includes(variable) } {
+scoped = !keyword variable:name &{ return !available_commands.includes(variable) } {
   return make_identifier(variable_prefix + variable);
 }
 
@@ -427,7 +439,7 @@ global = !keyword variable:("cookie" / "location" / "argv" / "node") {
     return make_identifier(variable);
 }
 
-variable = !keyword variable:(global / scoped) { return variable; }
+variable = global / scoped
 
 set = set_cookie / set_local
 
@@ -496,7 +508,7 @@ comment = "#" [^\n]* { return null; }
 
 integer = [0-9]+ { return parseInt(text(), 10); }
 
-keyword = "if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for"
+keyword = "if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while"
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

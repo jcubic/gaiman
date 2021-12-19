@@ -4,7 +4,7 @@ def prompt_email()
   if email then
     echo "is email $email correct?"
     let confirm = ask "YES/NO? "
-    if confirm ~= /yes/i then
+    if confirm =~ /yes/i then
       echo "ok will keep your email and contact you when time come."
     end
   else
@@ -15,7 +15,7 @@ end
 
 def ask_email()
   let command = ask "YES/NO? "
-  if command ~= /yes/i then
+  if command =~ /yes/i then
     prompt_email()
   else
     echo "Ok, I understand."
@@ -23,9 +23,9 @@ def ask_email()
 end
 
 def global(command)
-   if command ~= /help/ then
+   if command =~ /help/ then
       echo "available commands help"
-   else if command ~= /ls/ then
+   else if command =~ /ls/ then
       echo get "/exec?command=ls"
    else
       echo "wrong command"

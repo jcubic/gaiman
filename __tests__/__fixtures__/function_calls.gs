@@ -1,6 +1,6 @@
 def global(message)
   echo message
-  if message ~= /hello/ then
+  if message =~ /hello/ then
     show_hello()
   end
 end

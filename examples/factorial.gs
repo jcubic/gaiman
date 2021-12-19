@@ -2,7 +2,7 @@ echo "Factorial Interpreter\n"
 
 while true do
     let res = ask "factorial> "
-    if res ~= /^[0-9]+$/ then
+    if res =~ /^[0-9]+$/ then
         echo factorial(res)
     else
         echo "<red>$res is invalid number</red>"

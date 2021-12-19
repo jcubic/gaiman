@@ -42,7 +42,7 @@ More advanced example:
 ```ruby
 def ask_email(message)
    let reply = ask message
-   if reply ~= /y|yes/i then
+   if reply =~ /y|yes/i then
       echo "OK"
    else if reply ~= /n|no/i then
       echo "FAIL"
@@ -52,9 +52,9 @@ def ask_email(message)
 end
 
 def global(command)
-   if command ~= /help/ then
+   if command =~ /help/ then
       echo "available commands help"
-   else if command ~= /ls/
+   else if command =~ /ls/
       echo get "/exec?command=ls"
    else
       echo "wrong command"
@@ -69,7 +69,7 @@ if cookie.visited then
   else
     echo "Do you want me to contact you with updates?"
     let confirm = ask "yes/no: "
-    if confirm ~= /y|yes/i then
+    if confirm =~ /y|yes/i then
       echo "what is your name?"
       let command = ask "name: "
       if command then

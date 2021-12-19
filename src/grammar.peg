@@ -356,7 +356,7 @@ static_command = _ method:adapter_static_strings _ expr:(adapter_command / expre
     return call(property(make_identifier("term"), make_identifier(method)), expr, ...args.map(x => x[2]));
 }
 
-match = expression:(match_var / property / variable) _ "~=" _ re:re _ {
+match = expression:(match_var / property / variable) _ "=~" _ re:re _ {
     return {
         type: "AssignmentExpression",
         operator: "=",

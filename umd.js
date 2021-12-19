@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Sun, 19 Dec 2021 16:01:56 GMT
+ * Buid time: Sun, 19 Dec 2021 16:21:27 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -208,7 +208,7 @@
 	  var peg$c20 = "false";
 	  var peg$c21 = "*";
 	  var peg$c22 = " ";
-	  var peg$c23 = "~=";
+	  var peg$c23 = "=~";
 	  var peg$c27 = "/";
 	  var peg$c28 = "\\\\/";
 	  var peg$c29 = ".";
@@ -269,7 +269,7 @@
 	  var peg$e22 = peg$classExpectation([["a", "z"]], false, false);
 	  var peg$e23 = peg$literalExpectation("*", false);
 	  var peg$e24 = peg$literalExpectation(" ", false);
-	  var peg$e25 = peg$literalExpectation("~=", false);
+	  var peg$e25 = peg$literalExpectation("=~", false);
 	  var peg$e29 = peg$literalExpectation("/", false);
 	  var peg$e30 = peg$classExpectation(["/"], true, false);
 	  var peg$e31 = peg$literalExpectation("\\\\/", false);

@@ -194,7 +194,7 @@ function peg$parse(input, options) {
   var peg$c20 = "false";
   var peg$c21 = "*";
   var peg$c22 = " ";
-  var peg$c23 = "~=";
+  var peg$c23 = "=~";
   var peg$c24 = "{";
   var peg$c25 = "}";
   var peg$c26 = ":";
@@ -258,7 +258,7 @@ function peg$parse(input, options) {
   var peg$e22 = peg$classExpectation([["a", "z"]], false, false);
   var peg$e23 = peg$literalExpectation("*", false);
   var peg$e24 = peg$literalExpectation(" ", false);
-  var peg$e25 = peg$literalExpectation("~=", false);
+  var peg$e25 = peg$literalExpectation("=~", false);
   var peg$e26 = peg$literalExpectation("{", false);
   var peg$e27 = peg$literalExpectation("}", false);
   var peg$e28 = peg$literalExpectation(":", false);

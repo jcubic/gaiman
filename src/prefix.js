@@ -88,6 +88,15 @@ function simple_dict() {
     };
 }
 
+function to_string(object) {
+    if (object instanceof Array) {
+        object = object.map(to_string);
+    } else if (typeof object !== 'string') {
+        object = String(object);
+    }
+    return object;
+}
+
 const dict = map_supported ? map_dict() : simple_dict();
 
 class WebAdapter {
@@ -121,8 +130,8 @@ class WebAdapter {
     error(message) {
         this._term.error(message);
     }
-    echo(string) {
-        this._term.echo(string);
+    echo(arg) {
+        this._term.echo(to_string(arg));
     }
     ask(message) {
         return this._term.read(message);

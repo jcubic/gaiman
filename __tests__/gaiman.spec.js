@@ -28,9 +28,18 @@ describe('if statements', () => {
     });
 });
 
-describe('for loop', () => {
+describe('loop', () => {
     it('should parse for loops', () => {
         return test_fixture('for_loop.gs');
+    });
+    it('should parse while loops', () => {
+        return test_fixture('while_loop.gs');
+    });
+    it('should parse continue', () => {
+        return test_fixture('continue.gs');
+    });
+    it('should parse break', () => {
+        return test_fixture('break.gs');
     });
 });
 

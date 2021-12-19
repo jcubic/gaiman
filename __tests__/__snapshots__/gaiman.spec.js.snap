@@ -40,21 +40,6 @@ exports[`expressions should use command as part of expression 1`] = `
 }());"
 `;
 
-exports[`for loop should parse for loops 1`] = `
-"(async function () {
-    try {
-        for (let $_chr of \`hello\`) {
-            term.echo($_chr);
-        }
-        for (let $_chr of location.href) {
-            term.echo($_chr);
-        }
-    } catch (e) {
-        term.error(e);
-    }
-}());"
-`;
-
 exports[`functions should compile function calls 1`] = `
 "(async function () {
     try {
@@ -194,6 +179,75 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
                 let $_quux = 30 * 30 / 2 * 3;
                 10 * 10 / 2;
             }
+        }
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
+exports[`loop should parse break 1`] = `
+"(async function () {
+    try {
+        let $_x = 0;
+        while (true) {
+            $_x = $_x + 1;
+            if ($_x > 10) {
+                $_break;
+            }
+            term.echo($_x);
+        }
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
+exports[`loop should parse continue 1`] = `
+"(async function () {
+    try {
+        for (let $_i of [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ]) {
+            if ($_i % 2 === 0) {
+                $_continue;
+            }
+            term.echo($_i);
+        }
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
+exports[`loop should parse for loops 1`] = `
+"(async function () {
+    try {
+        for (let $_chr of \`hello\`) {
+            term.echo($_chr);
+        }
+        for (let $_chr of location.href) {
+            term.echo($_chr);
+        }
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
+exports[`loop should parse while loops 1`] = `
+"(async function () {
+    try {
+        let $_x = 10;
+        while ($_x > 0) {
+            term.echo(\`NUM: \${ $_x }\`);
+            $_x = $_x - 1;
         }
     } catch (e) {
         term.error(e);

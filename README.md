@@ -44,7 +44,7 @@ def ask_email(message)
    let reply = ask message
    if reply =~ /y|yes/i then
       echo "OK"
-   else if reply ~= /n|no/i then
+   else if reply =~ /n|no/i then
       echo "FAIL"
    else
       global(message)

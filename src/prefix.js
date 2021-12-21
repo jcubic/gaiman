@@ -17,14 +17,6 @@ function is_node() {
         process.release.name === 'node';
 }
 
-function is_iframe() {
-    try {
-        return window.self !== window.top;
-    } catch (e) {
-        return true;
-    }
-}
-
 const map_supported = 'Map' in this;
 
 

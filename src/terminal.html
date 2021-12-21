@@ -18,6 +18,26 @@
     </style>
 </head>
 <body>
+{{HTML}}<script>
+var is_iframe = (function() {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+})(); 
+if (is_iframe) {
+    window.onerror = function(message, source, lineno, colno, error) {
+        window.parent.postMessage({
+            message,
+            source,
+            lineno,
+            colno
+        });
+        throw error;
+    };
+}
+</script>
 <script src="{{FILE}}"></script>
 </body>
 </html>

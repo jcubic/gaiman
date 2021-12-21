@@ -119,7 +119,7 @@ class WebAdapter {
     store(name, ...args) {
         try {
             if (args.length === 0) {
-                return localStorage.getItem(name);
+                return JSON.parse(localStorage.getItem(name));
             } else {
                 const [ value ] = args;
                 localStorage.setItem(name, value);

@@ -320,13 +320,15 @@ string = "\"" ([^"] / "\\\\\"")*  "\"" {  // "
   return create_template_literal(JSON.parse(text().replace(/\n/g, '\\n')));
 }
 
-literal = value:(integer / boolean) {
+literal = value:(integer / boolean / null) {
    return {"type": "Literal", "value": value };
 }
 
 boolean = value:("true" / "false") {
     return value === "true";
 }
+
+null = "null" { return null; }
 
 expression = heredoc / property / math_expression / match_var / array / function_call / name / string / literal
 

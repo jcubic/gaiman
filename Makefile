@@ -18,10 +18,10 @@ umd.js: parser.js index.js rollup.config.js ./src/banner.js
 demo:
 	$(GAIMAN) -o docs/demo/ examples/demo.gs
 
-test:
+test: parser.js
 	$(JEST) --coverage --testMatch '**/__tests__/*.spec.js'
 
-test-accept-snapshots:
+test-accept-snapshots: parser.js
 	$(JEST) --coverage --updateSnapshot --testMatch '**/__tests__/*.spec.js'
 
 coveralls:

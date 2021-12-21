@@ -34,7 +34,7 @@
      .CodeMirror {
          height: 100%;
      }
-     .editor, .gaiman_output, .user_input, iframe {
+     .editor, .ast-explorer, .gaiman-output, .user-input, iframe {
          width: 100%;
          height: 100%;
      }
@@ -201,12 +201,12 @@
      footer p {
          margin: 0;
      }
-     footer  a[href] {
+     footer a[href] {
          color: #3377FF;
          color: var(--link-color, #3377FF);
          cursor: pointer;
      }
-     footer  a[href]:hover {
+     footer a[href]:hover {
          background-color: #3377FF;
          background-color: var(--link-color, #3377FF) !important;
          color: #000;
@@ -234,9 +234,10 @@
       <li class="active"><a href="#">Preview</a></li>
       <li class="hidden dev"><a href="#">JavaScript</a></li>
       <li class="hidden dev"><a href="#">AST</a></li>
+      <li class="hidden dev"><a href="#">Esprima</a></li>
     </ul>
     <div class="content">
-      <div class="gaiman_output active">
+      <div class="gaiman-output active">
         <iframe id="frame" src="./demo/"></iframe>
         <div class="errors">
           <ul></ul>
@@ -244,22 +245,26 @@
       </div>
       <div class="output editor dev"></div>
       <div class="ast editor dev"></div>
+      <div class="dev ast-explorer">
+        <div class="explorer-js editor"></div>
+        <div class="explorer-ast editor"></div>
+      </div>
     </div>
   </div>
-  <aside class="editor_wrapper">
+  <aside class="editor-wrapper">
     <div class="tabs dev hidden">
       <ul>
         <li class="active"><a href="#">PEG (Peggy) grammar</a></li>
       </ul>
       <div class="content">
-        <div class="gaiman_grammar active editor">
+        <div class="gaiman-grammar active editor">
           <div class="errors">
             <ul></ul>
           </div>
         </div>
       </div>
     </div>
-    <div class="tabs user_input">
+    <div class="tabs user-input">
       <ul>
         <li class="active"><a href="#">Gaiman</a></li>
         <li><a href="#">CSS</a></li>
@@ -267,14 +272,14 @@
         <li><a href="#" class="dev hidden">JavaScript</a></li>
       </ul>
       <div class="content">
-        <div class="gaiman_code editor active">
+        <div class="gaiman-code editor active">
           <div class="errors">
             <ul></ul>
           </div>
         </div>
-        <div class="css_editor editor"></div>
-        <div class="html_editor editor"></div>
-        <div class="js_editor editor"></div>
+        <div class="css-editor editor"></div>
+        <div class="html-editor editor"></div>
+        <div class="js-editor editor"></div>
       </div>
     </div>
   </aside>
@@ -285,12 +290,12 @@
 <div class="config">
   <ul>
     <li class="hidden dev">
-      <label for="full_output">Full Output</label>
-      <input type="checkbox" id="full_output"/>
+      <label for="full-output">Full Output</label>
+      <input type="checkbox" id="full-output"/>
     </li>
     <li>
-      <label for="developer_mode">Dev Mode</label>
-      <input type="checkbox" id="developer_mode"/>
+      <label for="developer-mode">Dev Mode</label>
+      <input type="checkbox" id="developer-mode"/>
     </li>
     <li>
       <button id="reset" class="btn">Reset</button>
@@ -360,6 +365,11 @@
                         .addClass('active');
      $tab.siblings()
          .removeClass('active');
+     if ($tab.is('.ast-explorer') && !$tab.is('.splitter_panel')) {
+         $('.ast-explorer').split({
+             orientation: 'horizontal'
+         });
+     }
      $tab.find('.CodeMirror').cm_refresh();
  }
 
@@ -460,9 +470,9 @@
 
  function parse_error(code, e) {
      if (!code) {
-         clear_error('.gaiman_code');
+         clear_error('.gaiman-code');
      } else {
-         error('.gaiman_code', format_error(code, e));
+         error('.gaiman-code', format_error(code, e));
      }
  }
 
@@ -528,10 +538,10 @@
          tab_activate(this);
          return false;
      });
-     var $dev_toggle = $('#developer_mode').on('change', function() {
+     var $dev_toggle = $('#developer-mode').on('change', function() {
          toggle_dev_mode(this.checked);
      });
-     var $full_mode_toggle = $('#full_output').on('change', function() {
+     var $full_mode_toggle = $('#full-output').on('change', function() {
          toggle_full_output_mode(this.checked);
      });
      $('.errors').on('click', '.close', function() {
@@ -591,27 +601,43 @@
 
      let parse = (code) => gaiman.parse(code);
 
-     state.editors.input = make_editor('.gaiman_code', state.code, {
+     state.editors.input = make_editor('.gaiman-code', state.code, {
          readOnly: !has_worker,
          mode: 'gaiman'
      });
-     state.editors.js = make_editor('.js_editor', state.js, {
+     state.editors.js = make_editor('.js-editor', state.js, {
          readOnly: false,
          mode: 'javascript'
+     });
+     state.editors.explorer = {};
+     ['js', 'ast'].forEach(name => {
+         state.editors.explorer[name] = make_editor(`.explorer-${name}`, '', {
+             readOnly: name === 'ast',
+             mode: 'javascript'
+         });
+     });
+     state.editors.explorer.js.on('change', () => {
+         try {
+             const code = state.editors.explorer.js.getValue();
+             const ast = esprima.parseScript(code);
+             update_editor(state.editors.explorer.ast, to_json(ast));
+         } catch(e) {
+             // invalid syntax
+         }
      });
      make_parser();
      compile();
      state.editors.output = make_editor('.output', state.output);
      state.editors.ast = make_editor('.ast', to_json(state.ast || {}));
-     state.editors.grammar = make_editor('.gaiman_grammar', state.grammar, {
+     state.editors.grammar = make_editor('.gaiman-grammar', state.grammar, {
          readOnly: false,
          mode: 'pegjs'
      });
-     state.editors.css = make_editor('.css_editor', state.css, {
+     state.editors.css = make_editor('.css-editor', state.css, {
          readOnly: false,
          mode: 'css'
      });
-     state.editors.html = make_editor('.html_editor', state.user_html, {
+     state.editors.html = make_editor('.html-editor', state.user_html, {
          readOnly: false,
          mode: 'htmlmixed'
      });
@@ -623,7 +649,7 @@
          if (data && data.message) {
              const { lineno, colno, message, source } = data;
              const msg = `Error: ${message}\nline: ${lineno} col: ${colno}`;
-             error('.gaiman_output', msg);
+             error('.gaiman-output', msg);
              if (state.full_output_mode) {
                  const code = await fetch(source).then(res => res.text());
                  const lines = code.split('\n');
@@ -652,13 +678,13 @@
      state.editors.grammar.on('change', debounce(function() {
          if (state.dev_mode) {
              state.grammar = state.editors.grammar.getValue();
-             clear_error('.gaiman_grammar');
+             clear_error('.gaiman-grammar');
              try {
                  make_parser();
                  update();
              } catch(e) {
                  parse = null;
-                 error('.gaiman_grammar', e.message);
+                 error('.gaiman-grammar', e.message);
                  set(GRAMMAR_FILE, state.grammar);
              }
          }
@@ -686,7 +712,7 @@
          $('.dev').toggleClass('hidden', !state.dev_mode);
          if (enable) {
              if (!editor_splitter) {
-                 editor_splitter = $('.editor_wrapper').split({
+                 editor_splitter = $('.editor-wrapper').split({
                      orientation: 'horizontal'
                  });
              }
@@ -695,7 +721,7 @@
              editor_splitter = null;
              tab_activate($('.tabs li:not(.dev):eq(0)'));
          }
-         $('.editor_wrapper .CodeMirror').cm_refresh();
+         $('.editor-wrapper .CodeMirror').cm_refresh();
      }
 
      function toggle_full_output_mode(enable) {
@@ -757,7 +783,7 @@
          state.js = state.editors.js.getValue();
          state.css = state.editors.css.getValue();
          state.user_html = state.editors.html.getValue();
-         clear_error('.gaiman_output');
+         clear_error('.gaiman-output');
          clear_marks(state.editors.output);
          state.html = template(html, {
              STYLE: css_sanitize(state.css),
@@ -787,5 +813,6 @@
  })(jQuery);
 </script>
 <script defer async src="https://cdn.jsdelivr.net/npm/jszip"></script>
+<script defer async src="https://cdn.jsdelivr.net/npm/esprima@4.x.x/dist/esprima.js"></script>
 </body>
 </html>

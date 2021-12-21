@@ -25,6 +25,80 @@ function is_iframe() {
     }
 }
 
+const map_supported = 'Map' in this;
+
+
+function map_dict() {
+    return {
+        make(init = {}) {
+            return new Map(Object.entries(init));
+        },
+        set(object, ...rest) {
+            while (rest.length > 2) {
+                const prop = rest.shift();
+                if (object instanceof Map) {
+                    object = object.get(prop);
+                } else {
+                    object = object[prop];
+                }
+            }
+            const prop = rest.shift();
+            const value = rest.shift();
+            if (object instanceof Map) {
+                object.set(prop, value);
+            } else {
+                object[prop] = value;
+            }
+        },
+        get(object, ...rest) {
+            while (rest.length) {
+                const arg = rest.shift();
+                if (object instanceof Map) {
+                    object = object.get(arg);
+                } else {
+                    object = object[arg];
+                }
+            }
+            return object;
+        }
+    };
+}
+
+function simple_dict() {
+    return {
+        make(init = {}) {
+            return init;
+        },
+        set(object, ...rest) {
+            while (rest.length > 2) {
+                const prop = rest.shift();
+                object = object[prop];
+            }
+            const prop = rest.shift();
+            const value = rest.shift();
+            object[prop] = value;
+        },
+        get(object, ...rest) {
+            while (rest.length) {
+                const arg = rest.shift();
+                object = object[arg];
+            }
+            return object;
+        }
+    };
+}
+
+function to_string(object) {
+    if (object instanceof Array) {
+        object = object.map(to_string);
+    } else if (typeof object !== 'string') {
+        object = String(object);
+    }
+    return object;
+}
+
+const dict = map_supported ? map_dict() : simple_dict();
+
 class WebAdapter {
     constructor() {
         var body = $('body');
@@ -44,9 +118,6 @@ class WebAdapter {
             exit: false
         }, options));
     }
-    ask(message) {
-        return this._term.read(message);
-    }
     sleep(timeout) {
         this._term.pause();
         return new Promise(resolve => {
@@ -56,22 +127,43 @@ class WebAdapter {
             }, Number(timeout));
         });
     }
-    echo(string) {
-        this._term.echo(string);
+    error(message) {
+        this._term.error(message);
+    }
+    echo(arg) {
+        this._term.echo(to_string(arg));
+    }
+    ask(message) {
+        return this._term.read(message);
+    }
+    ask_animate(message, delay) {
+        return this._term.read(message, { typing: true, delay });
     }
     echo_animate(string, delay) {
-        return this._term.echo(string, { typing: true, delay: 200 });
+        return this._term.echo(string, { typing: true, delay });
     }
     prompt_animate(string, delay) {
-        return this._term.set_prompt(string, { typing: true, delay: 200 });
+        return this._term.set_prompt(string, { typing: true, delay });
     }
     input_animate(string, delay) {
         return this._term.typing('enter', delay, string);
     }
+    parse(input) {
+        return $.terminal.parse_arguments(input);
+    }
+    post(url, data = {}) {
+        const form = new FormData();
+        Object.entries(data).forEach(([key, value]) => {
+            form.append(key, value);
+        });
+        return fetch(url, {
+            method: 'POST',
+            body: form
+        }).then(res => res.text());
+    }
     get(url) {
         return fetch(url).then(res => res.text());
     }
-    async post(url, data) { }
 }
 
 var cookie, argv, term, $$__m;
@@ -83,39 +175,11 @@ if (is_node()) {
 }
 
 (async function () {
-    async function $_ask_color() {
-        term.echo(`Pick color?`);
-        let $_color = await term.ask(`color? `);;
-        if ($$__m = String($_color).match(/red/i)) {
-            term.echo(`I like red, it reminding me of the sun at sunset`);
-        } else if ($$__m = String($_color).match(/blue/i)) {
-            term.echo(`I like blue, it reminds me of the sky`);
-        } else if ($$__m = String($_color).match(/black/i)) {
-            term.echo(`I like black it reminds me of the darkest night`);
-        } else {
-            term.echo(`sorry I only know red, blue and black colors`);
-        }
-        term.echo(`Do you want to check another color?`);
-        let $_confirm = await term.ask(`yes/no? `);;
-        if ($$__m = String($_confirm).match(/yes/i)) {
-            await $_ask_color();
-        } else {
-            term.echo(`Ok, have a nice day`);
-        }
-    }
-    let $_greetings = '   ____       _\n  / ___| __ _(_)_ __ ___   __ _ _ __\n | |  _ / _` | | \'_ ` _ \\ / _` | \'_ \\\n | |_| | (_| | | | | | | | (_| | | | |\n  \\____|\\__,_|_|_| |_| |_|\\__,_|_| |_|\n\nGaiman Engine\nCopyright (C) 2021 Jakub Jankiewicz <https://jcubic.pl/me>\nReleased under GPLv3 license\n';;
-    term.echo($_greetings);
-    await term.sleep(100);
-    term.echo(`Welcome stranger, can you tell me what is your name?`);
-    let $_name = await term.ask(`name? `);;
-    if ($_name) {
-        term.echo(`Hi, ${ $_name }. Welcome to the game generated by Gaiman`);
-        term.echo(`Do you want to play?`);
-        let $_confirm = await term.ask(`yes/no? `);;
-        if ($$__m = String($_confirm).match(/yes/i)) {
-            await $_ask_color();
-        } else {
-            term.echo(`Ok you can close the tab`);
-        }
+    try {
+        await term.echo_animate(`Hi, What is your name?`, 50);
+        let $_name = await term.ask(`name? `);
+        term.echo(`Hello ${ $_name }, nice to meet you.`);
+    } catch (e) {
+        term.error(e);
     }
 }());

@@ -1,0 +1,9 @@
+:root {
+    --color: #ccc;
+    --background: black;
+    /* use --glow: 1; to add glow effect */
+    /* available animations: terminal-bar, terminal-underline */
+    --animation: terminal-blink;
+    --font: monospace;
+    --options: {}; /* JSON config for jQuery Terminal */
+}

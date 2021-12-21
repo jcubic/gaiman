@@ -90,10 +90,23 @@ async function wrap_code(code) {
     return add_version(result);
 }
 
-async function get_terminal() {
-    return add_version((await readFile('./src/terminal.html')).toString())
+async function get_terminal(mapping) {
+    const html = (await readFile('./src/terminal.html')).toString();
+    const css = (await readFile('./src/terminal.css')).toString();
+    return template(html, Object.assign({
+        STYLE: css,
+        FILE: 'index.js',
+        VER: json.version
+    }, mapping));
+}
+
+function template(string, mapping) {
+    Object.entries(mapping).forEach(([key, value]) => {
+        string = string.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
+    });
+    return string;
 }
 
 function add_version(code) {
-    return code.replace(/\{\{VER\}\}/, json.version);
+    return template(code, { VER: json.version });
 }

@@ -34,7 +34,7 @@
      .CodeMirror {
          height: 100%;
      }
-     .editor, iframe {
+     .editor, .user_input, iframe {
          width: 100%;
          height: 100%;
      }
@@ -215,7 +215,7 @@
     <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/addon/search/search.js,npm/codemirror@5.x.x/addon/search/matchesonscrollbar.js,npm/codemirror@5.x.x/addon/search/searchcursor.js,npm/codemirror@5.x.x/addon/search/jump-to-line.js,npm/codemirror@5.x.x/addon/scroll/annotatescrollbar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/addon/dialog/dialog.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/peggy"></script>
-    <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/mode/javascript/javascript.js,npm/codemirror@5.x.x/mode/pegjs/pegjs.js"></script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/mode/javascript/javascript.js,npm/codemirror@5.x.x/mode/pegjs/pegjs.js,npm/codemirror@5.x.x/mode/css/css.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/src/codemirror.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery.splitter"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/idb-keyval.js"></script>
@@ -242,9 +242,18 @@
         <ul></ul>
       </div>
     </div>
-    <div class="gaiman_code editor">
-      <div class="errors">
-        <ul></ul>
+    <div class="tabs user_input">
+      <ul>
+        <li class="active"><a href="#">Gaiman Code</a></li>
+        <li><a href="#">CSS</a></li>
+      </ul>
+      <div class="content">
+        <div class="gaiman_code editor active">
+          <div class="errors">
+            <ul></ul>
+          </div>
+        </div>
+        <div class="css_editor editor"></div>
       </div>
     </div>
   </aside>
@@ -270,6 +279,16 @@
     </li>
   </ul>
 </div>
+<script type="text/x-template" id="css">:root {
+    --color: #ccc;
+    --background: black;
+    --link-color: #3377FF;
+    /* use --glow: 1; to add glow effect */
+    /* available animations: terminal-bar, terminal-underline */
+    --animation: terminal-blink;
+    --font: monospace;
+    --options: {"enabled": false}; /* JSON config for jQuery Terminal */
+}</script>
 <script>
 
  $.fn.cm_refresh = function() {
@@ -475,8 +494,9 @@
      $('#reset').on('click', async function() {
          parse = (code) => gaiman.parse(code);
          grammar = await fetch_text(`${repo}src/grammar.peg`);
-         code = await fetch_text(`${repo}examples/demo.gs`);
+         code = await fetch_text(`${repo}examples/hello.gs`);
          update_editor(state.editors.grammar, grammar);
+         update_editor(state.editors.css, css.innerHTML);
          update_editor(state.editors.input, code);
          return false;
      });
@@ -498,6 +518,8 @@
      const SOURCE_FILE = '_gaiman_source.gs';
      const GRAMMAR_FILE = '_gaiman_grammar.peg';
      const OUTPUT_FILE = '_gaiman_output.js';
+     const CSS_FILE = '_gaiman.css';
+     const HTML_FILE = '_gaiman.html';
 
      const REF = await hash('master');
      const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`
@@ -505,9 +527,10 @@
          dev_mode: ls.get(DEV_MODE),
          selected_tab: ls.get(SELECTED_TAB),
          full_output_mode: ls.get(FULL_MODE),
+         css: (await get(CSS_FILE)) || css.innerHTML,
          editors: {},
          grammar: await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`),
-         code: await get_file(SOURCE_FILE, `${repo}examples/demo.gs`),
+         code: await get_file(SOURCE_FILE, `${repo}examples/hello.gs`),
          ast: {}
      };
      window.state = state;
@@ -530,6 +553,11 @@
          readOnly: false,
          mode: 'pegjs'
      });
+     state.editors.css = make_editor('.css_editor', state.css, {
+         readOnly: false,
+         mode: 'css'
+     });
+     build_html();
      set_idb();
      load();
      state.editors.input.on('change', debounce(update, 800));
@@ -546,6 +574,12 @@
                  set(GRAMMAR_FILE, state.grammar);
              }
          }
+     }, 800));
+     state.editors.css.on('change', debounce(function() {
+         build_html();
+         set(CSS_FILE, state.css);
+         set(HTML_FILE, state.html);
+         frame.src = `./__idb__/${HTML_FILE}`;
      }, 800));
 
      if (state.dev_mode !== undefined) {
@@ -593,8 +627,15 @@
          state.output_full = prefix + state.output + postfix;
      }
 
+     function template(string, mapping) {
+         Object.entries(mapping).forEach(([key, value]) => {
+             string = string.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
+         });
+         return string;
+     }
+
      function add_version(code) {
-         return code.replace(/\{\{VER\}\}/g, gaiman.version);
+         return template(code, { VER: gaiman.version });
      }
 
      function compile() {
@@ -614,11 +655,17 @@
 
      function set_idb() {
          set(SOURCE_FILE, state.code);
+         set(HTML_FILE, state.html);
          set(OUTPUT_FILE, state.output_full);
          set(GRAMMAR_FILE, state.grammar);
      }
+     function build_html() {
+         state.css = state.editors.css.getValue();
+         state.html = template(html, { STYLE: state.css, FILE: './_gaiman_output.js' });
+     }
 
      function update() {
+         build_html();
          compile();
          set_idb();
          load();
@@ -626,7 +673,7 @@
 
      function load() {
          if (has_worker && state.output) {
-             frame.src = './gaiman.html?' + Date.now();
+             frame.src = `./__idb__/${HTML_FILE}`;
              if (state.full_output) {
                  update_editor(state.editors.output, state.output_full);
              } else {

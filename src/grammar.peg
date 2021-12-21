@@ -163,6 +163,16 @@
             }
         };
     }
+    function jump(name) {
+        const mapping = {
+            "break": "BreakStatement",
+            "continue": "ContinueStatement"
+        };
+        return {
+            "type": mapping[name],
+            "label": null
+        };
+    }
     // move error location without mutation
     function move_location(loc, start, end) {
         const { start: loc_start, end: loc_end } = loc;
@@ -211,7 +221,7 @@ Start = statements:(!"end" _ statement* / _) {
     };
 }
 
-statement = !"end" _ statement:(comment / if / for_loop / while_loop / return / var / expression_statement / function_definition) _ {
+statement = !"end" _ statement:(comment / if / for_loop / while_loop / jump / return / var / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -239,6 +249,10 @@ last_else = _ "else" _ body:statement* "end" {
         "type": "BlockStatement",
         "body": body.filter(Boolean)
     };
+}
+
+jump = _ keyword:$("break" / "continue") _ {
+    return jump(keyword);
 }
 
 for_loop = "for" SP !keyword name:variable SP "in" SP iterator:(expression_like / variable) _ "do" _ body:statement* _ "end" _ {
@@ -515,7 +529,7 @@ comment = "#" [^\n]* { return null; }
 
 integer = [0-9]+ { return parseInt(text(), 10); }
 
-keyword = "if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while"
+keyword = "if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue"
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

@@ -193,7 +193,7 @@ exports[`loop should parse break 1`] = `
         while (true) {
             $_x = $_x + 1;
             if ($_x > 10) {
-                $_break;
+                break;
             }
             term.echo($_x);
         }
@@ -216,7 +216,7 @@ exports[`loop should parse continue 1`] = `
                 7
             ]) {
             if ($_i % 2 === 0) {
-                $_continue;
+                continue;
             }
             term.echo($_i);
         }

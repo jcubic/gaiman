@@ -216,6 +216,7 @@
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/addon/dialog/dialog.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/peggy"></script>
     <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/mode/javascript/javascript.js,npm/codemirror@5.x.x/mode/pegjs/pegjs.js,npm/codemirror@5.x.x/mode/css/css.js"></script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.65.0/mode/xml/xml.js,npm/codemirror@5.65.0/mode/htmlmixed/htmlmixed.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/src/codemirror.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery.splitter"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/idb-keyval.js"></script>
@@ -253,6 +254,7 @@
       <ul>
         <li class="active"><a href="#">Code</a></li>
         <li><a href="#">CSS</a></li>
+        <li><a href="#" class="dev hidden">HTML</a></li>
       </ul>
       <div class="content">
         <div class="gaiman_code editor active">
@@ -261,6 +263,7 @@
           </div>
         </div>
         <div class="css_editor editor"></div>
+        <div class="html_editor editor"></div>
       </div>
     </div>
   </aside>
@@ -311,6 +314,18 @@
          clearTimeout(timer);
          timer = setTimeout(() => { func.apply(this, args); }, timeout);
      };
+ }
+
+ function css_sanitize(css) {
+     var style = document.createElement('style');
+     style.innerHTML = css;
+     document.head.appendChild(style);
+     var sheet = style.sheet;
+     var result = Array.from(style.sheet.cssRules).map(rule => {
+         return rule.cssText || '';
+     }).join('\n');
+     document.head.removeChild(style);
+     return result;
  }
 
  async function hash(branch) {
@@ -504,6 +519,7 @@
          code = await fetch_text(`${repo}examples/hello.gs`);
          update_editor(state.editors.grammar, grammar);
          update_editor(state.editors.css, css.innerHTML);
+         update_editor(state.editors.html, '');
          update_editor(state.editors.input, code);
          return false;
      });
@@ -527,6 +543,7 @@
      const OUTPUT_FILE = '_gaiman_output.js';
      const CSS_FILE = '_gaiman.css';
      const HTML_FILE = '_gaiman.html';
+     const USER_HTML = '_user.html';
 
      const REF = await hash('master');
      const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`
@@ -535,6 +552,7 @@
          selected_tab: ls.get(SELECTED_TAB),
          full_output_mode: ls.get(FULL_MODE),
          css: (await get(CSS_FILE)) || css.innerHTML,
+         user_html: (await get(USER_HTML)) || '',
          editors: {},
          grammar: await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`),
          code: await get_file(SOURCE_FILE, `${repo}examples/hello.gs`),
@@ -564,6 +582,10 @@
          readOnly: false,
          mode: 'css'
      });
+     state.editors.html = make_editor('.html_editor', state.user_html, {
+         readOnly: false,
+         mode: 'htmlmixed'
+     });
      build_html();
      set_idb();
      load();
@@ -582,12 +604,8 @@
              }
          }
      }, 800));
-     state.editors.css.on('change', debounce(function() {
-         build_html();
-         set(CSS_FILE, state.css);
-         set(HTML_FILE, state.html);
-         frame.src = `./__idb__/${HTML_FILE}`;
-     }, 800));
+     state.editors.css.on('change', debounce(update_html, 800));
+     state.editors.html.on('change', debounce(update_html, 800));
 
      if (state.dev_mode !== undefined) {
          toggle_dev_mode(state.dev_mode);
@@ -662,13 +680,28 @@
 
      function set_idb() {
          set(SOURCE_FILE, state.code);
+         set(USER_HTML, state.user_html);
          set(HTML_FILE, state.html);
          set(OUTPUT_FILE, state.output_full);
          set(GRAMMAR_FILE, state.grammar);
      }
+
+     function update_html() {
+         build_html();
+         set(CSS_FILE, state.css);
+         set(USER_HTML, state.user_html);
+         set(HTML_FILE, state.html);
+         frame.src = `./__idb__/${HTML_FILE}`;
+     }
+
      function build_html() {
          state.css = state.editors.css.getValue();
-         state.html = template(html, { STYLE: state.css, FILE: './_gaiman_output.js' });
+         state.user_html = state.editors.html.getValue();
+         state.html = template(html, {
+             STYLE: css_sanitize(state.css),
+             HTML: state.user_html + '\n',
+             FILE: './_gaiman_output.js'
+         });
      }
 
      function update() {

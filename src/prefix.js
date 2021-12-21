@@ -122,7 +122,7 @@ class WebAdapter {
                 return JSON.parse(localStorage.getItem(name));
             } else {
                 const [ value ] = args;
-                localStorage.setItem(name, value);
+                localStorage.setItem(name, JSON.stringify(value));
             }
         } catch(e) {
             // ignore errors that may happen in Incognito mode

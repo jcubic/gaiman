@@ -424,7 +424,7 @@ function peg$parse(input, options) {
       return  {
           "type": "AwaitExpression",
           "argument": call(property(make_identifier("term"),
-                                    make_identifier(method.replace(/\*$/, '_animate'))), expr, ...args.map(x => x[2]))
+                                    make_identifier(method.replace(/\*$/, '_2'))), expr, ...args.map(x => x[2]))
       };
   };
   var peg$f23 = function(method, expr, args) {
@@ -1972,7 +1972,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseadapter_anim_strings() {
+  function peg$parseadapter_asterisk_strings() {
     var s0, s1, s2;
 
     s0 = peg$currPos;
@@ -2047,7 +2047,7 @@ function peg$parse(input, options) {
 
     s0 = peg$currPos;
     s1 = peg$parse_();
-    s2 = peg$parseadapter_anim_strings();
+    s2 = peg$parseadapter_asterisk_strings();
     if (s2 !== peg$FAILED) {
       s3 = peg$parse_();
       s4 = peg$parseadapter_command();
@@ -3527,7 +3527,10 @@ function peg$parse(input, options) {
       }
       if (s3 !== peg$FAILED) {
         s4 = peg$parse_();
-        s5 = peg$parseexpression();
+        s5 = peg$parseexpression_like();
+        if (s5 === peg$FAILED) {
+          s5 = peg$parsevariable();
+        }
         if (s5 !== peg$FAILED) {
           peg$savedPos = s0;
           s0 = peg$f40(s1, s3, s5);
@@ -4336,8 +4339,8 @@ function peg$parse(input, options) {
           };
           return new_loc;
       }
-      var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*"];
-      var sync_commands = ["echo", "prompt", "input", "parse"];
+      var async_commands = ["ask", "get", "post", "sleep", "sleep*", "echo*", "prompt*", "input*", "ask*"];
+      var sync_commands = ["echo", "prompt", "input", "parse", "store"];
       var available_commands = async_commands.concat(sync_commands);
 
 

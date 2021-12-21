@@ -116,14 +116,29 @@ class WebAdapter {
             exit: false
         }, options));
     }
-    sleep(timeout) {
-        this._term.pause();
+    store(name, ...args) {
+        try {
+            if (args.length === 0) {
+                return localStorage.getItem(name);
+            } else {
+                const [ value ] = args;
+                localStorage.setItem(name, value);
+            }
+        } catch(e) {
+            // ignore errors that may happen in Incognito mode
+        }
+    }
+    sleep(timeout, visible = false) {
+        this._term.pause(visible);
         return new Promise(resolve => {
             setTimeout(() => {
                 this._term.resume();
                 resolve();
             }, Number(timeout));
         });
+    }
+    sleep_2(timeout) {
+        return this.sleep(timeout, true);
     }
     error(message) {
         this._term.error(message);
@@ -134,16 +149,16 @@ class WebAdapter {
     ask(message) {
         return this._term.read(message);
     }
-    ask_animate(message, delay) {
+    ask_2(message, delay) {
         return this._term.read(message, { typing: true, delay });
     }
-    echo_animate(string, delay) {
+    echo_2(string, delay) {
         return this._term.echo(string, { typing: true, delay });
     }
-    prompt_animate(string, delay) {
+    prompt_2(string, delay) {
         return this._term.set_prompt(string, { typing: true, delay });
     }
-    input_animate(string, delay) {
+    input_2(string, delay) {
         return this._term.typing('enter', delay, string);
     }
     parse(input) {

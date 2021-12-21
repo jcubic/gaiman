@@ -191,8 +191,8 @@
         };
         return new_loc;
     }
-    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*"];
-    var sync_commands = ["echo", "prompt", "input", "parse"];
+    var async_commands = ["ask", "get", "post", "sleep", "sleep*", "echo*", "prompt*", "input*", "ask*"];
+    var sync_commands = ["echo", "prompt", "input", "parse", "store"];
     var available_commands = async_commands.concat(sync_commands);
 }
 
@@ -340,20 +340,20 @@ async_command_name = word:$[a-z]+ { return word; }
 
 adapter_async_strings = word:async_command_name &{ return async_commands.includes(word) } { return word; }
 
-adapter_anim_strings = word:animation_command_name &{ return async_commands.includes(word) } { return word; }
+adapter_asterisk_strings = word:animation_command_name &{ return async_commands.includes(word) } { return word; }
 
 adapter_static_strings = word:any_word &{ return sync_commands.includes(word); } { return word; }
 
 adapter_command = animation_commands / async_command / static_command
 
-animation_commands = _ method:adapter_anim_strings _ expr:(adapter_command / expression) _ args:(
+animation_commands = _ method:adapter_asterisk_strings _ expr:(adapter_command / expression) _ args:(
     ("," _ expression)+ / '' {
       error(`Command ${method} require at least two arguments`);
     }) _ {
     return  {
         "type": "AwaitExpression",
         "argument": call(property(make_identifier("term"),
-                                  make_identifier(method.replace(/\*$/, '_animate'))), expr, ...args.map(x => x[2]))
+                                  make_identifier(method.replace(/\*$/, '_2'))), expr, ...args.map(x => x[2]))
     };
 }
 
@@ -484,7 +484,7 @@ set_cookie = "cookie." name:name _ "=" _ expr:expression {
     };
 }
 
-set_local = left:(property / scoped) _ operator:("=" !"=") _  right:expression {
+set_local = left:(property / scoped) _ operator:("=" !"=") _  right:(expression_like / variable) {
     return {
         "type": "AssignmentExpression",
         "operator": operator[0],

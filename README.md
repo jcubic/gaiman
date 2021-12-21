@@ -89,7 +89,7 @@ More examples in [examples directory](https://github.com/jcubic/gaiman/tree/mast
 
 ## Live Demo
 
-See [Gaiman Playground](https://jcubic.github.io/gaiman/)
+See [Gaiman Playground](https://gaiman.js.org/)
 
 ## Operator precedence
 

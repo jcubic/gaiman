@@ -25,7 +25,7 @@ var is_iframe = (function() {
     } catch (e) {
         return true;
     }
-})(); 
+})();
 if (is_iframe) {
     window.onerror = function(message, source, lineno, colno, error) {
         window.parent.postMessage({

@@ -34,7 +34,7 @@
      .CodeMirror {
          height: 100%;
      }
-     .editor, .user_input, iframe {
+     .editor, .gaiman_output, .user_input, iframe {
          width: 100%;
          height: 100%;
      }
@@ -102,6 +102,10 @@
          scrollbar-color: #aaa #000;
          scrollbar-color: var(--color, #aaa) var(--background, #000);
          scrollbar-width: thin;
+     }
+     .CodeMirror .syntax-error {
+         background: red !important;
+         color: black !important;
      }
      .config {
          position: fixed;
@@ -232,7 +236,12 @@
       <li class="hidden dev"><a href="#">AST</a></li>
     </ul>
     <div class="content">
-      <iframe class="active" id="frame" src="./demo/"></iframe>
+      <div class="gaiman_output active">
+        <iframe id="frame" src="./demo/"></iframe>
+        <div class="errors">
+          <ul></ul>
+        </div>
+      </div>
       <div class="output editor dev"></div>
       <div class="ast editor dev"></div>
     </div>
@@ -414,6 +423,19 @@
      return CodeMirror($node.get(0), settings);
  }
 
+ function clear_marks(editor) {
+     const loc = { line: 0, ch: 0 };
+     const doc = editor.getDoc();
+     doc.markText(loc, loc);
+ }
+
+ function mark_error(editor, message, start, end) {
+     const doc = editor.getDoc();
+     doc.markText(start, end, {
+         className: 'syntax-error'
+     })
+ }
+
  function error(editor, message) {
      var $editor = $(editor);
      var ul = $editor.find('.errors ul');
@@ -589,6 +611,31 @@
      build_html();
      set_idb();
      load();
+     window.addEventListener('message', async function(event) {
+         const { data } = event;
+         if (data && data.message) {
+             const { lineno, colno, message, source } = data;
+             const msg = `Error: ${message}\nline: ${lineno} col: ${colno}`;
+             error('.gaiman_output', msg);
+             if (state.full_output_mode) {
+                 const code = await fetch(source).then(res => res.text());
+                 const lines = code.split('\n');
+                 const line = lines[lineno - 1];
+                 var start = {
+                     line: lineno -1,
+                     ch: line.match(/^(\s*)/)[0].length
+                 }
+                 const end = { line: lineno - 1, ch: line.length };
+                 state.editors.output.scrollIntoView(start);
+                 mark_error(
+                     state.editors.output,
+                     message,
+                     start,
+                     end
+                 );
+             }
+         }
+     });
      state.editors.input.on('change', debounce(update, 800));
      state.editors.grammar.on('change', debounce(function() {
          if (state.dev_mode) {
@@ -697,6 +744,8 @@
      function build_html() {
          state.css = state.editors.css.getValue();
          state.user_html = state.editors.html.getValue();
+         clear_error('.gaiman_output');
+         clear_marks(state.editors.output);
          state.html = template(html, {
              STYLE: css_sanitize(state.css),
              HTML: state.user_html + '\n',
@@ -714,7 +763,7 @@
      function load() {
          if (has_worker && state.output) {
              frame.src = `./__idb__/${HTML_FILE}`;
-             if (state.full_output) {
+             if (state.full_output_mode) {
                  update_editor(state.editors.output, state.output_full);
              } else {
                  update_editor(state.editors.output, state.output);

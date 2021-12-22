@@ -54,7 +54,7 @@ end
 def global(command)
    if command =~ /help/ then
       echo "available commands help"
-   else if command =~ /ls/
+   else if command =~ /ls/ then
       echo get "/exec?command=ls"
    else
       echo "wrong command"
@@ -74,8 +74,8 @@ if cookie.visited then
       let command = ask "name: "
       if command then
         let user = command
-        let cookie.user = command
-        let response = post "/register" { name: user, email: email }
+        cookie.user = command
+        let response = post "/register", { "name" => user, "email" => email }
         if response then
           echo "Welcome $user. You're successfully registered"
         end

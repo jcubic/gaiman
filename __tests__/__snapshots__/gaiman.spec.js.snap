@@ -300,6 +300,9 @@ exports[`loop should parse while loops 1`] = `
             term.echo(\`NUM: \${ $_x }\`);
             $_x = $_x - 1;
         }
+        while (!true) {
+            $_x;
+        }
     } catch (e) {
         term.error(e);
     }

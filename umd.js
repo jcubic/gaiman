@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Wed, 22 Dec 2021 18:36:46 GMT
+ * Buid time: Wed, 22 Dec 2021 20:02:54 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -1188,7 +1188,7 @@
 	  }
 
 	  function peg$parsewhile_loop() {
-	    var s0, s1, s2, s3, s4, s5, s7, s8, s9;
+	    var s0, s1, s2, s3, s5, s7, s8, s9;
 
 	    s0 = peg$currPos;
 	    if (input.substr(peg$currPos, 5) === peg$c9) {
@@ -1203,39 +1203,34 @@
 	      if (s2 !== peg$FAILED) {
 	        s3 = peg$parseexpression();
 	        if (s3 !== peg$FAILED) {
-	          s4 = peg$parseSP();
-	          if (s4 !== peg$FAILED) {
-	            if (input.substr(peg$currPos, 2) === peg$c8) {
-	              s5 = peg$c8;
-	              peg$currPos += 2;
-	            } else {
-	              s5 = peg$FAILED;
-	              if (peg$silentFails === 0) { peg$fail(peg$e8); }
-	            }
-	            if (s5 !== peg$FAILED) {
-	              peg$parse_();
-	              s7 = [];
+	          peg$parse_();
+	          if (input.substr(peg$currPos, 2) === peg$c8) {
+	            s5 = peg$c8;
+	            peg$currPos += 2;
+	          } else {
+	            s5 = peg$FAILED;
+	            if (peg$silentFails === 0) { peg$fail(peg$e8); }
+	          }
+	          if (s5 !== peg$FAILED) {
+	            peg$parse_();
+	            s7 = [];
+	            s8 = peg$parsestatement();
+	            while (s8 !== peg$FAILED) {
+	              s7.push(s8);
 	              s8 = peg$parsestatement();
-	              while (s8 !== peg$FAILED) {
-	                s7.push(s8);
-	                s8 = peg$parsestatement();
-	              }
-	              s8 = peg$parse_();
-	              if (input.substr(peg$currPos, 3) === peg$c0) {
-	                s9 = peg$c0;
-	                peg$currPos += 3;
-	              } else {
-	                s9 = peg$FAILED;
-	                if (peg$silentFails === 0) { peg$fail(peg$e0); }
-	              }
-	              if (s9 !== peg$FAILED) {
-	                peg$parse_();
-	                peg$savedPos = s0;
-	                s0 = peg$f9(s3, s7);
-	              } else {
-	                peg$currPos = s0;
-	                s0 = peg$FAILED;
-	              }
+	            }
+	            s8 = peg$parse_();
+	            if (input.substr(peg$currPos, 3) === peg$c0) {
+	              s9 = peg$c0;
+	              peg$currPos += 3;
+	            } else {
+	              s9 = peg$FAILED;
+	              if (peg$silentFails === 0) { peg$fail(peg$e0); }
+	            }
+	            if (s9 !== peg$FAILED) {
+	              peg$parse_();
+	              peg$savedPos = s0;
+	              s0 = peg$f9(s3, s7);
 	            } else {
 	              peg$currPos = s0;
 	              s0 = peg$FAILED;
@@ -9022,48 +9017,45 @@
 	sourceMap.SourceMapConsumer = sourceMapConsumer.SourceMapConsumer;
 	sourceMap.SourceNode = sourceNode.SourceNode;
 
-	var _from = "escodegen@^2.0.0";
-	var _id = "escodegen@2.0.0";
-	var _inBundle = false;
-	var _integrity = "sha512-mmHKys/C8BFUGI+MAWNcSYoORYLMdPzjrknd2Vc+bUsjN5bXcr8EhrNB+UTqfL1y3I9c4fw2ihgtMPQLBRiQxw==";
-	var _location = "/escodegen";
-	var _phantomChildren = {
-	};
-	var _requested = {
-		type: "range",
-		registry: true,
-		raw: "escodegen@^2.0.0",
-		name: "escodegen",
-		escapedName: "escodegen",
-		rawSpec: "^2.0.0",
-		saveSpec: null,
-		fetchSpec: "^2.0.0"
-	};
-	var _requiredBy = [
-		"/",
-		"/jsdom"
-	];
-	var _resolved = "https://registry.npmjs.org/escodegen/-/escodegen-2.0.0.tgz";
-	var _shasum = "5e32b12833e8aa8fa35e1bf0befa89380484c7dd";
-	var _spec = "escodegen@^2.0.0";
-	var _where = "/home/users/jankiewj/projects/jcubic/gaiman";
+	var name$1 = "escodegen";
+	var description$1 = "ECMAScript code generator";
+	var homepage$1 = "http://github.com/estools/escodegen";
+	var main$1 = "escodegen.js";
 	var bin$1 = {
-		esgenerate: "bin/esgenerate.js",
-		escodegen: "bin/escodegen.js"
+		esgenerate: "./bin/esgenerate.js",
+		escodegen: "./bin/escodegen.js"
 	};
-	var bugs$1 = {
-		url: "https://github.com/estools/escodegen/issues"
+	var files = [
+		"LICENSE.BSD",
+		"README.md",
+		"bin",
+		"escodegen.js",
+		"package.json"
+	];
+	var version$2 = "2.0.0";
+	var engines = {
+		node: ">=6.0"
 	};
-	var bundleDependencies = false;
+	var maintainers = [
+		{
+			name: "Yusuke Suzuki",
+			email: "utatane.tea@gmail.com",
+			web: "http://github.com/Constellation"
+		}
+	];
+	var repository$1 = {
+		type: "git",
+		url: "http://github.com/estools/escodegen.git"
+	};
 	var dependencies$1 = {
-		esprima: "^4.0.1",
 		estraverse: "^5.2.0",
 		esutils: "^2.0.2",
-		optionator: "^0.8.1",
+		esprima: "^4.0.1",
+		optionator: "^0.8.1"
+	};
+	var optionalDependencies = {
 		"source-map": "~0.6.1"
 	};
-	var deprecated = false;
-	var description$1 = "ECMAScript code generator";
 	var devDependencies$1 = {
 		acorn: "^7.3.1",
 		bluebird: "^3.4.7",
@@ -9076,74 +9068,31 @@
 		"gulp-mocha": "^3.0.1",
 		semver: "^5.1.0"
 	};
-	var engines = {
-		node: ">=6.0"
-	};
-	var files = [
-		"LICENSE.BSD",
-		"README.md",
-		"bin",
-		"escodegen.js",
-		"package.json"
-	];
-	var homepage$1 = "http://github.com/estools/escodegen";
 	var license$1 = "BSD-2-Clause";
-	var main$1 = "escodegen.js";
-	var maintainers = [
-		{
-			name: "Yusuke Suzuki",
-			email: "utatane.tea@gmail.com",
-			url: "http://github.com/Constellation"
-		}
-	];
-	var name$1 = "escodegen";
-	var optionalDependencies = {
-		"source-map": "~0.6.1"
-	};
-	var repository$1 = {
-		type: "git",
-		url: "git+ssh://git@github.com/estools/escodegen.git"
-	};
 	var scripts$1 = {
-		build: "cjsify -a path: tools/entry-point.js > escodegen.browser.js",
-		"build-min": "cjsify -ma path: tools/entry-point.js > escodegen.browser.min.js",
+		test: "gulp travis",
+		"unit-test": "gulp test",
 		lint: "gulp lint",
 		release: "node tools/release.js",
-		test: "gulp travis",
-		"unit-test": "gulp test"
+		"build-min": "./node_modules/.bin/cjsify -ma path: tools/entry-point.js > escodegen.browser.min.js",
+		build: "./node_modules/.bin/cjsify -a path: tools/entry-point.js > escodegen.browser.js"
 	};
-	var version$2 = "2.0.0";
 	var require$$3 = {
-		_from: _from,
-		_id: _id,
-		_inBundle: _inBundle,
-		_integrity: _integrity,
-		_location: _location,
-		_phantomChildren: _phantomChildren,
-		_requested: _requested,
-		_requiredBy: _requiredBy,
-		_resolved: _resolved,
-		_shasum: _shasum,
-		_spec: _spec,
-		_where: _where,
-		bin: bin$1,
-		bugs: bugs$1,
-		bundleDependencies: bundleDependencies,
-		dependencies: dependencies$1,
-		deprecated: deprecated,
-		description: description$1,
-		devDependencies: devDependencies$1,
-		engines: engines,
-		files: files,
-		homepage: homepage$1,
-		license: license$1,
-		main: main$1,
-		maintainers: maintainers,
 		name: name$1,
-		optionalDependencies: optionalDependencies,
+		description: description$1,
+		homepage: homepage$1,
+		main: main$1,
+		bin: bin$1,
+		files: files,
+		version: version$2,
+		engines: engines,
+		maintainers: maintainers,
 		repository: repository$1,
-		scripts: scripts$1,
-		version: version$2
+		dependencies: dependencies$1,
+		optionalDependencies: optionalDependencies,
+		devDependencies: devDependencies$1,
+		license: license$1,
+		scripts: scripts$1
 	};
 
 	/*

@@ -259,7 +259,7 @@ for_loop = "for" SP !keyword name:variable SP "in" SP iterator:(expression_like 
     return for_loop(name, iterator, body);
 }
 
-while_loop = "while" SP test:expression SP "do" _ body:statement* _ "end" _ {
+while_loop = "while" SP test:expression _ "do" _ body:statement* _ "end" _ {
     return while_loop(test, body);
 }
 

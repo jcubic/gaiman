@@ -61,6 +61,7 @@ exports[`expressions should parse property access 1`] = `
         term.echo(await term.get($_dict[\`hello_\` + 10]));
         $_dict[$_i] = 10;
         $_dict[$_i] = { [\`foo\`]: 10 };
+        $_dict[$_i][\`hello\`][\`world\`][$_nice];
     } catch (e) {
         term.error(e);
     }

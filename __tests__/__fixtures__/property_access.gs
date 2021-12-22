@@ -5,3 +5,4 @@ dict[i] = 10
 dict[i] = {
   "foo" => 10
 }
+dict[i]["hello"]["world"][nice]

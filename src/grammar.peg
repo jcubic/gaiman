@@ -270,6 +270,43 @@ array = "[" values:((expression_like / variable) _ ","? _)* "]" {
     };
 }
 
+prop_access = object:any_name "[" _ property:(math_expression / dict / match_var / array / function_call / string / literal) _ "]" _ {
+    return {
+        type: 'MemberExpression',
+        computed: true,
+        object,
+        property
+    };  
+}
+
+
+dict_prop = _ name:string _ "=>" _ value:expression _ {
+    return {
+        type: "Property",
+        key: name,
+        computed: true,
+        value,
+        kind: "init",
+        method: false,
+        shorthand: false
+    };
+}
+
+dict_list = _ first:dict_prop rest:(_ "," _ dict_prop _)* _ {
+    const list = rest.map(prop => prop[3]);
+    list.unshift(first);
+    return list;
+}
+
+dict = _ "{" _ properties:dict_list? _ "}" _ {
+    return {
+        "type": "ObjectExpression",
+        "properties": properties || []
+    };
+}
+
+// TODO: make "," mandatory as in dict
+
 function_call = _ !keyword name:variable _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
     return {
         "type": "AwaitExpression",
@@ -330,7 +367,7 @@ boolean = value:("true" / "false") {
 
 null = "null" { return null; }
 
-expression = heredoc / property / math_expression / match_var / array / function_call / name / string / literal
+expression = heredoc / property / prop_access / math_expression / dict / match_var / array / function_call / any_name / string / literal
 
 command = adapter_command / match
 
@@ -486,7 +523,7 @@ set_cookie = "cookie." name:name _ "=" _ expr:expression {
     };
 }
 
-set_local = left:(property / scoped) _ operator:("=" !"=") _  right:(expression_like / variable) {
+set_local = left:(prop_access / property / scoped) _ operator:("=" !"=") _  right:(expression_like / variable) {
     return {
         "type": "AssignmentExpression",
         "operator": operator[0],

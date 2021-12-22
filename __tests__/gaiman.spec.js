@@ -62,4 +62,14 @@ describe('expressions', () => {
     it('should parse arrays', () => {
         return test_fixture('arrays.gs');
     });
+    it('should parse dictionaries', () => {
+        return test_fixture('dictionaries.gs');
+    });
+    it('should parse property access', () => {
+        return test_fixture('property_access.gs');
+    });
+    it('should parse property access', () => {
+        return test_fixture('property_set.gs');
+    });
 });
+

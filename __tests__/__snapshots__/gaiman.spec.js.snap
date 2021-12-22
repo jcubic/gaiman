@@ -29,6 +29,56 @@ exports[`expressions should parse arrays 1`] = `
 }());"
 `;
 
+exports[`expressions should parse dictionaries 1`] = `
+"(async function () {
+    try {
+        let $_dict = {};
+        let $_dict = {
+            [\`foo\`]: 10,
+            [\`bar\`]: \`hello\`,
+            [\`baz\`]: [
+                1,
+                2,
+                3
+            ],
+            [\`quux\`]: {
+                [\`1\`]: 10,
+                [\`2\`]: 20,
+                [\`3\`]: 30
+            }
+        };
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
+exports[`expressions should parse property access 1`] = `
+"(async function () {
+    try {
+        term.echo($_dict[$_i]);
+        term.echo(await term.get($_dict[\`hello\`]));
+        term.echo(await term.get($_dict[\`hello_\` + 10]));
+        $_dict[$_i] = 10;
+        $_dict[$_i] = { [\`foo\`]: 10 };
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
+exports[`expressions should parse property access 2`] = `
+"(async function () {
+    try {
+        $_dict[$_i] = 10;
+        $_dict[$_i] = { [\`foo\`]: 10 };
+        $_dict[10 + 10] = \`hello \${ $_bar }\`;
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
 exports[`expressions should use command as part of expression 1`] = `
 "(async function () {
     try {

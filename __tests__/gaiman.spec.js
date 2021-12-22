@@ -13,6 +13,12 @@ async function test_fixture(filename) {
     expect(gaiman.compile(code)).toMatchSnapshot();
 }
 
+describe('global', () => {
+    it('should ignore comments', () => {
+        return test_fixture('comments.gs');
+    });
+});
+
 describe('if statements', () => {
     it('should compile base if', () => {
         return test_fixture('nested_base_if.gs');

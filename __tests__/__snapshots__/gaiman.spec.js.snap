@@ -148,6 +148,38 @@ exports[`functions should create factorial function 1`] = `
 }());"
 `;
 
+exports[`global should ignore comments 1`] = `
+"(async function () {
+    try {
+        let $_x = {
+            [\`foo\`]: 10,
+            [\`bar\`]: 20
+        };
+        let $_y = [
+            1,
+            2,
+            3,
+            4
+        ];
+        async function $_foo() {
+            return 10;
+        }
+        while (!true) {
+            $_x;
+        }
+        for (let $_i of [
+                1,
+                2,
+                3
+            ]) {
+            $_x;
+        }
+    } catch (e) {
+        term.error(e);
+    }
+}());"
+`;
+
 exports[`if statements should compile base if 1`] = `
 "(async function () {
     try {

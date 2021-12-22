@@ -196,7 +196,7 @@
     var available_commands = async_commands.concat(sync_commands);
 }
 
-Start = statements:(!"end" _ statement* / _) {
+Start = statements:statements {
     return {
         "type": "Program",
         "body": [{
@@ -211,7 +211,7 @@ Start = statements:(!"end" _ statement* / _) {
                     "body": {
                         "type": "BlockStatement",
                         "body": [
-                            try_catch(statements[2].filter(Boolean))
+                            try_catch(statements)
                         ]
                     }
                 },
@@ -221,7 +221,11 @@ Start = statements:(!"end" _ statement* / _) {
     };
 }
 
-statement = !"end" _ statement:(comment / if / for_loop / while_loop / jump / return / var / expression_statement / function_definition) _ {
+statements = statements:(!"end" _ statement* / _) {
+    return statements[2].filter(Boolean);
+}
+
+statement = !"end" _ statement:(if / for_loop / while_loop / jump / return / var / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -236,18 +240,18 @@ expression_like = set / command / expression / function_call
 
 end = "end" { return null; }
 
-if = _ "if" _ cond:expression_like _ "then" _ body:(statement* / _) next:(end / if_next / last_else) _ {
-  return make_if(cond, body.filter(Boolean), next);
+if = _ "if" _ cond:expression_like _ "then" _ body:statements next:(end / if_next / last_else) _ {
+  return make_if(cond, body, next);
 }
 
 if_next = _ "else" _ if_next:if {
     return if_next;
 }
 
-last_else = _ "else" _ body:statement* "end" {
+last_else = _ "else" _ body:statements "end" {
     return {
         "type": "BlockStatement",
-        "body": body.filter(Boolean)
+        "body": body
     };
 }
 
@@ -259,7 +263,7 @@ for_loop = "for" SP !keyword name:variable SP "in" SP iterator:(expression_like 
     return for_loop(name, iterator, body);
 }
 
-while_loop = "while" SP test:expression _ "do" _ body:statement* _ "end" _ {
+while_loop = "while" SP test:expression _ "do" _ body:statements _ "end" _ {
     return while_loop(test, body);
 }
 
@@ -575,8 +579,10 @@ keyword = "if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 
+WP = [ \t\n\r]
+
 _ "optional whitespace"
-  = [ \t\n\r]* { return []; }
+  = WP* comment / WP* { return []; }
 
 SP "whitespace"
-  = [ \t\n\r]+
+  = WP+

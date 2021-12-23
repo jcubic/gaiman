@@ -1,0 +1,6 @@
+ _____     _
+|   __|___|_|_____ ___ ___
+|  |  | .'| |     | .'|   |
+|_____|__,|_|_|_|_|__,|_|_|
+
+Text based game engine and programming language

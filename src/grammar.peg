@@ -443,15 +443,15 @@ adapter_asterisk_strings = word:animation_command_name &{ return async_commands.
 
 adapter_static_strings = word:any_word &{ return sync_commands.includes(word); } { return word; }
 
-adapter_command = animation_commands / async_command / static_command
+adapter_command = extra_commands / async_command / static_command
 
-animation_commands = _ method:adapter_asterisk_strings _ expr:(adapter_command / expression) _ args:(
+extra_commands = _ method:adapter_asterisk_strings _ expr:(adapter_command / expression) _ args:(
     ("," _ expression)+ / '' {
       error(`Command ${method} require at least two arguments`);
     }) _ {
     return  {
         "type": "AwaitExpression",
-        "argument": gaiman_call(method.replace(/\*$/, '_2')), expr, ...args.map(x => x[2])
+        "argument": gaiman_call(method.replace(/\*$/, '_2'), expr, ...args.map(x => x[2]))
     };
 }
 

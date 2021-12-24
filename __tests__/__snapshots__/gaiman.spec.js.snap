@@ -91,7 +91,7 @@ exports[`expressions should parse property access 2`] = `
 exports[`expressions should use command as part of expression 1`] = `
 "(async function () {
     try {
-        await gaiman.echo_2();
+        await gaiman.echo_2(await gaiman.get(\`https://jcubic.pl/file.txt\`), 100);
         gaiman.echo(\`<white>\` + await gaiman.ask(\`? \`) + \`</white>\`);
     } catch (e) {
         gaiman.error(e);

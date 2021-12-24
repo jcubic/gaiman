@@ -449,7 +449,7 @@ function peg$parse(input, options) {
   var peg$f27 = function(method, expr, args) {
       return  {
           "type": "AwaitExpression",
-          "argument": gaiman_call(method.replace(/\*$/, '_2')), expr, ...args.map(x => x[2])
+          "argument": gaiman_call(method.replace(/\*$/, '_2'), expr, ...args.map(x => x[2]))
       };
   };
   var peg$f28 = function(method, expr, args) {
@@ -2736,7 +2736,7 @@ function peg$parse(input, options) {
   function peg$parseadapter_command() {
     var s0;
 
-    s0 = peg$parseanimation_commands();
+    s0 = peg$parseextra_commands();
     if (s0 === peg$FAILED) {
       s0 = peg$parseasync_command();
       if (s0 === peg$FAILED) {
@@ -2747,7 +2747,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseanimation_commands() {
+  function peg$parseextra_commands() {
     var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
     s0 = peg$currPos;

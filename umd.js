@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Fri, 24 Dec 2021 00:25:29 GMT
+ * Buid time: Fri, 24 Dec 2021 00:32:13 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -461,7 +461,7 @@
 	  var peg$f27 = function(method, expr, args) {
 	      return  {
 	          "type": "AwaitExpression",
-	          "argument": gaiman_call(method.replace(/\*$/, '_2')), expr, ...args.map(x => x[2])
+	          "argument": gaiman_call(method.replace(/\*$/, '_2'), expr, ...args.map(x => x[2]))
 	      };
 	  };
 	  var peg$f28 = function(method, expr, args) {
@@ -2717,7 +2717,7 @@
 	  function peg$parseadapter_command() {
 	    var s0;
 
-	    s0 = peg$parseanimation_commands();
+	    s0 = peg$parseextra_commands();
 	    if (s0 === peg$FAILED) {
 	      s0 = peg$parseasync_command();
 	      if (s0 === peg$FAILED) {
@@ -2728,7 +2728,7 @@
 	    return s0;
 	  }
 
-	  function peg$parseanimation_commands() {
+	  function peg$parseextra_commands() {
 	    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
 	    s0 = peg$currPos;

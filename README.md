@@ -110,10 +110,13 @@ See [Gaiman Playground](https://gaiman.js.org/)
 
 See Wiki [TODO & Roadmap](https://github.com/jcubic/gaiman/wiki/TODO-&-Roadmap).
 
-## Name
+## Name and Origin
 
 Name came from [Neil Gaiman](https://en.wikipedia.org/wiki/Neil_Gaiman),
 Author of novels, comic books, graphic novels and films. Great storyteller.
+
+You can read about the origin of the languguage in the begining of the article:
+* [How to create programming language that compiles to JavaScript](https://hackernoon.com/creating-your-own-javascript-based-programming-language-has-never-been-easier-wju33by)
 
 ## Acknowledge
 

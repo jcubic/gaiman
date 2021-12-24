@@ -317,7 +317,7 @@ function peg$parse(input, options) {
       };
   };
   var peg$f1 = function(statements) {
-      return statements[2].filter(Boolean);
+      return statements[2].flat(2).filter(Boolean);
   };
   var peg$f2 = function(statement) {
      return statement;
@@ -5160,6 +5160,7 @@ function peg$parse(input, options) {
               "arguments": []
           });
           return result;
+          
       }
       function gaiman_prop(method) {
           return property(make_identifier("gaiman"), make_identifier(method));
@@ -5266,14 +5267,10 @@ function peg$parse(input, options) {
                   ]),
                   ...body
               ];
-              const result = {
-                  "type": "BlockStatement",
-                  body: [
-                      fn(...args),
-                      expression_statement(gaiman_call('exit_loop', literal(loop_count)))
-                  ]
-              };
-              return result;
+              return [
+                  fn(...args),
+                  expression_statement(gaiman_call('exit_loop', literal(loop_count)))
+              ];
           };
       }
       function expression_fold(type) {

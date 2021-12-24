@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Fri, 24 Dec 2021 00:16:36 GMT
+ * Buid time: Fri, 24 Dec 2021 00:25:29 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -329,7 +329,7 @@
 	      };
 	  };
 	  var peg$f1 = function(statements) {
-	      return statements[2].filter(Boolean);
+	      return statements[2].flat(2).filter(Boolean);
 	  };
 	  var peg$f2 = function(statement) {
 	     return statement;
@@ -4988,6 +4988,7 @@
 	              "arguments": []
 	          });
 	          return result;
+	          
 	      }
 	      function gaiman_prop(method) {
 	          return property(make_identifier("gaiman"), make_identifier(method));
@@ -5057,14 +5058,10 @@
 	                  ]),
 	                  ...body
 	              ];
-	              const result = {
-	                  "type": "BlockStatement",
-	                  body: [
-	                      fn(...args),
-	                      expression_statement(gaiman_call('exit_loop', literal(loop_count)))
-	                  ]
-	              };
-	              return result;
+	              return [
+	                  fn(...args),
+	                  expression_statement(gaiman_call('exit_loop', literal(loop_count)))
+	              ];
 	          };
 	      }
 	      function expression_fold(type) {

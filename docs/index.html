@@ -648,6 +648,9 @@
          const { data } = event;
          if (data && data.message) {
              const { lineno, colno, message, source } = data;
+             if (lineo === null || colno === null) {
+                 return error('.gaiman-output', `Error: ${message}`);
+             }
              const msg = `Error: ${message}\nline: ${lineno} col: ${colno}`;
              error('.gaiman-output', msg);
              if (state.full_output_mode) {

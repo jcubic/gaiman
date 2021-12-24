@@ -309,25 +309,11 @@ function peg$parse(input, options) {
   var peg$f0 = function(statements) {
       return {
           "type": "Program",
-          "body": [{
-              "type": "ExpressionStatement",
-              "expression": {
-                  "type": "CallExpression",
-                  "callee": {
-                      "type": "FunctionExpression",
-                      "id": null,
-                      "async": true,
-                      "params": [],
-                      "body": {
-                          "type": "BlockStatement",
-                          "body": [
-                              try_catch(statements)
-                          ]
-                      }
-                  },
-                  "arguments": []
-              }
-          }]
+          "body": [
+              iife([
+                  try_catch(statements)
+              ])
+          ]
       };
   };
   var peg$f1 = function(statements) {
@@ -463,19 +449,17 @@ function peg$parse(input, options) {
   var peg$f27 = function(method, expr, args) {
       return  {
           "type": "AwaitExpression",
-          "argument": call(property(make_identifier("term"),
-                                    make_identifier(method.replace(/\*$/, '_2'))), expr, ...args.map(x => x[2]))
+          "argument": gaiman_call(method.replace(/\*$/, '_2')), expr, ...args.map(x => x[2])
       };
   };
   var peg$f28 = function(method, expr, args) {
       return  {
           "type": "AwaitExpression",
-          "argument": call(property(make_identifier("term"),
-                                    make_identifier(method)), expr, ...args.map(x => x[2]))
+          "argument": gaiman_call(method, expr, ...args.map(x => x[2]))
       };
   };
   var peg$f29 = function(method, expr, args) {
-      return call(property(make_identifier("term"), make_identifier(method)), expr, ...args.map(x => x[2]));
+      return gaiman_call(method, expr, ...args.map(x => x[2]));
   };
   var peg$f30 = function(expression, re) {
       return {
@@ -5163,6 +5147,26 @@ function peg$parse(input, options) {
               "alternate": alternative
           };
       }
+      function iife(body) {
+          const result = expression_statement({
+              "type": "CallExpression",
+              "callee": {
+                  "type": "FunctionExpression",
+                  "id": null,
+                  "async": true,
+                  "params": [],
+                  "body": make_block(body)
+              },
+              "arguments": []
+          });
+          return result;
+      }
+      function gaiman_prop(method) {
+          return property(make_identifier("gaiman"), make_identifier(method));
+      }
+      function gaiman_call(method, ...args) {
+          return call(gaiman_prop(method), ...args);
+      }
       function make_block(body) {
           return {
               "type": "BlockStatement",
@@ -5189,7 +5193,18 @@ function peg$parse(input, options) {
               declarations: declarations
           };
       }
-      function for_loop(variable, iterator, body) {
+      function variable(name, expression) {
+          return {
+              "type": "VariableDeclaration",
+              "declarations": [{
+                  "type": "VariableDeclarator",
+                  "id": name,
+                  "init": expression
+              }],
+              "kind": "let"
+          };
+      }
+      var for_loop = with_loop_guard(function(variable, iterator, body) {
           return {
               "type": "ForOfStatement",
               "await": false,
@@ -5208,8 +5223,8 @@ function peg$parse(input, options) {
                   "body": body
               }
           };
-      }
-      function while_loop(test, body) {
+      });
+      var while_loop = with_loop_guard(function(test, body) {
           return {
               "type": "WhileStatement",
               "test": test,
@@ -5217,6 +5232,48 @@ function peg$parse(input, options) {
                   "type": "BlockStatement",
                   "body": body
               }
+          };
+      });
+      function literal(value) {
+          return { type: 'Literal', value }
+      }
+      function expression_statement(expression) {
+          return {
+              "type": "ExpressionStatement",
+              "expression": expression
+          };
+      }
+      let loop_count = 0;
+      function with_loop_guard(fn) {
+          var guard_var = make_identifier('loop_guard');
+          var cond = {
+              "type": "UnaryExpression",
+              "operator": "!",
+              "argument": {
+                  "type": "UpdateExpression",
+                  "operator": "--",
+                  "argument": guard_var,
+                  "prefix": true
+              },
+              "prefix": true
+          };
+          return function(...args) {
+              const last = args.length - 1;
+              const body = args[last];
+              args[last] = [
+                  make_if(gaiman_call('should_break_loop', literal(++loop_count)), [
+                       jump('break')
+                  ]),
+                  ...body
+              ];
+              const result = {
+                  "type": "BlockStatement",
+                  body: [
+                      fn(...args),
+                      expression_statement(gaiman_call('exit_loop', literal(loop_count)))
+                  ]
+              };
+              return result;
           };
       }
       function expression_fold(type) {
@@ -5290,10 +5347,7 @@ function peg$parse(input, options) {
                       "type": "BlockStatement",
                       "body": [{
                           "type": "ExpressionStatement",
-                            "expression": call(
-                              property(make_identifier("term"), make_identifier("error")),
-                              make_identifier("e")
-                          )
+                            "expression": gaiman_call('error', make_identifier("e"))
                       }]
                   }
               }

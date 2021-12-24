@@ -18,6 +18,53 @@ function parse_cookies(cookies) {
     return result;
 }
 
+const loops = {};
+
+const Gaiman = {
+    _get_time() {
+        return +new Date;
+    },
+    should_break_loop(id) {
+        if (!loops[id]) {
+            loops[id] = {
+                start: this._get_time(),
+                count: 1
+            }
+            return false;
+        } else {
+            var now = this._get_time();
+            const { start } = loops[id];
+            const count = ++loops[id].count;
+            console.log({count, test: count > this._config.loop_threshold});
+            if (count > this._config.loop_threshold) {
+                const stop = now - start > this._config.loop_timeout;
+                if (stop) {
+                    window.parent.postMessage({
+                        message: 'Infinite Loop detected!',
+                        colno: null,
+                        lineno: null
+                    });
+                }
+                return stop;
+            }
+            return false;
+        }
+    },
+    exit_loop(id) {
+        delete loops[id];
+    },
+    parse(input) {
+        return $.terminal.parse_arguments(input);
+    }
+};
+
+function extend(object, prototype) {
+    const descriptors = Object.getOwnPropertyDescriptors(object);
+    for (const prop in descriptors) {
+        Object.defineProperty(prototype, prop, descriptors[prop]);
+    }
+}
+
 function is_node() {
     return typeof process !== 'undefined' &&
         process.release.name === 'node';
@@ -98,7 +145,11 @@ function to_string(object) {
 const dict = map_supported ? map_dict() : simple_dict();
 
 class WebAdapter {
-    constructor() {
+    constructor(config = {}) {
+        this._config = $.extend({
+            loop_threshold: 500,
+            loop_timeout: 200
+        }, config);
         var body = $('body');
         var options = body.css('--options');
         if (typeof options === 'undefined') {
@@ -161,9 +212,6 @@ class WebAdapter {
     input_2(string, delay) {
         return this._term.typing('enter', delay, string);
     }
-    parse(input) {
-        return $.terminal.parse_arguments(input);
-    }
     post(url, data = {}) {
         const form = new FormData();
         Object.entries(data).forEach(([key, value]) => {
@@ -179,10 +227,12 @@ class WebAdapter {
     }
 }
 
-var cookie, argv, term, $$__m;
+extend(Gaiman, WebAdapter.prototype);
+
+var cookie, argv, gaiman, $$__m;
 if (is_node()) {
     argv = process.argv;
 } else {
     cookie = parse_cookies(document.cookie);
-    term = new WebAdapter();
+    gaiman = new WebAdapter();
 }

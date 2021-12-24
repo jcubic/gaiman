@@ -29,13 +29,12 @@ const Gaiman = {
             loops[id] = {
                 start: this._get_time(),
                 count: 1
-            }
+            };
             return false;
         } else {
             var now = this._get_time();
             const { start } = loops[id];
             const count = ++loops[id].count;
-            console.log({count, test: count > this._config.loop_threshold});
             if (count > this._config.loop_threshold) {
                 const stop = now - start > this._config.loop_timeout;
                 if (stop) {

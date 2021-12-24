@@ -9,32 +9,28 @@ exports[`expressions should parse arrays 1`] = `
             3,
             4
         ];
-        {
-            for (let $_word of [
-                    \`lorem\`,
-                    \`ipsum\`,
-                    \`dolor\`
-                ]) {
-                if (gaiman.should_break_loop(1)) {
-                    break;
-                }
-                gaiman.echo($_word);
+        for (let $_word of [
+                \`lorem\`,
+                \`ipsum\`,
+                \`dolor\`
+            ]) {
+            if (gaiman.should_break_loop(1)) {
+                break;
             }
-            gaiman.exit_loop(1);
+            gaiman.echo($_word);
         }
-        {
-            for (let $_i of [
-                    1,
-                    2,
-                    3
-                ]) {
-                if (gaiman.should_break_loop(2)) {
-                    break;
-                }
-                gaiman.echo($_i);
+        gaiman.exit_loop(1);
+        for (let $_i of [
+                1,
+                2,
+                3
+            ]) {
+            if (gaiman.should_break_loop(2)) {
+                break;
             }
-            gaiman.exit_loop(2);
+            gaiman.echo($_i);
         }
+        gaiman.exit_loop(2);
     } catch (e) {
         gaiman.error(e);
     }
@@ -176,28 +172,24 @@ exports[`global should ignore comments 1`] = `
         async function $_foo() {
             return 10;
         }
-        {
-            while (!true) {
-                if (gaiman.should_break_loop(1)) {
-                    break;
-                }
-                $_x;
+        while (!true) {
+            if (gaiman.should_break_loop(1)) {
+                break;
             }
-            gaiman.exit_loop(1);
+            $_x;
         }
-        {
-            for (let $_i of [
-                    1,
-                    2,
-                    3
-                ]) {
-                if (gaiman.should_break_loop(2)) {
-                    break;
-                }
-                $_x;
+        gaiman.exit_loop(1);
+        for (let $_i of [
+                1,
+                2,
+                3
+            ]) {
+            if (gaiman.should_break_loop(2)) {
+                break;
             }
-            gaiman.exit_loop(2);
+            $_x;
         }
+        gaiman.exit_loop(2);
     } catch (e) {
         gaiman.error(e);
     }
@@ -297,19 +289,17 @@ exports[`loop should parse break 1`] = `
 "(async function () {
     try {
         let $_x = 0;
-        {
-            while (true) {
-                if (gaiman.should_break_loop(1)) {
-                    break;
-                }
-                $_x = $_x + 1;
-                if ($_x > 10) {
-                    break;
-                }
-                gaiman.echo($_x);
+        while (true) {
+            if (gaiman.should_break_loop(1)) {
+                break;
             }
-            gaiman.exit_loop(1);
+            $_x = $_x + 1;
+            if ($_x > 10) {
+                break;
+            }
+            gaiman.echo($_x);
         }
+        gaiman.exit_loop(1);
     } catch (e) {
         gaiman.error(e);
     }
@@ -319,26 +309,24 @@ exports[`loop should parse break 1`] = `
 exports[`loop should parse continue 1`] = `
 "(async function () {
     try {
-        {
-            for (let $_i of [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7
-                ]) {
-                if (gaiman.should_break_loop(1)) {
-                    break;
-                }
-                if ($_i % 2 === 0) {
-                    continue;
-                }
-                gaiman.echo($_i);
+        for (let $_i of [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7
+            ]) {
+            if (gaiman.should_break_loop(1)) {
+                break;
             }
-            gaiman.exit_loop(1);
+            if ($_i % 2 === 0) {
+                continue;
+            }
+            gaiman.echo($_i);
         }
+        gaiman.exit_loop(1);
     } catch (e) {
         gaiman.error(e);
     }
@@ -348,24 +336,20 @@ exports[`loop should parse continue 1`] = `
 exports[`loop should parse for loops 1`] = `
 "(async function () {
     try {
-        {
-            for (let $_chr of \`hello\`) {
-                if (gaiman.should_break_loop(1)) {
-                    break;
-                }
-                gaiman.echo($_chr);
+        for (let $_chr of \`hello\`) {
+            if (gaiman.should_break_loop(1)) {
+                break;
             }
-            gaiman.exit_loop(1);
+            gaiman.echo($_chr);
         }
-        {
-            for (let $_chr of location.href) {
-                if (gaiman.should_break_loop(2)) {
-                    break;
-                }
-                gaiman.echo($_chr);
+        gaiman.exit_loop(1);
+        for (let $_chr of location.href) {
+            if (gaiman.should_break_loop(2)) {
+                break;
             }
-            gaiman.exit_loop(2);
+            gaiman.echo($_chr);
         }
+        gaiman.exit_loop(2);
     } catch (e) {
         gaiman.error(e);
     }
@@ -376,25 +360,21 @@ exports[`loop should parse while loops 1`] = `
 "(async function () {
     try {
         let $_x = 10;
-        {
-            while ($_x > 0) {
-                if (gaiman.should_break_loop(1)) {
-                    break;
-                }
-                gaiman.echo(\`NUM: \${ $_x }\`);
-                $_x = $_x - 1;
+        while ($_x > 0) {
+            if (gaiman.should_break_loop(1)) {
+                break;
             }
-            gaiman.exit_loop(1);
+            gaiman.echo(\`NUM: \${ $_x }\`);
+            $_x = $_x - 1;
         }
-        {
-            while (!true) {
-                if (gaiman.should_break_loop(2)) {
-                    break;
-                }
-                $_x;
+        gaiman.exit_loop(1);
+        while (!true) {
+            if (gaiman.should_break_loop(2)) {
+                break;
             }
-            gaiman.exit_loop(2);
+            $_x;
         }
+        gaiman.exit_loop(2);
     } catch (e) {
         gaiman.error(e);
     }

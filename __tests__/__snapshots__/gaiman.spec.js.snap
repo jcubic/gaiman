@@ -31,6 +31,11 @@ exports[`expressions should parse arrays 1`] = `
             gaiman.echo($_i);
         }
         gaiman.exit_loop(2);
+        let $_names = [
+            \`helo\`,
+            \`world\`
+        ];
+        gaiman.echo($_names[0] + \` \` + $_names[1]);
     } catch (e) {
         gaiman.error(e);
     }

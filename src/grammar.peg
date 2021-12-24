@@ -327,7 +327,7 @@ array = "[" values:((expression_like / variable) _ ","? _)* "]" {
     };
 }
 
-prop_access = object:any_name props:("[" _ property:(math_expression / dict / match_var / array / function_call / string / literal) _ "]")+ _ {
+bracket_prop_access = object:any_name props:("[" _ property:(math_expression / dict / match_var / array / function_call / string / literal) _ "]")+ _ {
     props = props.map(prop => prop[2]);
     return props.reduce((object, property) => {
         return {
@@ -427,7 +427,7 @@ boolean = value:("true" / "false") {
 
 null = "null" { return null; }
 
-expression = heredoc / property / prop_access / math_expression / dict / match_var / array / function_call / any_name / string / literal
+expression = heredoc / property / math_expression / bracket_prop_access / dict / match_var / array / function_call / any_name / string / literal
 
 command = adapter_command / match
 
@@ -542,8 +542,8 @@ mul_div
     }
 
 factor
-  = "(" _ expr:(math_expression / adapter_command ) _ ")" { return expr; }
-  / function_call / string / literal / match_var / variable
+  = "(" _ expr:(math_expression / adapter_command) _ ")" { return expr; }
+  / bracket_prop_access / function_call / string / literal / match_var / variable
 
 any_name = variable:name {
   return make_identifier(variable_prefix + variable);
@@ -581,7 +581,7 @@ set_cookie = "cookie." name:name _ "=" _ expr:expression {
     };
 }
 
-set_local = left:(prop_access / property / scoped) _ operator:("=" !"=") _  right:(expression_like / variable) {
+set_local = left:(bracket_prop_access / property / scoped) _ operator:("=" !"=") _  right:(expression_like / variable) {
     return {
         "type": "AssignmentExpression",
         "operator": operator[0],

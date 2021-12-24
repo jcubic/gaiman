@@ -1488,7 +1488,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseprop_access() {
+  function peg$parsebracket_prop_access() {
     var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
     s0 = peg$currPos;
@@ -2464,9 +2464,9 @@ function peg$parse(input, options) {
     if (s0 === peg$FAILED) {
       s0 = peg$parseproperty();
       if (s0 === peg$FAILED) {
-        s0 = peg$parseprop_access();
+        s0 = peg$parsemath_expression();
         if (s0 === peg$FAILED) {
-          s0 = peg$parsemath_expression();
+          s0 = peg$parsebracket_prop_access();
           if (s0 === peg$FAILED) {
             s0 = peg$parsedict();
             if (s0 === peg$FAILED) {
@@ -4210,15 +4210,18 @@ function peg$parse(input, options) {
       s0 = peg$FAILED;
     }
     if (s0 === peg$FAILED) {
-      s0 = peg$parsefunction_call();
+      s0 = peg$parsebracket_prop_access();
       if (s0 === peg$FAILED) {
-        s0 = peg$parsestring();
+        s0 = peg$parsefunction_call();
         if (s0 === peg$FAILED) {
-          s0 = peg$parseliteral();
+          s0 = peg$parsestring();
           if (s0 === peg$FAILED) {
-            s0 = peg$parsematch_var();
+            s0 = peg$parseliteral();
             if (s0 === peg$FAILED) {
-              s0 = peg$parsevariable();
+              s0 = peg$parsematch_var();
+              if (s0 === peg$FAILED) {
+                s0 = peg$parsevariable();
+              }
             }
           }
         }
@@ -4433,7 +4436,7 @@ function peg$parse(input, options) {
     var s0, s1, s2, s3, s4, s5, s6;
 
     s0 = peg$currPos;
-    s1 = peg$parseprop_access();
+    s1 = peg$parsebracket_prop_access();
     if (s1 === peg$FAILED) {
       s1 = peg$parseproperty();
       if (s1 === peg$FAILED) {

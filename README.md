@@ -1,15 +1,16 @@
 # Gaiman Engine
 
-![Gaiman Text based advanture games engine](assets/banner.svg)
+![Gaiman: Text based advanture games engine and programming language](assets/banner.svg)
 
 [![Build and test](https://github.com/jcubic/gaiman/actions/workflows/build.yaml/badge.svg)](https://github.com/jcubic/gaiman/actions/workflows/build.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/jcubic/gaiman/badge.svg?branch=master)](https://coveralls.io/github/jcubic/gaiman?branch=master)
 [![LICENSE GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/jcubic/gaiman/blob/master/LICENSE)
 
-[Storytelling Text Based Game Engine](https://github.com/jcubic/gaiman)
+[Gaiman: Storytelling Text Based Game Engine and Programming Language](https://github.com/jcubic/gaiman)
 
-Main part of Gaiman is a minimalist language that generate
-[Text Adventure Games](https://en.wikipedia.org/wiki/Interactive_fiction).
+Main part of Gaiman is a minimalist programming language that can be used to generate
+[Text Adventure Games](https://en.wikipedia.org/wiki/Interactive_fiction). But it can also be used
+to create any interactive CLI application.
 
 ## Installation
 

@@ -30,10 +30,10 @@ And you can open generated html file in browser and run the game.
 ## Examples
 
 
-This is Hello world Gaiman DLS example:
+This is Hello world Gaiman DSL example:
 
 ```ruby
-echo* "Hi, What is your name?", 50
+echo* "Hi, What is your name?", 50 # Typing animattion with 50ms delay
 let name = ask "name? "
 echo "Hello $name, nice to meet you."
 ```

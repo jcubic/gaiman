@@ -1,4 +1,4 @@
-# Gaiman Engine
+# Gaiman Engine and Programming Language
 
 ![Gaiman: Text based advanture games engine and programming language](assets/banner.svg)
 

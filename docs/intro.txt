@@ -1,0 +1,3 @@
+This is Gaiman langauge, that simplify creating Web Based Terminals.
+The main idea for the language is to help write complex flow,
+e.g. creating Interactive Text Based Games.

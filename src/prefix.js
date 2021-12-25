@@ -26,6 +26,19 @@ function is_promise(obj) {
     return obj && is_function(obj.then);
 }
 
+function is_node() {
+    return typeof process !== 'undefined' &&
+        process.release.name === 'node';
+}
+
+// based on https://stackoverflow.com/a/46282334/387194
+function extend(object, prototype) {
+    const descriptors = Object.getOwnPropertyDescriptors(object);
+    for (const prop in descriptors) {
+        Object.defineProperty(prototype, prop, descriptors[prop]);
+    }
+}
+
 const loops = {};
 
 const Gaiman = {
@@ -80,93 +93,23 @@ const Gaiman = {
     }
 };
 
-
-// based on https://stackoverflow.com/a/46282334/387194
-function extend(object, prototype) {
-    const descriptors = Object.getOwnPropertyDescriptors(object);
-    for (const prop in descriptors) {
-        Object.defineProperty(prototype, prop, descriptors[prop]);
-    }
-}
-
-function is_node() {
-    return typeof process !== 'undefined' &&
-        process.release.name === 'node';
-}
-
-const map_supported = 'Map' in this;
-
-
-function map_dict() {
-    return {
-        make(init = {}) {
-            return new Map(Object.entries(init));
-        },
-        set(object, ...rest) {
-            while (rest.length > 2) {
-                const prop = rest.shift();
-                if (object instanceof Map) {
-                    object = object.get(prop);
-                } else {
-                    object = object[prop];
-                }
-            }
-            const prop = rest.shift();
-            const value = rest.shift();
-            if (object instanceof Map) {
-                object.set(prop, value);
-            } else {
-                object[prop] = value;
-            }
-        },
-        get(object, ...rest) {
-            while (rest.length) {
-                const arg = rest.shift();
-                if (object instanceof Map) {
-                    object = object.get(arg);
-                } else {
-                    object = object[arg];
-                }
-            }
-            return object;
-        }
-    };
-}
-
-function simple_dict() {
-    return {
-        make(init = {}) {
-            return init;
-        },
-        set(object, ...rest) {
-            while (rest.length > 2) {
-                const prop = rest.shift();
-                object = object[prop];
-            }
-            const prop = rest.shift();
-            const value = rest.shift();
-            object[prop] = value;
-        },
-        get(object, ...rest) {
-            while (rest.length) {
-                const arg = rest.shift();
-                object = object[arg];
-            }
-            return object;
-        }
-    };
+if (!('Map' in this)) {
+    $.getScript('https://cdn.jsdelivr.net/gh/jcubic/static/js/map.min.js').then(() => {
+        window.Map = ES6_Map;
+    });
 }
 
 function to_string(object) {
     if (object instanceof Array) {
         object = object.map(to_string);
     } else if (typeof object !== 'string') {
+        if (object) {
+            object = JSON.stringify(object, null, 2);
+        }
         object = String(object);
     }
     return object;
 }
-
-const dict = map_supported ? map_dict() : simple_dict();
 
 class WebAdapter {
     constructor(config = {}) {

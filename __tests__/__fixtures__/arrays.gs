@@ -8,6 +8,6 @@ for i in [1,2,3] do
     echo i
 end
 
-let names = ["helo", "world"] 
+let names = ["helo", "world"]
 
 echo names[0] + " " + names[1]

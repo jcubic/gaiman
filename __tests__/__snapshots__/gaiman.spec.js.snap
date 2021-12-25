@@ -355,6 +355,25 @@ exports[`loop should parse for loops 1`] = `
             gaiman.echo($_chr);
         }
         gaiman.exit_loop(2);
+        for (let [$_key, $_value] of Object.entries($_collect)) {
+            if (gaiman.should_break_loop(3)) {
+                break;
+            }
+            gaiman.echo(\`\${ $_key } => \${ $_value }\`);
+        }
+        gaiman.exit_loop(3);
+        for (let $_i of [
+                1,
+                2,
+                3,
+                4
+            ]) {
+            if (gaiman.should_break_loop(4)) {
+                break;
+            }
+            gaiman.echo($_i);
+        }
+        gaiman.exit_loop(4);
     } catch (e) {
         gaiman.error(e);
     }

@@ -42,6 +42,9 @@
         return result;
         
     }
+    function method(...props) {
+        return property(...props.map(make_identifier));
+    }
     function gaiman_prop(method) {
         return property(make_identifier("gaiman"), make_identifier(method));
     }
@@ -84,8 +87,31 @@
             }],
             "kind": "let"
         };
-    }
-    var for_loop = with_loop_guard(function(variable, iterator, body) {
+    } 
+    var for_loop = with_loop_guard(function(variable, value, body) {
+        if (variable instanceof Array) {
+            return {
+                "type": "ForOfStatement",
+                "await": false,
+                "left": {
+                    "type": "VariableDeclaration",
+                    "declarations": [{
+                        "type": "VariableDeclarator",
+                        "id": {
+                            "type": "ArrayPattern",
+                            "elements": variable
+                        },
+                        "init": null
+                     }],
+                     "kind": "let"
+                },
+                "right": call(method('Object', 'entries'), value),
+                "body": {
+                    "type": "BlockStatement",
+                    "body": body
+                }
+            };
+        }
         return {
             "type": "ForOfStatement",
             "await": false,
@@ -98,7 +124,7 @@
                 }],
                 "kind": "let"
             },
-            "right": iterator,
+            "right": value,
             "body": {
                 "type": "BlockStatement",
                 "body": body
@@ -312,8 +338,12 @@ jump = _ keyword:$("break" / "continue") _ {
     return jump(keyword);
 }
 
-for_loop = "for" SP !keyword name:variable SP "in" SP iterator:(expression_like / variable) _ "do" _ body:statement* _ "end" _ {
-    return for_loop(name, iterator, body);
+for_loop = "for" SP !keyword arg:((variable _ "," _ variable) / variable) SP "in" SP iterator:(expression_like / variable) _ "do" _ body:statement* _ "end" _ {
+    if (arg instanceof Array) {
+        return for_loop([arg[0], arg[4]], iterator, body);
+    } else {
+        return for_loop(arg, iterator, body);
+    }
 }
 
 while_loop = "while" SP test:expression _ "do" _ body:statements _ "end" _ {

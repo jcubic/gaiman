@@ -57,6 +57,8 @@ const Gaiman = {
     }
 };
 
+
+// based on https://stackoverflow.com/a/46282334/387194
 function extend(object, prototype) {
     const descriptors = Object.getOwnPropertyDescriptors(object);
     for (const prop in descriptors) {
@@ -146,6 +148,7 @@ const dict = map_supported ? map_dict() : simple_dict();
 class WebAdapter {
     constructor(config = {}) {
         this._config = $.extend({
+            newline: true,
             loop_threshold: 500,
             loop_timeout: 200
         }, config);
@@ -165,6 +168,13 @@ class WebAdapter {
             greetings: false,
             exit: false
         }, options));
+    }
+    config(name, value) {
+        if (typeof name === 'string') {
+            this._config[name] = value;
+        } else {
+            $.extend(this._config, name);
+        }
     }
     store(name, ...args) {
         try {
@@ -194,7 +204,7 @@ class WebAdapter {
         this._term.error(message);
     }
     echo(arg) {
-        this._term.echo(to_string(arg));
+        this._term.echo(to_string(arg), { newline: this._config.newline });
     }
     ask(message) {
         return this._term.read(message);

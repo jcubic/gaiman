@@ -40,7 +40,6 @@
             "arguments": []
         });
         return result;
-        
     }
     function method(...props) {
         return property(...props.map(make_identifier));
@@ -285,7 +284,7 @@
         return new_loc;
     }
     var async_commands = ["ask", "get", "post", "sleep", "sleep*", "echo*", "prompt*", "input*", "ask*"];
-    var sync_commands = ["echo", "prompt", "input", "parse", "store"];
+    var sync_commands = ["echo", "prompt", "config", "input", "parse", "store"];
     var available_commands = async_commands.concat(sync_commands);
 }
 

@@ -41,6 +41,11 @@
         });
         return result;
     }
+    function build_list(first, rest) {
+        const list = rest.map(prop => prop[3]);
+        list.unshift(first);
+        return list;
+    }
     function method(...props) {
         return property(...props.map(make_identifier));
     }
@@ -268,6 +273,17 @@
             "label": null
         };
     }
+    function lambda(params, body) {
+        return {
+            "type": "FunctionExpression",
+            "id": make_identifier('lambda'),
+            "params": params,
+            "body": {
+                "type": "BlockStatement",
+                "body": body
+            }
+        };
+    }
     // move error location without mutation
     function move_location(loc, start, end) {
         const { start: loc_start, end: loc_end } = loc;
@@ -322,7 +338,7 @@ expression_statement = !keyword expression:expression_like {
 expression_like = set / command / expression / function_call
 
 
-expression = heredoc / function_call / property / math_expression / bracket_prop_access / dict / match_var / array / any_name / string / literal
+expression = heredoc / function_call / lambda / property / math_expression / bracket_prop_access / dict / match_var / array / any_name / string / literal
 
 command = adapter_command / match
 
@@ -359,13 +375,6 @@ while_loop = "while" SP test:expression _ "do" _ body:statements _ "end" _ {
     return while_loop(test, body);
 }
 
-array = "[" values:((expression_like / variable) _ ","? _)* "]" {
-    return {
-        "type": "ArrayExpression",
-        "elements": values.map(value => value[0])
-    };
-}
-
 bracket_prop_access = object:(global / any_name) props:("[" _ property:(math_expression / dict / match_var / array / function_call / string / literal) _ "]")+ _ {
     props = props.map(prop => prop[2]);
     return props.reduce((object, property) => {
@@ -391,36 +400,57 @@ dict_prop = _ name:string _ "=>" _ value:expression _ {
     };
 }
 
-dict_list = _ first:dict_prop rest:(_ "," _ dict_prop _)* _ {
-    const list = rest.map(prop => prop[3]);
-    list.unshift(first);
-    return list;
+param_list = first:variable rest:(_ "," _ variable _)* _ {
+    return build_list(first, rest);
 }
 
-dict = _ "{" _ properties:dict_list? _ "}" _ {
+argument = expression_like / variable
+
+argument_list = first:argument rest:(_ "," _ argument _)* _ {
+    return build_list(first, rest);
+}
+
+array = "[" values:(argument_list / null_array) "]" {
+    return {
+        "type": "ArrayExpression",
+        "elements": values
+    };
+}
+
+dict_list = _ first:dict_prop rest:(_ "," _ dict_prop _)* _ {
+    return build_list(first, rest);
+}
+
+dict = _ "{" _ properties:(dict_list / null_array)  _ "}" _ {
     return {
         "type": "ObjectExpression",
-        "properties": properties || []
+        "properties": properties
     };
 }
 
-// TODO: make "," mandatory as in dict
+array_property = array:array _ "." _ prop:name {
+    return {
+          "type": "MemberExpression",
+          "computed": false,
+          "object": array,
+          "property": make_identifier(prop)
+    };
+}
 
-function_call = _ !keyword name:(property / variable) _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
+function_call = _ !keyword name:(array_property / property / variable) _ "(" args:(argument_list / null_array) ")" _ {
     return {
         "type": "AwaitExpression",
-        "argument": call(name, ...names.map(name => name[0]))
+        "argument": call(name, ...args)
     };
 }
 
-function_definition = _ "def" _ name:variable _ "(" args:(variable _ ","? _)* ")" _  body:statement* _ "end" _ {
+function_definition = _ "def" _ name:variable _ "(" args:(param_list / null_array) ")" _  body:statement* _ "end" _ {
     const fn_name = name.name.replace(/\$_/, '');
     if (available_commands.includes(fn_name)) {
         const error = new Error(`invalid function name, '${fn_name}' is a command`);
         error.location = move_location(location(), 4, fn_name.length + 4);
         throw error;
     }
-    var args = args.map(function(arg) { return arg[0]; });
     return {
         "type": "FunctionDeclaration",
         "id": name,
@@ -431,6 +461,12 @@ function_definition = _ "def" _ name:variable _ "(" args:(variable _ ","? _)* ")
             "body": body
         }
     };
+}
+
+null_array = '' { return []; }
+
+lambda = "lambda" _ "(" params:(param_list / null_array) ")" _ body:statement* _ "end" _ {
+    return lambda(params, body);
 }
 
 return = _ "return" _ expression:expression_like _ {
@@ -681,7 +717,7 @@ comment = "#" [^\n]* { return null; }
 
 integer = [0-9]+ { return parseInt(text(), 10); }
 
-keyword = "if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue"
+keyword = "if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda"
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

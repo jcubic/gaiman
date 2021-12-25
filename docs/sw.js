@@ -58,7 +58,9 @@ self.addEventListener('fetch', function (event) {
                 return;
             }
             //request = credentials: 'include'
-            fetch(event.request).then(resolve).catch(reject);
+            fetch(event.request).then(resolve).catch(e => {
+                reject(e.message);
+            });
         }
     }));
 });

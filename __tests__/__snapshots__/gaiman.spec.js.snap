@@ -1,5 +1,52 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`expressions should call methods 1`] = `
+"(async function () {
+    try {
+        await location.replace(\`/__idb__/_gaiman.js\`);
+        let $_x = [
+            1,
+            2,
+            3,
+            4
+        ];
+        async function $_square($_x) {
+            return $_x * $_x;
+        }
+        gaiman.echo(await $_x.map($_square));
+        await $_foo.bar.baz(\`hello\`);
+    } catch (e) {
+        gaiman.error(e);
+    }
+}());"
+`;
+
+exports[`expressions should chain methods 1`] = `
+"(async function () {
+    try {
+        gaiman.echo(await (await [
+            1,
+            0,
+            2,
+            3,
+            0,
+            4
+        ].map($_square)).filter($_identity));
+        let $_arr = [
+            1,
+            2,
+            3,
+            4,
+            5
+        ];
+        gaiman.echo(await (await (await $_arr.map($_square)).filter($_identity)).join(\`\`));
+        gaiman.echo(await (await \`foo\`.split(\`\`)).join(\`:\`));
+    } catch (e) {
+        gaiman.error(e);
+    }
+}());"
+`;
+
 exports[`expressions should parse arrays 1`] = `
 "(async function () {
     try {
@@ -149,27 +196,6 @@ exports[`expressions should use command as part of expression 1`] = `
     try {
         await gaiman.echo_extra(await gaiman.get(\`https://jcubic.pl/file.txt\`), 100);
         gaiman.echo(\`<white>\` + await gaiman.ask(\`? \`) + \`</white>\`);
-    } catch (e) {
-        gaiman.error(e);
-    }
-}());"
-`;
-
-exports[`functions should call methods 1`] = `
-"(async function () {
-    try {
-        await location.replace(\`/__idb__/_gaiman.js\`);
-        let $_x = [
-            1,
-            2,
-            3,
-            4
-        ];
-        async function $_square($_x) {
-            return $_x * $_x;
-        }
-        gaiman.echo(await $_x.map($_square));
-        await $_foo.bar.baz(\`hello\`);
     } catch (e) {
         gaiman.error(e);
     }

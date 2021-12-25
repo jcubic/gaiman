@@ -62,9 +62,6 @@ describe('functions', () => {
     it('should create factorial function', () => {
         return test_fixture('factorial.gs');
     });
-    it('should call methods', () => {
-        return test_fixture('methods.gs');
-    });
 });
 
 describe('expressions', () => {
@@ -88,6 +85,12 @@ describe('expressions', () => {
     });
     it('should parse map function', () => {
         return test_fixture('map.gs');
+    });
+    it('should call methods', () => {
+        return test_fixture('methods.gs');
+    });
+    it('should chain methods', () => {
+        return test_fixture('chain.gs');
     });
 });
 

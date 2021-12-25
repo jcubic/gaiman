@@ -428,7 +428,7 @@ dict = _ "{" _ properties:(dict_list / null_array)  _ "}" _ {
     };
 }
 
-array_property = array:array _ "." _ prop:name {
+literal_property = array:(array / string) _ "." _ prop:name {
     return {
           "type": "MemberExpression",
           "computed": false,
@@ -437,10 +437,23 @@ array_property = array:array _ "." _ prop:name {
     };
 }
 
-function_call = _ !keyword name:(array_property / property / variable) _ "(" args:(argument_list / null_array) ")" _ {
+function_call = _ !keyword name:(literal_property / property / variable) _ "(" args:(argument_list / null_array) ")" _ rest:("." _ name _ "(" (argument_list / null_array) ")")* {
+
     return {
         "type": "AwaitExpression",
-        "argument": call(name, ...args)
+        "argument": rest.reduce(function(acc, item) {
+            const args = item[5];
+            const name = item[2];
+            return call({
+                "type": "MemberExpression",
+                "computed": false,
+                "object": {
+                    "type": "AwaitExpression",
+                    "argument": acc
+                },
+                "property": make_identifier(name)
+            }, ...args);
+        }, call(name, ...args))
     };
 }
 

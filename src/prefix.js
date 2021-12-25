@@ -18,6 +18,14 @@ function parse_cookies(cookies) {
     return result;
 }
 
+function is_function(obj) {
+    return typeof obj === 'function';
+}
+
+function is_promise(obj) {
+    return obj && is_function(obj.then);
+}
+
 const loops = {};
 
 const Gaiman = {
@@ -68,7 +76,7 @@ const Gaiman = {
         return $.get(url);
     },
     get_extra(url) {
-        return $.get(url, $.noop, "text")
+        return $.get(url, $.noop, "text");
     }
 };
 
@@ -255,14 +263,32 @@ extend(Gaiman, WebAdapter.prototype);
 (function(map) {
    Array.prototype.map = function(...args) {
        var result = map.apply(this, args);
-       var is_promise = result.some(x => x && x.then);
-       if (is_promise) {
-           return Promise.all(result); 
+       var has_promise = result.some(is_promise);
+       if (has_promise) {
+           return Promise.all(result);
        } else {
            return result;
        }
    };
 })(Array.prototype.map);
+
+(function(filter) {
+    function call(fn, arr, ctx) {
+        return filter.call(ctx, (_, i) => {
+            return arr[i];
+        });
+    }
+    Array.prototype.filter = function(fn, ctx) {
+        var items = this.map(fn, ctx);
+        if (is_promise(items)) {
+            return items.then(arr => {
+                return call(fn, arr, this);
+            });
+        } else {
+            return call(fn, items, this);
+        }
+    };
+})(Array.prototype.filter);
 
 var cookie, argv, gaiman, $$__m;
 if (is_node()) {

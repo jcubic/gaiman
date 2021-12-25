@@ -445,8 +445,10 @@ function peg$parse(input, options) {
           "kind": "let"
       };
   };
-  var peg$f20 = function() {  // "
-    return create_template_literal(JSON.parse(text().replace(/\n/g, '\\n')));
+  var peg$f20 = function() { // "
+      var string = text().replace(/\\n/g, '\uFFFF\uFFFF').replace(/\n/g, '\\n');
+      string = JSON.parse(string).replace(/\uFFFF\uFFFF/g, '\\n');
+      return create_template_literal(string);
   };
   var peg$f21 = function(value) {
      return {"type": "Literal", "value": value };
@@ -5277,7 +5279,6 @@ function peg$parse(input, options) {
               "arguments": []
           });
           return result;
-          
       }
       function method(...props) {
           return property(...props.map(make_identifier));
@@ -5522,7 +5523,7 @@ function peg$parse(input, options) {
           return new_loc;
       }
       var async_commands = ["ask", "get", "post", "sleep", "sleep*", "echo*", "prompt*", "input*", "ask*"];
-      var sync_commands = ["echo", "prompt", "input", "parse", "store"];
+      var sync_commands = ["echo", "prompt", "config", "input", "parse", "store"];
       var available_commands = async_commands.concat(sync_commands);
 
 

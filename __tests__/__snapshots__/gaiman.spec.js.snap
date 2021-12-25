@@ -119,6 +119,27 @@ exports[`expressions should use command as part of expression 1`] = `
 }());"
 `;
 
+exports[`functions should call methods 1`] = `
+"(async function () {
+    try {
+        await location.replace(\`/__idb__/_gaiman.js\`);
+        let $_x = [
+            1,
+            2,
+            3,
+            4
+        ];
+        async function $_square($_x) {
+            return $_x * $_x;
+        }
+        gaiman.echo(await $_x.map($_square));
+        await $_foo.bar.baz(\`hello\`);
+    } catch (e) {
+        gaiman.error(e);
+    }
+}());"
+`;
+
 exports[`functions should compile function calls 1`] = `
 "(async function () {
     try {

@@ -62,6 +62,9 @@ describe('functions', () => {
     it('should create factorial function', () => {
         return test_fixture('factorial.gs');
     });
+    it('should call methods', () => {
+        return test_fixture('methods.gs');
+    });
 });
 
 describe('expressions', () => {

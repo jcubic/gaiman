@@ -317,7 +317,7 @@ expression_statement = !keyword expression:expression_like {
 expression_like = set / command / expression / function_call
 
 
-expression = heredoc / property / math_expression / bracket_prop_access / dict / match_var / array / function_call / any_name / string / literal
+expression = heredoc / function_call / property / math_expression / bracket_prop_access / dict / match_var / array / any_name / string / literal
 
 command = adapter_command / match
 
@@ -401,7 +401,7 @@ dict = _ "{" _ properties:dict_list? _ "}" _ {
 
 // TODO: make "," mandatory as in dict
 
-function_call = _ !keyword name:variable _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
+function_call = _ !keyword name:(property / variable) _ "(" names:((expression_like / variable) _ ","? _)* ")" _ {
     return {
         "type": "AwaitExpression",
         "argument": call(name, ...names.map(name => name[0]))

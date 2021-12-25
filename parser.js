@@ -936,19 +936,19 @@ function peg$parse(input, options) {
 
     s0 = peg$parseheredoc();
     if (s0 === peg$FAILED) {
-      s0 = peg$parseproperty();
+      s0 = peg$parsefunction_call();
       if (s0 === peg$FAILED) {
-        s0 = peg$parsemath_expression();
+        s0 = peg$parseproperty();
         if (s0 === peg$FAILED) {
-          s0 = peg$parsebracket_prop_access();
+          s0 = peg$parsemath_expression();
           if (s0 === peg$FAILED) {
-            s0 = peg$parsedict();
+            s0 = peg$parsebracket_prop_access();
             if (s0 === peg$FAILED) {
-              s0 = peg$parsematch_var();
+              s0 = peg$parsedict();
               if (s0 === peg$FAILED) {
-                s0 = peg$parsearray();
+                s0 = peg$parsematch_var();
                 if (s0 === peg$FAILED) {
-                  s0 = peg$parsefunction_call();
+                  s0 = peg$parsearray();
                   if (s0 === peg$FAILED) {
                     s0 = peg$parseany_name();
                     if (s0 === peg$FAILED) {
@@ -2008,7 +2008,10 @@ function peg$parse(input, options) {
         s2 = peg$FAILED;
       }
       if (s2 !== peg$FAILED) {
-        s3 = peg$parsevariable();
+        s3 = peg$parseproperty();
+        if (s3 === peg$FAILED) {
+          s3 = peg$parsevariable();
+        }
         if (s3 !== peg$FAILED) {
           s4 = peg$parse_();
           if (s4 !== peg$FAILED) {

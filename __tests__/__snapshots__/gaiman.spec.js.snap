@@ -36,6 +36,14 @@ exports[`expressions should parse arrays 1`] = `
             \`world\`
         ];
         gaiman.echo($_names[0] + \` \` + $_names[1]);
+        gaiman.echo(await [
+            1,
+            2,
+            3,
+            4
+        ].map(function lambda($_x) {
+            return $_x * $_x;
+        }));
     } catch (e) {
         gaiman.error(e);
     }

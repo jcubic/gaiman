@@ -11,3 +11,7 @@ end
 let names = ["helo", "world"]
 
 echo names[0] + " " + names[1]
+
+echo [1,2,3,4].map(lambda(x)
+    return x * x
+end)

@@ -290,6 +290,20 @@ extend(Gaiman, WebAdapter.prototype);
     };
 })(Array.prototype.filter);
 
+(function(reduce) {
+    Array.prototype.reduce = function(fn, init) {
+        return reduce.call(this, function(acc, item) {
+            if (is_promise(acc)) {
+                return acc.then(acc => {
+                    return fn(acc, item);
+                });
+            } else {
+                return fn(acc, item);
+            }
+        }, init);
+    };
+})(Array.prototype.reduce);
+
 var cookie, argv, gaiman, $$__m;
 if (is_node()) {
     argv = process.argv;

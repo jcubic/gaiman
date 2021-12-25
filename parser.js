@@ -470,7 +470,7 @@ function peg$parse(input, options) {
   var peg$f28 = function(method, expr, args) {
       return  {
           "type": "AwaitExpression",
-          "argument": gaiman_call(method.replace(/\*$/, '_2'), expr, ...args.map(x => x[2]))
+          "argument": gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]))
       };
   };
   var peg$f29 = function(method, expr, args) {
@@ -480,7 +480,7 @@ function peg$parse(input, options) {
       };
   };
   var peg$f30 = function(method, expr, args) {
-      return gaiman_call(method, expr, ...args.map(x => x[2]));
+      return gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]));
   };
   var peg$f31 = function(expression, re) {
       return {
@@ -2592,48 +2592,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseany_word() {
-    var s0, s1, s2, s3;
-
-    s0 = peg$currPos;
-    s1 = peg$currPos;
-    s2 = [];
-    if (peg$r1.test(input.charAt(peg$currPos))) {
-      s3 = input.charAt(peg$currPos);
-      peg$currPos++;
-    } else {
-      s3 = peg$FAILED;
-      if (peg$silentFails === 0) { peg$fail(peg$e29); }
-    }
-    if (s3 !== peg$FAILED) {
-      while (s3 !== peg$FAILED) {
-        s2.push(s3);
-        if (peg$r1.test(input.charAt(peg$currPos))) {
-          s3 = input.charAt(peg$currPos);
-          peg$currPos++;
-        } else {
-          s3 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$e29); }
-        }
-      }
-    } else {
-      s2 = peg$FAILED;
-    }
-    if (s2 !== peg$FAILED) {
-      s1 = input.substring(s1, peg$currPos);
-    } else {
-      s1 = s2;
-    }
-    if (s1 !== peg$FAILED) {
-      peg$savedPos = s0;
-      s1 = peg$f24(s1);
-    }
-    s0 = s1;
-
-    return s0;
-  }
-
-  function peg$parseanimation_command_name() {
+  function peg$parseasterisk_name() {
     var s0, s1, s2, s3, s4;
 
     s0 = peg$currPos;
@@ -2676,6 +2635,65 @@ function peg$parse(input, options) {
         peg$currPos = s2;
         s2 = peg$FAILED;
       }
+    } else {
+      peg$currPos = s2;
+      s2 = peg$FAILED;
+    }
+    if (s2 !== peg$FAILED) {
+      s1 = input.substring(s1, peg$currPos);
+    } else {
+      s1 = s2;
+    }
+    if (s1 !== peg$FAILED) {
+      peg$savedPos = s0;
+      s1 = peg$f24(s1);
+    }
+    s0 = s1;
+
+    return s0;
+  }
+
+  function peg$parsecommand_name() {
+    var s0, s1, s2, s3, s4;
+
+    s0 = peg$currPos;
+    s1 = peg$currPos;
+    s2 = peg$currPos;
+    s3 = [];
+    if (peg$r1.test(input.charAt(peg$currPos))) {
+      s4 = input.charAt(peg$currPos);
+      peg$currPos++;
+    } else {
+      s4 = peg$FAILED;
+      if (peg$silentFails === 0) { peg$fail(peg$e29); }
+    }
+    if (s4 !== peg$FAILED) {
+      while (s4 !== peg$FAILED) {
+        s3.push(s4);
+        if (peg$r1.test(input.charAt(peg$currPos))) {
+          s4 = input.charAt(peg$currPos);
+          peg$currPos++;
+        } else {
+          s4 = peg$FAILED;
+          if (peg$silentFails === 0) { peg$fail(peg$e29); }
+        }
+      }
+    } else {
+      s3 = peg$FAILED;
+    }
+    if (s3 !== peg$FAILED) {
+      if (input.charCodeAt(peg$currPos) === 42) {
+        s4 = peg$c28;
+        peg$currPos++;
+      } else {
+        s4 = peg$FAILED;
+        if (peg$silentFails === 0) { peg$fail(peg$e30); }
+      }
+      if (s4 === peg$FAILED) {
+        s4 = null;
+      }
+      s3 = [s3, s4];
+      s2 = s3;
     } else {
       peg$currPos = s2;
       s2 = peg$FAILED;
@@ -2767,7 +2785,7 @@ function peg$parse(input, options) {
     var s0, s1, s2;
 
     s0 = peg$currPos;
-    s1 = peg$parseanimation_command_name();
+    s1 = peg$parseasterisk_name();
     if (s1 !== peg$FAILED) {
       peg$savedPos = peg$currPos;
       s2 = peg$f25(s1);
@@ -2795,7 +2813,7 @@ function peg$parse(input, options) {
     var s0, s1, s2;
 
     s0 = peg$currPos;
-    s1 = peg$parseany_word();
+    s1 = peg$parsecommand_name();
     if (s1 !== peg$FAILED) {
       peg$savedPos = peg$currPos;
       s2 = peg$f26(s1);
@@ -5361,6 +5379,9 @@ function peg$parse(input, options) {
       function gaiman_call(method, ...args) {
           return call(gaiman_prop(method), ...args);
       }
+      function map_extra_method(method) {
+          return method.replace(/\*$/, '_extra')
+      }
       function make_block(body) {
           return {
               "type": "BlockStatement",
@@ -5595,7 +5616,7 @@ function peg$parse(input, options) {
           return new_loc;
       }
       var async_commands = ["ask", "get", "post", "sleep", "sleep*", "echo*", "prompt*", "input*", "ask*"];
-      var sync_commands = ["echo", "prompt", "config", "input", "parse", "store"];
+      var sync_commands = ["echo", "prompt", "config", "input", "parse*", "parse", "store"];
       var available_commands = async_commands.concat(sync_commands);
 
 

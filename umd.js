@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Sat, 25 Dec 2021 12:59:44 GMT
+ * Buid time: Sat, 25 Dec 2021 13:56:54 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -482,7 +482,7 @@
 	  var peg$f28 = function(method, expr, args) {
 	      return  {
 	          "type": "AwaitExpression",
-	          "argument": gaiman_call(method.replace(/\*$/, '_2'), expr, ...args.map(x => x[2]))
+	          "argument": gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]))
 	      };
 	  };
 	  var peg$f29 = function(method, expr, args) {
@@ -492,7 +492,7 @@
 	      };
 	  };
 	  var peg$f30 = function(method, expr, args) {
-	      return gaiman_call(method, expr, ...args.map(x => x[2]));
+	      return gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]));
 	  };
 	  var peg$f31 = function(expression, re) {
 	      return {
@@ -917,19 +917,19 @@
 
 	    s0 = peg$parseheredoc();
 	    if (s0 === peg$FAILED) {
-	      s0 = peg$parseproperty();
+	      s0 = peg$parsefunction_call();
 	      if (s0 === peg$FAILED) {
-	        s0 = peg$parsemath_expression();
+	        s0 = peg$parseproperty();
 	        if (s0 === peg$FAILED) {
-	          s0 = peg$parsebracket_prop_access();
+	          s0 = peg$parsemath_expression();
 	          if (s0 === peg$FAILED) {
-	            s0 = peg$parsedict();
+	            s0 = peg$parsebracket_prop_access();
 	            if (s0 === peg$FAILED) {
-	              s0 = peg$parsematch_var();
+	              s0 = peg$parsedict();
 	              if (s0 === peg$FAILED) {
-	                s0 = peg$parsearray();
+	                s0 = peg$parsematch_var();
 	                if (s0 === peg$FAILED) {
-	                  s0 = peg$parsefunction_call();
+	                  s0 = peg$parsearray();
 	                  if (s0 === peg$FAILED) {
 	                    s0 = peg$parseany_name();
 	                    if (s0 === peg$FAILED) {
@@ -1989,7 +1989,10 @@
 	        s2 = peg$FAILED;
 	      }
 	      if (s2 !== peg$FAILED) {
-	        s3 = peg$parsevariable();
+	        s3 = peg$parseproperty();
+	        if (s3 === peg$FAILED) {
+	          s3 = peg$parsevariable();
+	        }
 	        if (s3 !== peg$FAILED) {
 	          s4 = peg$parse_();
 	          if (s4 !== peg$FAILED) {
@@ -2570,48 +2573,7 @@
 	    return s0;
 	  }
 
-	  function peg$parseany_word() {
-	    var s0, s1, s2, s3;
-
-	    s0 = peg$currPos;
-	    s1 = peg$currPos;
-	    s2 = [];
-	    if (peg$r1.test(input.charAt(peg$currPos))) {
-	      s3 = input.charAt(peg$currPos);
-	      peg$currPos++;
-	    } else {
-	      s3 = peg$FAILED;
-	      if (peg$silentFails === 0) { peg$fail(peg$e29); }
-	    }
-	    if (s3 !== peg$FAILED) {
-	      while (s3 !== peg$FAILED) {
-	        s2.push(s3);
-	        if (peg$r1.test(input.charAt(peg$currPos))) {
-	          s3 = input.charAt(peg$currPos);
-	          peg$currPos++;
-	        } else {
-	          s3 = peg$FAILED;
-	          if (peg$silentFails === 0) { peg$fail(peg$e29); }
-	        }
-	      }
-	    } else {
-	      s2 = peg$FAILED;
-	    }
-	    if (s2 !== peg$FAILED) {
-	      s1 = input.substring(s1, peg$currPos);
-	    } else {
-	      s1 = s2;
-	    }
-	    if (s1 !== peg$FAILED) {
-	      peg$savedPos = s0;
-	      s1 = peg$f24(s1);
-	    }
-	    s0 = s1;
-
-	    return s0;
-	  }
-
-	  function peg$parseanimation_command_name() {
+	  function peg$parseasterisk_name() {
 	    var s0, s1, s2, s3, s4;
 
 	    s0 = peg$currPos;
@@ -2654,6 +2616,65 @@
 	        peg$currPos = s2;
 	        s2 = peg$FAILED;
 	      }
+	    } else {
+	      peg$currPos = s2;
+	      s2 = peg$FAILED;
+	    }
+	    if (s2 !== peg$FAILED) {
+	      s1 = input.substring(s1, peg$currPos);
+	    } else {
+	      s1 = s2;
+	    }
+	    if (s1 !== peg$FAILED) {
+	      peg$savedPos = s0;
+	      s1 = peg$f24(s1);
+	    }
+	    s0 = s1;
+
+	    return s0;
+	  }
+
+	  function peg$parsecommand_name() {
+	    var s0, s1, s2, s3, s4;
+
+	    s0 = peg$currPos;
+	    s1 = peg$currPos;
+	    s2 = peg$currPos;
+	    s3 = [];
+	    if (peg$r1.test(input.charAt(peg$currPos))) {
+	      s4 = input.charAt(peg$currPos);
+	      peg$currPos++;
+	    } else {
+	      s4 = peg$FAILED;
+	      if (peg$silentFails === 0) { peg$fail(peg$e29); }
+	    }
+	    if (s4 !== peg$FAILED) {
+	      while (s4 !== peg$FAILED) {
+	        s3.push(s4);
+	        if (peg$r1.test(input.charAt(peg$currPos))) {
+	          s4 = input.charAt(peg$currPos);
+	          peg$currPos++;
+	        } else {
+	          s4 = peg$FAILED;
+	          if (peg$silentFails === 0) { peg$fail(peg$e29); }
+	        }
+	      }
+	    } else {
+	      s3 = peg$FAILED;
+	    }
+	    if (s3 !== peg$FAILED) {
+	      if (input.charCodeAt(peg$currPos) === 42) {
+	        s4 = peg$c28;
+	        peg$currPos++;
+	      } else {
+	        s4 = peg$FAILED;
+	        if (peg$silentFails === 0) { peg$fail(peg$e30); }
+	      }
+	      if (s4 === peg$FAILED) {
+	        s4 = null;
+	      }
+	      s3 = [s3, s4];
+	      s2 = s3;
 	    } else {
 	      peg$currPos = s2;
 	      s2 = peg$FAILED;
@@ -2745,7 +2766,7 @@
 	    var s0, s1, s2;
 
 	    s0 = peg$currPos;
-	    s1 = peg$parseanimation_command_name();
+	    s1 = peg$parseasterisk_name();
 	    if (s1 !== peg$FAILED) {
 	      peg$savedPos = peg$currPos;
 	      s2 = peg$f25(s1);
@@ -2773,7 +2794,7 @@
 	    var s0, s1, s2;
 
 	    s0 = peg$currPos;
-	    s1 = peg$parseany_word();
+	    s1 = peg$parsecommand_name();
 	    if (s1 !== peg$FAILED) {
 	      peg$savedPos = peg$currPos;
 	      s2 = peg$f26(s1);
@@ -5186,6 +5207,9 @@
 	      function gaiman_call(method, ...args) {
 	          return call(gaiman_prop(method), ...args);
 	      }
+	      function map_extra_method(method) {
+	          return method.replace(/\*$/, '_extra')
+	      }
 	      function make_block(body) {
 	          return {
 	              "type": "BlockStatement",
@@ -5383,7 +5407,7 @@
 	          return new_loc;
 	      }
 	      var async_commands = ["ask", "get", "post", "sleep", "sleep*", "echo*", "prompt*", "input*", "ask*"];
-	      var sync_commands = ["echo", "prompt", "config", "input", "parse", "store"];
+	      var sync_commands = ["echo", "prompt", "config", "input", "parse*", "parse", "store"];
 	      var available_commands = async_commands.concat(sync_commands);
 
 

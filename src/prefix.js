@@ -54,6 +54,9 @@ const Gaiman = {
     },
     parse(input) {
         return $.terminal.parse_arguments(input);
+    },
+    parse_extra(input) {
+        return $.terminal.split_arguments(input);
     }
 };
 
@@ -197,7 +200,7 @@ class WebAdapter {
             }, Number(timeout));
         });
     }
-    sleep_2(timeout) {
+    sleep_extra(timeout) {
         return this.sleep(timeout, true);
     }
     error(message) {
@@ -209,16 +212,16 @@ class WebAdapter {
     ask(message) {
         return this._term.read(message);
     }
-    ask_2(message, delay) {
+    ask_extra(message, delay) {
         return this._term.read(message, { typing: true, delay });
     }
-    echo_2(string, delay) {
+    echo_extra(string, delay) {
         return this._term.echo(string, { typing: true, delay });
     }
-    prompt_2(string, delay) {
+    prompt_extra(string, delay) {
         return this._term.set_prompt(string, { typing: true, delay });
     }
-    input_2(string, delay) {
+    input_extra(string, delay) {
         return this._term.typing('enter', delay, string);
     }
     post(url, data = {}) {
@@ -237,6 +240,18 @@ class WebAdapter {
 }
 
 extend(Gaiman, WebAdapter.prototype);
+
+(function(map) {
+   Array.prototype.map = function(...args) {
+       var result = map.apply(this, args);
+       var is_promise = result.some(x => x && x.then);
+       if (is_promise) {
+           return Promise.all(result); 
+       } else {
+           return result;
+       }
+   };
+})(Array.prototype.map);
 
 var cookie, argv, gaiman, $$__m;
 if (is_node()) {

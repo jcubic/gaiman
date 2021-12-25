@@ -50,6 +50,9 @@
     function gaiman_call(method, ...args) {
         return call(gaiman_prop(method), ...args);
     }
+    function map_extra_method(method) {
+        return method.replace(/\*$/, '_extra')
+    }
     function make_block(body) {
         return {
             "type": "BlockStatement",
@@ -284,7 +287,7 @@
         return new_loc;
     }
     var async_commands = ["ask", "get", "post", "sleep", "sleep*", "echo*", "prompt*", "input*", "ask*"];
-    var sync_commands = ["echo", "prompt", "config", "input", "parse", "store"];
+    var sync_commands = ["echo", "prompt", "config", "input", "parse*", "parse", "store"];
     var available_commands = async_commands.concat(sync_commands);
 }
 
@@ -467,18 +470,17 @@ infinity = "infinity" {
     return make_identifier('Infinity');
 }
 
+asterisk_name = word:$([a-z]+ "*") { return word; }
 
-any_word = word:$[a-z]+ { return word; }
-
-animation_command_name = word:$([a-z]+ "*") { return word; }
+command_name = word:$([a-z]+ "*"?) { return word; }
 
 async_command_name = word:$[a-z]+ { return word; }
 
 adapter_async_strings = word:async_command_name &{ return async_commands.includes(word) } { return word; }
 
-adapter_asterisk_strings = word:animation_command_name &{ return async_commands.includes(word) } { return word; }
+adapter_asterisk_strings = word:asterisk_name &{ return async_commands.includes(word) } { return word; }
 
-adapter_static_strings = word:any_word &{ return sync_commands.includes(word); } { return word; }
+adapter_static_strings = word:command_name &{ return sync_commands.includes(word); } { return word; }
 
 adapter_command = extra_commands / async_command / static_command
 
@@ -488,7 +490,7 @@ extra_commands = _ method:adapter_asterisk_strings _ expr:(adapter_command / exp
     }) _ {
     return  {
         "type": "AwaitExpression",
-        "argument": gaiman_call(method.replace(/\*$/, '_2'), expr, ...args.map(x => x[2]))
+        "argument": gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]))
     };
 }
 
@@ -501,7 +503,7 @@ async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / exp
 }
 
 static_command = _ method:adapter_static_strings _ expr:(adapter_command / expression) _ args:("," _ expression)* {
-    return gaiman_call(method, expr, ...args.map(x => x[2]));
+    return gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]));
 }
 
 match = expression:(match_var / property / variable) _ "=~" _ re:re _ {

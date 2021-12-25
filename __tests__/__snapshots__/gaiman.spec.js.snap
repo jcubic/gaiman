@@ -216,6 +216,19 @@ exports[`global should ignore comments 1`] = `
 }());"
 `;
 
+exports[`global should parse constant values 1`] = `
+"(async function () {
+    try {
+        let $_a = Infinity;
+        let $_b = null;
+        let $_c = true;
+        let $_d = false;
+    } catch (e) {
+        gaiman.error(e);
+    }
+}());"
+`;
+
 exports[`if statements should compile base if 1`] = `
 "(async function () {
     try {
@@ -289,6 +302,9 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
         if ($$__m = String($_command).match(/(foo)/)) {
             let $_command = await gaiman.ask(\`? \`);
             let $_foo = 30 * 30 / 2;
+            let $_bar = +$_command;
+            let $_baz = 10;
+            let $_quux = -$_baz;
             10 * 10 + 3;
             if ($$__m = String($_commad).match(/(bar)/)) {
                 gaiman.echo($$__m[1] + \`foo\`);

@@ -17,6 +17,9 @@ describe('global', () => {
     it('should ignore comments', () => {
         return test_fixture('comments.gs');
     });
+    it('should parse constant values', () => {
+        return test_fixture('constants.gs');
+    });
 });
 
 describe('if statements', () => {

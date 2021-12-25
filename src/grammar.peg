@@ -463,6 +463,11 @@ boolean = value:("true" / "false") {
 
 null = "null" { return null; }
 
+infinity = "infinity" {
+    return make_identifier('Infinity');
+}
+
+
 any_word = word:$[a-z]+ { return word; }
 
 animation_command_name = word:$([a-z]+ "*") { return word; }
@@ -534,14 +539,16 @@ property = struct:variable rest:("." name)+ {
 
 math_expression = unary / or
 
-unary
-  = "not" SP expression:or _ {
+
+not = "not" " " { return "!"; }
+
+unary = op:("-" / "+" / not) _ expression:or {
     return {
         "type": "UnaryExpression",
-        "operator": "!",
+        "operator": op,
         "argument": expression
     };
-  }
+}
 
 or
   = head:and tail:(SP "or" SP and)* {
@@ -575,7 +582,7 @@ mul_div
 
 factor
   = "(" _ expr:(math_expression / adapter_command) _ ")" { return expr; }
-  / bracket_prop_access / function_call / string / literal / match_var / variable
+  / bracket_prop_access / function_call / string / literal / match_var / variable / infinity
 
 any_name = variable:name {
   return make_identifier(variable_prefix + variable);

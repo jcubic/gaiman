@@ -5,5 +5,8 @@ while x > 0 do
 end
 
 while not true do
-    x
+    let i = 0
+    while i < 10 do
+        i += 1
+    end
 end

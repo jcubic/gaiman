@@ -86,5 +86,8 @@ describe('expressions', () => {
     it('should parse assign operators', () => {
         return test_fixture('assign_operators.gs');
     });
+    it('should parse map function', () => {
+        return test_fixture('map.gs');
+    });
 });
 

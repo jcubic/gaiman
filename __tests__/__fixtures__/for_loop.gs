@@ -11,5 +11,9 @@ for key, value in collect do
 end
 
 for i in [1, 2, 3, 4] do
-    echo i
+    for j in [1, 2, 3, 4] do
+        for k in [1, 2, 3, 4] do
+            echo i + j + k
+        end
+    end
 end

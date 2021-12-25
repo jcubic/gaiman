@@ -363,7 +363,7 @@ jump = _ keyword:$("break" / "continue") _ {
     return jump(keyword);
 }
 
-for_loop = "for" SP !keyword arg:((variable _ "," _ variable) / variable) SP "in" SP iterator:(expression_like / variable) _ "do" _ body:statement* _ "end" _ {
+for_loop = "for" SP !keyword arg:((variable _ "," _ variable) / variable) SP "in" SP iterator:(expression_like / variable) _ "do" _ body:statements _ "end" _ {
     if (arg instanceof Array) {
         return for_loop([arg[0], arg[4]], iterator, body);
     } else {
@@ -444,7 +444,7 @@ function_call = _ !keyword name:(array_property / property / variable) _ "(" arg
     };
 }
 
-function_definition = _ "def" _ name:variable _ "(" args:(param_list / null_array) ")" _  body:statement* _ "end" _ {
+function_definition = _ "def" _ name:variable _ "(" args:(param_list / null_array) ")" _  body:statements _ "end" _ {
     const fn_name = name.name.replace(/\$_/, '');
     if (available_commands.includes(fn_name)) {
         const error = new Error(`invalid function name, '${fn_name}' is a command`);
@@ -465,7 +465,7 @@ function_definition = _ "def" _ name:variable _ "(" args:(param_list / null_arra
 
 null_array = '' { return []; }
 
-lambda = "lambda" _ "(" params:(param_list / null_array) ")" _ body:statement* _ "end" _ {
+lambda = "lambda" _ "(" params:(param_list / null_array) ")" _ body:statements _ "end" _ {
     return lambda(params, body);
 }
 

@@ -89,7 +89,7 @@
             }],
             "kind": "let"
         };
-    } 
+    }
     var for_loop = with_loop_guard(function(variable, value, body) {
         if (variable instanceof Array) {
             return {
@@ -290,6 +290,7 @@
     var sync_commands = ["echo", "prompt", "config", "input", "parse*", "parse", "store"];
     var available_commands = async_commands.concat(sync_commands);
     var extra_single = ["sleep*", "get*"];
+    var blacklist_properties = ["constructor", "__proto__", "prototype"];
 }
 
 Start = statements:statements {
@@ -365,7 +366,7 @@ array = "[" values:((expression_like / variable) _ ","? _)* "]" {
     };
 }
 
-bracket_prop_access = object:any_name props:("[" _ property:(math_expression / dict / match_var / array / function_call / string / literal) _ "]")+ _ {
+bracket_prop_access = object:(global / any_name) props:("[" _ property:(math_expression / dict / match_var / array / function_call / string / literal) _ "]")+ _ {
     props = props.map(prop => prop[2]);
     return props.reduce((object, property) => {
         return {
@@ -473,7 +474,7 @@ infinity = "infinity" {
 
 asterisk_name = word:$([a-z]+ "*")
 
-command_name = word:$([a-z]+ "*"?) 
+command_name = word:$([a-z]+ "*"?)
 
 async_command_name = word:$[a-z]+
 

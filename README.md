@@ -87,6 +87,8 @@ end
 ```
 
 More examples in [examples directory](https://github.com/jcubic/gaiman/tree/master/examples)
+See [Reference Manual](https://github.com/jcubic/gaiman/wiki/Reference-Manual)
+
 
 ## Live Demo
 

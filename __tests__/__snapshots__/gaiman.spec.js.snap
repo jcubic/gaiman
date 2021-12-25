@@ -42,6 +42,21 @@ exports[`expressions should parse arrays 1`] = `
 }());"
 `;
 
+exports[`expressions should parse assign operators 1`] = `
+"(async function () {
+    try {
+        $_i = 2;
+        $_i += 2;
+        $_i -= 2;
+        $_i *= 2;
+        $_i /= 2;
+        $_i %= 2;
+    } catch (e) {
+        gaiman.error(e);
+    }
+}());"
+`;
+
 exports[`expressions should parse dictionaries 1`] = `
 "(async function () {
     try {

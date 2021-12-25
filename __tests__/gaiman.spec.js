@@ -77,5 +77,8 @@ describe('expressions', () => {
     it('should parse property access', () => {
         return test_fixture('property_set.gs');
     });
+    it('should parse assign operators', () => {
+        return test_fixture('assign_operators.gs');
+    });
 });
 

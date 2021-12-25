@@ -317,6 +317,11 @@ expression_statement = !keyword expression:expression_like {
 
 expression_like = set / command / expression / function_call
 
+
+expression = heredoc / property / math_expression / bracket_prop_access / dict / match_var / array / function_call / any_name / string / literal
+
+command = adapter_command / match
+
 end = "end" { return null; }
 
 if = _ "if" _ cond:expression_like _ "then" _ body:statements next:(end / if_next / last_else) _ {
@@ -456,10 +461,6 @@ boolean = value:("true" / "false") {
 }
 
 null = "null" { return null; }
-
-expression = heredoc / property / math_expression / bracket_prop_access / dict / match_var / array / function_call / any_name / string / literal
-
-command = adapter_command / match
 
 any_word = word:$[a-z]+ { return word; }
 
@@ -611,10 +612,13 @@ set_cookie = "cookie." name:name _ "=" _ expr:expression {
     };
 }
 
-set_local = left:(bracket_prop_access / property / scoped) _ operator:("=" !"=") _  right:(expression_like / variable) {
+assign_operator = $("=" !"=" / "*=" / "+=" / "-=" / "%=" / "/=")
+
+
+set_local = left:(bracket_prop_access / property / scoped) _ operator:assign_operator _  right:(expression_like / variable) {
     return {
         "type": "AssignmentExpression",
-        "operator": operator[0],
+        "operator": operator,
         "left": left,
         "right": right
     };

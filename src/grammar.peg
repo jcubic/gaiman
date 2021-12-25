@@ -89,7 +89,7 @@
             }],
             "kind": "let"
         };
-    } 
+    }
     var for_loop = with_loop_guard(function(variable, value, body) {
         if (variable instanceof Array) {
             return {
@@ -302,7 +302,7 @@ Start = statements:statements {
     };
 }
 
-statements = statements:(!"end" _ statement* / _) {
+statements = statements:(!"end" _ statement* _ / _) {
     return statements[2].flat(2).filter(Boolean);
 }
 

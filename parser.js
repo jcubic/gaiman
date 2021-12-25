@@ -791,8 +791,14 @@ function peg$parse(input, options) {
           s4.push(s5);
           s5 = peg$parsestatement();
         }
-        s2 = [s2, s3, s4];
-        s1 = s2;
+        s5 = peg$parse_();
+        if (s5 !== peg$FAILED) {
+          s2 = [s2, s3, s4, s5];
+          s1 = s2;
+        } else {
+          peg$currPos = s1;
+          s1 = peg$FAILED;
+        }
       } else {
         peg$currPos = s1;
         s1 = peg$FAILED;
@@ -5418,7 +5424,7 @@ function peg$parse(input, options) {
               }],
               "kind": "let"
           };
-      } 
+      }
       var for_loop = with_loop_guard(function(variable, value, body) {
           if (variable instanceof Array) {
               return {

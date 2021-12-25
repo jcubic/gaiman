@@ -57,6 +57,18 @@ const Gaiman = {
     },
     parse_extra(input) {
         return $.terminal.split_arguments(input);
+    },
+    post(url, data = {}) {
+        return $.post(url, data);
+    },
+    post_extra(url, data = {}) {
+        return $.post(url, data, $.noop, "text");
+    },
+    get(url) {
+        return $.get(url);
+    },
+    get_extra(url) {
+        return $.get(url, $.noop, "text")
     }
 };
 
@@ -203,7 +215,13 @@ class WebAdapter {
     sleep_extra(timeout) {
         return this.sleep(timeout, true);
     }
-    error(message) {
+    error(e) {
+        var message;
+        if (e.statusText) {
+            message = `Failed to fetch: ${e.url}\n${e.statusText}`;
+        } else {
+            message = e.message || e;
+        }
         this._term.error(message);
     }
     echo(arg) {
@@ -224,20 +242,13 @@ class WebAdapter {
     input_extra(string, delay) {
         return this._term.typing('enter', delay, string);
     }
-    post(url, data = {}) {
-        const form = new FormData();
-        Object.entries(data).forEach(([key, value]) => {
-            form.append(key, value);
-        });
-        return fetch(url, {
-            method: 'POST',
-            body: form
-        }).then(res => res.text());
-    }
-    get(url) {
-        return fetch(url).then(res => res.text());
-    }
 }
+
+$.ajaxSetup({
+    beforeSend: function(jqXHR, settings) {
+        jqXHR.url = settings.url;
+    }
+});
 
 extend(Gaiman, WebAdapter.prototype);
 

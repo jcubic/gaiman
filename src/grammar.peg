@@ -89,7 +89,7 @@
             }],
             "kind": "let"
         };
-    }
+    } 
     var for_loop = with_loop_guard(function(variable, value, body) {
         if (variable instanceof Array) {
             return {
@@ -286,9 +286,10 @@
         };
         return new_loc;
     }
-    var async_commands = ["ask", "get", "post", "sleep", "sleep*", "echo*", "prompt*", "input*", "ask*"];
+    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
     var sync_commands = ["echo", "prompt", "config", "input", "parse*", "parse", "store"];
     var available_commands = async_commands.concat(sync_commands);
+    var extra_single = ["sleep*", "get*"];
 }
 
 Start = statements:statements {
@@ -470,19 +471,28 @@ infinity = "infinity" {
     return make_identifier('Infinity');
 }
 
-asterisk_name = word:$([a-z]+ "*") { return word; }
+asterisk_name = word:$([a-z]+ "*")
 
-command_name = word:$([a-z]+ "*"?) { return word; }
+command_name = word:$([a-z]+ "*"?) 
 
-async_command_name = word:$[a-z]+ { return word; }
+async_command_name = word:$[a-z]+
 
-adapter_async_strings = word:async_command_name &{ return async_commands.includes(word) } { return word; }
+adapter_async_strings = word:$async_command_name &{ return async_commands.includes(word) } { return word; }
 
-adapter_asterisk_strings = word:asterisk_name &{ return async_commands.includes(word) } { return word; }
+adapter_asterisk_strings = word:$asterisk_name &{ return async_commands.includes(word) } { return word; }
 
 adapter_static_strings = word:command_name &{ return sync_commands.includes(word); } { return word; }
 
-adapter_command = extra_commands / async_command / static_command
+adapter_command = extra_commands_single / extra_commands / async_command / static_command
+
+extra_single = word:asterisk_name &{ return extra_single.includes(word); } { return word; }
+
+extra_commands_single = _ method:extra_single _ expr:(adapter_command / expression) _ {
+    return  {
+        "type": "AwaitExpression",
+        "argument": gaiman_call(map_extra_method(method), expr)
+    };
+}
 
 extra_commands = _ method:adapter_asterisk_strings _ expr:(adapter_command / expression) _ args:(
     ("," _ expression)+ / '' {
@@ -594,7 +604,7 @@ scoped = !keyword variable:name &{ return !available_commands.includes(variable)
   return make_identifier(variable_prefix + variable);
 }
 
-global = !keyword variable:("cookie" / "location" / "argv" / "node") {
+global = !keyword variable:("cookie" / "location" / "JSON" / "console" / "argv" / "node") {
     return make_identifier(variable);
 }
 

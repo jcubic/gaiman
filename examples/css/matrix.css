@@ -1,19 +1,71 @@
 :root {
-    --color: rgba(85, 234, 167, 0.95);
-    --glow: 1;
-    --background: black;
-    --link-color: #3377FF;
-    --size: 1;
-    /* use --glow: 1; to add glow effect */
-    /* available animations: terminal-bar, terminal-underline */
-    --animation: terminal-blink;
-    --font: monospace;
-    --options: {"enabled": false}; /* JSON config for jQuery Terminal */
+    --options: {"enabled": false};
 }
 body {
+    background: black;
+}
+.trinity-dialog {
+    --size: 1.4;
+    --background: black;
+    --color: rgba(85, 234, 167, 0.95);
+    border: 2px solid var(--color);
+    background: var(--background);
+    width: 800px;
+    height: 400px;
+    min-height: 100px;
+    min-width: 250px;
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 40px);
+    z-index: 100;
+    resize: both;
+    overflow: auto;
+}
+.trinity-dialog .body {
+    width: 100%;
+    height: calc(100% - 28px);
+}
+.trinity-dialog, .trinity-dialog header .title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.trinity-dialog header .title {
+    margin-top: -2px;
+    background: var(--color);
+    padding: 1px 10px;
+}
+.trinity-dialog header {
+    background: var(--color);
+    position: relative;
+}
+.trinity-dialog header::before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 55px;
+    top: 5px;
+    right: 10px;
+    width: calc(100% - 55px - 5px);
+    height: 15px;
+    background: #138B5F;
+}
+.trinity-dialog header .title::before {
+    content: "[ ";
+}
+.trinity-dialog header .title::after {
+    content: " ]";
+}
+.trinity-dialog header ul {
     margin: 0;
     padding: 0;
+    list-style: none;
+    display: inline-block;
 }
-#term {
-    height: 100vh;
+.trinity-dialog header li {
+    display: inline-block;
+    margin: 3px;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--background);
 }

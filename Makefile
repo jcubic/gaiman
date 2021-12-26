@@ -2,8 +2,11 @@ PEG=./node_modules/.bin/peggy
 JEST=./node_modules/.bin/jest
 COVERALLS=./node_modules/coveralls/bin/coveralls.js
 CAT=cat
+CURL=curl
+GREP=grep
 GAIMAN=./bin/compile.js
 ROLLUP=./node_modules/.bin/rollup
+README_TMP=readme.html
 
 .PHONY: test coveralls demo
 
@@ -26,3 +29,7 @@ test-accept-snapshots: parser.js
 
 coveralls:
 	$(CAT) ./coverage/lcov.info | $(COVERALLS)
+
+purge:
+	$(CURL) https://github.com/jcubic/gaiman/blob/master/README.md > $(README_TMP)
+	$(GREP) -Eo '<img src="[^"]+"' $(README_TMP)  | $(GREP) -Eo 'https[^"]+' | xargs -I {} $(CURL) -X PURGE {}

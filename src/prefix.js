@@ -235,13 +235,13 @@ extend(Gaiman, WebAdapter.prototype);
 
 (function(reduce) {
     Array.prototype.reduce = function(fn, init) {
-        return reduce.call(this, function(acc, item) {
+        return reduce.call(this, function(acc, ...args) {
             if (is_promise(acc)) {
                 return acc.then(acc => {
-                    return fn(acc, item);
+                    return fn(acc, ...args);
                 });
             } else {
-                return fn(acc, item);
+                return fn(acc, ...args);
             }
         }, init);
     };

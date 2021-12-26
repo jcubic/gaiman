@@ -95,7 +95,7 @@ async function get_terminal(mapping) {
     const css = (await readFile('./src/terminal.css')).toString();
     return template(html, Object.assign({
         STYLE: css,
-        HTML: '',
+        HTML: '<div id="term"></div>',
         FILE: 'index.js',
         VER: json.version
     }, mapping));

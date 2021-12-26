@@ -643,7 +643,8 @@
          full_output_mode: ls.get(FULL_MODE),
          css: await get_template(CSS_FILE, `${repo}examples/css/`, css),
          js: await get_file(SCRIPT_FILE, `${repo}src/prefix.js`),
-         user_html: (await get(USER_HTML)) || '',
+         // TODO: use Theme from URL
+         user_html: (await get(USER_HTML)) || '<div id="root"></div>',
          editors: {},
          grammar: await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`),
          code: await get_file(SOURCE_FILE, `${repo}examples/`, 'hello.gs'),

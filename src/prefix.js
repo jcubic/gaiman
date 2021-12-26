@@ -134,8 +134,8 @@ class WebAdapter {
             loop_threshold: 500,
             loop_timeout: 200
         }, config);
-        var body = $('body');
-        var options = body.css('--options');
+        var root = $('#term');
+        var options = root.css('--options');
         if (typeof options === 'undefined') {
             options = {};
         } else {
@@ -146,7 +146,7 @@ class WebAdapter {
                 options = {};
             }
         }
-        this._term = body.terminal($.noop, $.extend({
+        this._term = root.terminal($.noop, $.extend({
             greetings: false,
             exit: false
         }, options));
@@ -264,9 +264,10 @@ extend(Gaiman, WebAdapter.prototype);
 })(Array.prototype.reduce);
 
 var cookie, argv, gaiman, $$__m;
-if (is_node()) {
-    argv = process.argv;
-} else {
-    cookie = parse_cookies(document.cookie);
-    gaiman = new WebAdapter();
-}
+try {
+    if (is_node()) {
+        argv = process.argv;
+    } else {
+        cookie = parse_cookies(document.cookie);
+        gaiman = new WebAdapter();
+    }

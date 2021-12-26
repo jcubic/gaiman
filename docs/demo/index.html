@@ -17,6 +17,8 @@
 :root {
     --color: #ccc;
     --background: black;
+    --link-color: #3377FF;
+    --size: 1;
     /* use --glow: 1; to add glow effect */
     /* available animations: terminal-bar, terminal-underline */
     --animation: terminal-blink;
@@ -27,6 +29,26 @@
     </style>
 </head>
 <body>
+<div id="term"></div><script>
+var is_iframe = (function() {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+})();
+if (is_iframe) {
+    window.onerror = function(message, source, lineno, colno, error) {
+        window.parent.postMessage({
+            message,
+            source,
+            lineno,
+            colno
+        });
+        throw error;
+    };
+}
+</script>
 <script src="index.js"></script>
 </body>
 </html>

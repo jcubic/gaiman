@@ -228,7 +228,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-<main>
+  <main>
   <div class="tabs">
     <ul>
       <li class="active"><a href="#">Preview</a></li>
@@ -323,6 +323,20 @@
      });
  };
 
+ const urlSearchParams = new URLSearchParams(window.location.search);
+ const query = Object.fromEntries(urlSearchParams.entries());
+
+ function parse_cookies(cookies) {
+     const result = {};
+     cookies.split(/\s*;\s*/).forEach(function(pair) {
+         pair = pair.split(/\s*=\s*/);
+         var name = decodeURIComponent(pair[0]);
+         var value = decodeURIComponent(pair.splice(1).join('='));
+         result[name] = value;
+     });
+     return result;
+ }
+
  // ref: https://www.freecodecamp.org/news/javascript-debounce-example/
  function debounce(func, timeout = 300) {
      let timer;
@@ -408,12 +422,39 @@
      return fetch(url).then(res => res.text());
  }
 
- async function get_file(token, url) {
-     let result = await idbKeyval.get(token);
-     if (!result) {
-         result = await fetch_text(url);
+ const query_mapping = {};
+
+ async function get_file(token, url, file = '', fallback = () => fetch_text(url + file)) {
+     async function next() {
+         let result = await idbKeyval.get(token);
+         if (!result) {
+             result = await fallback();
+         }
+         return result;
      }
-     return result;
+     try {
+         if (query_mapping[token]) {
+             const prop = query_mapping[token];
+             const file = query[prop];
+             if (file) {
+                 return await fetch_text(url + file);
+             }
+         }
+         return next();
+     } catch(e) {
+         return next();
+     }
+ }
+
+ function get_template(token, url, node) {
+     return get_file(token, url, null, () => node.innerHTML);
+ }
+
+ async function get_css(repo) {
+     if (query.css) {
+         return fetch_text(`${repo}examples/css/${query.css}`);
+     }
+     return (await get(CSS_FILE)) || css.innerHTML;
  }
 
  function to_json(object) {
@@ -590,18 +631,21 @@
      const HTML_FILE = '_gaiman.html';
      const USER_HTML = '_user.html';
 
+     query_mapping[CSS_FILE] = 'css';
+     query_mapping[SOURCE_FILE] = 'gaiman';
+
      const REF = await hash('master');
      const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`
      const state = {
          dev_mode: ls.get(DEV_MODE),
          selected_tab: ls.get(SELECTED_TAB),
          full_output_mode: ls.get(FULL_MODE),
-         css: (await get(CSS_FILE)) || css.innerHTML,
+         css: await get_template(CSS_FILE, `${repo}examples/css/`, css),
          js: await get_file(SCRIPT_FILE, `${repo}src/prefix.js`),
          user_html: (await get(USER_HTML)) || '',
          editors: {},
          grammar: await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`),
-         code: await get_file(SOURCE_FILE, `${repo}examples/hello.gs`),
+         code: await get_file(SOURCE_FILE, `${repo}examples/`, 'hello.gs'),
          ast: {}
      };
      window.state = state;
@@ -814,7 +858,7 @@
 
      function load() {
          if (has_worker && state.output) {
-             frame.src = `./__idb__/${HTML_FILE}`;
+             update_html();
              if (state.full_output_mode) {
                  update_editor(state.editors.output, state.output_full);
              } else {

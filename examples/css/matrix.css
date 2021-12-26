@@ -1,3 +1,10 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+#term {
+    height: 100vh;
+}
 :root {
     --color: rgba(85, 234, 167, 0.95);
     --glow: 1;

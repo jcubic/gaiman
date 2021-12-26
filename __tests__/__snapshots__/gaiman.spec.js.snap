@@ -47,56 +47,6 @@ exports[`expressions should chain methods 1`] = `
 }"
 `;
 
-exports[`expressions should parse arrays 1`] = `
-"async function main() {
-    try {
-        let $_x = [
-            1,
-            2,
-            3,
-            4
-        ];
-        for (let $_word of [
-                \`lorem\`,
-                \`ipsum\`,
-                \`dolor\`
-            ]) {
-            if (gaiman.should_break_loop(1)) {
-                break;
-            }
-            gaiman.echo($_word);
-        }
-        gaiman.exit_loop(1);
-        for (let $_i of [
-                1,
-                2,
-                3
-            ]) {
-            if (gaiman.should_break_loop(2)) {
-                break;
-            }
-            gaiman.echo($_i);
-        }
-        gaiman.exit_loop(2);
-        let $_names = [
-            \`helo\`,
-            \`world\`
-        ];
-        gaiman.echo($_names[0] + \` \` + $_names[1]);
-        gaiman.echo(await [
-            1,
-            2,
-            3,
-            4
-        ].map(function lambda($_x) {
-            return $_x * $_x;
-        }));
-    } catch (e) {
-        gaiman.error(e);
-    }
-}"
-`;
-
 exports[`expressions should parse assign operators 1`] = `
 "async function main() {
     try {
@@ -106,30 +56,6 @@ exports[`expressions should parse assign operators 1`] = `
         $_i *= 2;
         $_i /= 2;
         $_i %= 2;
-    } catch (e) {
-        gaiman.error(e);
-    }
-}"
-`;
-
-exports[`expressions should parse dictionaries 1`] = `
-"async function main() {
-    try {
-        let $_dict = {};
-        let $_dict = {
-            [\`foo\`]: 10,
-            [\`bar\`]: \`hello\`,
-            [\`baz\`]: [
-                1,
-                2,
-                3
-            ],
-            [\`quux\`]: {
-                [\`1\`]: 10,
-                [\`2\`]: 20,
-                [\`3\`]: 30
-            }
-        };
     } catch (e) {
         gaiman.error(e);
     }
@@ -563,6 +489,93 @@ exports[`loop should parse while loops 1`] = `
             gaiman.exit_loop(3);
         }
         gaiman.exit_loop(4);
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
+exports[`values should parse arrays 1`] = `
+"async function main() {
+    try {
+        let $_x = [
+            1,
+            2,
+            3,
+            4
+        ];
+        for (let $_word of [
+                \`lorem\`,
+                \`ipsum\`,
+                \`dolor\`
+            ]) {
+            if (gaiman.should_break_loop(1)) {
+                break;
+            }
+            gaiman.echo($_word);
+        }
+        gaiman.exit_loop(1);
+        for (let $_i of [
+                1,
+                2,
+                3
+            ]) {
+            if (gaiman.should_break_loop(2)) {
+                break;
+            }
+            gaiman.echo($_i);
+        }
+        gaiman.exit_loop(2);
+        let $_names = [
+            \`helo\`,
+            \`world\`
+        ];
+        gaiman.echo($_names[0] + \` \` + $_names[1]);
+        gaiman.echo(await [
+            1,
+            2,
+            3,
+            4
+        ].map(function lambda($_x) {
+            return $_x * $_x;
+        }));
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
+exports[`values should parse dictionaries 1`] = `
+"async function main() {
+    try {
+        let $_dict = {};
+        let $_dict = {
+            [\`foo\`]: 10,
+            [\`bar\`]: \`hello\`,
+            [\`baz\`]: [
+                1,
+                2,
+                3
+            ],
+            [\`quux\`]: {
+                [\`1\`]: 10,
+                [\`2\`]: 20,
+                [\`3\`]: 30
+            }
+        };
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
+exports[`values should parse strings 1`] = `
+"async function main() {
+    try {
+        gaiman.echo(\`foo bar\`);
+        gaiman.echo(\`helo \\"xxx\\"\`);
+        gaiman.echo(\`hello \\\\\\\\\`);
+        gaiman.echo(\`hello \\\\\\\\\\"hello\\\\\\\\\\" hello\`);
     } catch (e) {
         gaiman.error(e);
     }

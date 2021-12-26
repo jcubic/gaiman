@@ -486,8 +486,10 @@ var = _ "let" _ name:(variable) _ "=" _ expression:expression_like _ {
     };
 }
 
-string = "\"" ([^"] / "\\\\\"")*  "\"" { // "
-    var string = text().replace(/\\n/g, '\uFFFF\uFFFF')
+DoubleStringCharacter = !('"' / "\\") . / "\\" . { return text(); } // "
+
+string = '"' DoubleStringCharacter*  '"' { // '
+    var string = text().replace(/\\n/g, '\uFFFF\uFFFF');
     string = JSON.parse(string).replace(/\\/g, '\\\\').replace(/\uFFFF\uFFFF/g, '\\n');
     return create_template_literal(string);
 }

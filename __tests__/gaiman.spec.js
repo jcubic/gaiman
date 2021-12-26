@@ -37,6 +37,18 @@ describe('if statements', () => {
     });
 });
 
+describe('values', () => {
+    it('should parse strings', () => {
+        return test_fixture('strings.gs');
+    });
+    it('should parse arrays', () => {
+        return test_fixture('arrays.gs');
+    });
+    it('should parse dictionaries', () => {
+        return test_fixture('dictionaries.gs');
+    });
+});
+
 describe('loop', () => {
     it('should parse for loops', () => {
         return test_fixture('for_loop.gs');
@@ -67,12 +79,6 @@ describe('functions', () => {
 describe('expressions', () => {
     it('should use command as part of expression', () => {
         return test_fixture('expression_commands.gs');
-    });
-    it('should parse arrays', () => {
-        return test_fixture('arrays.gs');
-    });
-    it('should parse dictionaries', () => {
-        return test_fixture('dictionaries.gs');
     });
     it('should parse property access', () => {
         return test_fixture('property_access.gs');

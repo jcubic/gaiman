@@ -10,10 +10,10 @@
 })(function(CodeMirror) {
 
     var keywordList = [
-         "ask", "def", "echo", "else", "end", "false", "for", "get", "if", "in",
-         "let", "not", "or", "post", "return", "sleep", "then", "true", "while",
-         "throw", "lambda", "do", "continue", "break", "store", "config", "parse",
-         "ask*", "echo*", "input*"
+        "ask", "def", "echo", "else", "end", "false", "for", "get", "if", "in",
+        "let", "not", "or", "post", "return", "sleep", "then", "true", "while",
+        "throw", "lambda", "do", "continue", "break", "store", "config", "parse",
+        "type", "ask*", "echo*", "input*"
      ];
 
      CodeMirror.defineSimpleMode("gaiman", {

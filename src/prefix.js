@@ -73,6 +73,22 @@ const Gaiman = {
     exit_loop(id) {
         delete loops[id];
     },
+    type(obj) {
+        if (obj === 'null') {
+            return 'null';
+        } else if (Number.isNaN(obj)) {
+            return 'nan';
+        } else if (obj instanceof Array) {
+            return 'array';
+        } else {
+            var type = typeof obj;
+            if (type === 'object') {
+                // https://tinyurl.com/fixing-typeof
+                return ({}).toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase();
+            }
+            return type;
+        }
+    },
     parse(input) {
         return $.terminal.parse_arguments(input);
     },

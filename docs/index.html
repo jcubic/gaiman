@@ -616,7 +616,7 @@ body {
          update_editor(state.editors.css, css.innerHTML);
          update_editor(state.editors.js, state.js);
          update_editor(state.editors.html, html.innerHTML);
-         update_editor(state.editors.input, code);
+         update_editor(state.editors.input, state.code);
          return false;
      });
      $('#download').on('click', function() {

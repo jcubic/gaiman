@@ -5930,10 +5930,7 @@ function peg$parse(input, options) {
                        "kind": "let"
                   },
                   "right": call(method('Object', 'entries'), value),
-                  "body": {
-                      "type": "BlockStatement",
-                      "body": body
-                  }
+                  "body": make_block(body)
               };
           }
           return {
@@ -5949,20 +5946,14 @@ function peg$parse(input, options) {
                   "kind": "let"
               },
               "right": value,
-              "body": {
-                  "type": "BlockStatement",
-                  "body": body
-              }
+              "body": make_block(body)
           };
       });
       var while_loop = with_loop_guard(function(test, body) {
           return {
               "type": "WhileStatement",
               "test": test,
-              "body": {
-                  "type": "BlockStatement",
-                  "body": body
-              }
+              "body": make_block(body)
           };
       });
       function literal(value) {
@@ -6060,10 +6051,7 @@ function peg$parse(input, options) {
       function try_catch(body) {
           return {
               "type": "TryStatement",
-              "block": {
-                  "type": "BlockStatement",
-                  body: body
-              },
+              "block": make_block(body),
               "handler": {
                   "type": "CatchClause",
                   "param": {
@@ -6095,10 +6083,7 @@ function peg$parse(input, options) {
               "type": "FunctionExpression",
               "id": make_identifier('lambda'),
               "params": params,
-              "body": {
-                  "type": "BlockStatement",
-                  "body": body
-              }
+              "body": make_block(body)
           };
       }
       // move error location without mutation

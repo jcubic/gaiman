@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Sun, 26 Dec 2021 16:41:11 GMT
+ * Buid time: Sun, 26 Dec 2021 16:44:34 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -5733,10 +5733,7 @@
 	                       "kind": "let"
 	                  },
 	                  "right": call(method('Object', 'entries'), value),
-	                  "body": {
-	                      "type": "BlockStatement",
-	                      "body": body
-	                  }
+	                  "body": make_block(body)
 	              };
 	          }
 	          return {
@@ -5752,20 +5749,14 @@
 	                  "kind": "let"
 	              },
 	              "right": value,
-	              "body": {
-	                  "type": "BlockStatement",
-	                  "body": body
-	              }
+	              "body": make_block(body)
 	          };
 	      });
 	      var while_loop = with_loop_guard(function(test, body) {
 	          return {
 	              "type": "WhileStatement",
 	              "test": test,
-	              "body": {
-	                  "type": "BlockStatement",
-	                  "body": body
-	              }
+	              "body": make_block(body)
 	          };
 	      });
 	      function literal(value) {
@@ -5851,10 +5842,7 @@
 	      function try_catch(body) {
 	          return {
 	              "type": "TryStatement",
-	              "block": {
-	                  "type": "BlockStatement",
-	                  body: body
-	              },
+	              "block": make_block(body),
 	              "handler": {
 	                  "type": "CatchClause",
 	                  "param": {
@@ -5886,10 +5874,7 @@
 	              "type": "FunctionExpression",
 	              "id": make_identifier('lambda'),
 	              "params": params,
-	              "body": {
-	                  "type": "BlockStatement",
-	                  "body": body
-	              }
+	              "body": make_block(body)
 	          };
 	      }
 	      // move error location without mutation

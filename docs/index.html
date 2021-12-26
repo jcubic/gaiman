@@ -605,7 +605,7 @@
          state.grammar = await fetch_text(`${repo}src/grammar.peg`);
          state.code = await fetch_text(`${repo}examples/hello.gs`);
          state.js = await fetch_text(`${repo}src/prefix.js`);
-         update_editor(state.editors.grammar, grammar);
+         update_editor(state.editors.grammar, state.grammar);
          update_editor(state.editors.css, css.innerHTML);
          update_editor(state.editors.js, state.js);
          update_editor(state.editors.html, html.innerHTML);
@@ -706,7 +706,7 @@
          const { data } = event;
          if (data && data.message) {
              const { lineno, colno, message, source } = data;
-             if (lineo === null || colno === null) {
+             if (lineno === null || colno === null) {
                  return error('.gaiman-output', `Error: ${message}`);
              }
              const msg = `Error: ${message}\nline: ${lineno} col: ${colno}`;

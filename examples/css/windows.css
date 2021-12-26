@@ -1,0 +1,95 @@
+:root {
+    --color: #ccc;
+    --background: black;
+    --link-color: #3377FF;
+    --size: 1.4;
+    /* use --glow: 1; to add glow effect */
+    /* available animations: terminal-bar, terminal-underline */
+    --animation: terminal-underline;
+    --font: monospace;
+    --options: {"enabled": false}; /* JSON config for jQuery Terminal */
+}
+body .shell {
+    width: 600px;
+    height: 300px;
+}
+body .shell .terminal {
+    height: calc(100% - 29px);
+    padding: 10px;
+    --size: 1.1;
+    /*
+     * padding bottom 0 on terminal and margin
+     * on .cmd will be in version 2.0.1
+     * that fixes FireFox issue
+     */
+    padding-bottom: 0;
+}
+body .shell .terminal .cmd {
+    margin-bottom: 10px;
+}
+.shell .typed-cursor, .shell .cursor {
+    background: transparent;
+}
+.shell > .status-bar .title {
+    cursor: move;
+}
+/*
+ * fix to shell.js to center title to free space
+ */
+.shell.windows .status-bar .title {
+    right: 106px;
+}
+@supports (--css: variables) {
+    .shell .terminal {
+        --color: #aaa;
+    }
+    .shell.windows .content.terminal {
+        --background: black;
+        --color: white;
+        --animation: terminal-underline;
+    }
+}
+/*
+ * overwrite shell.js style because shell.js   
+ * selectors are stronger then terminal ones
+ */
+.cmd span.cursor {
+    animation: none;
+    width: auto;
+    background-color: var(--background, #000);
+}
+.shell:not(.light) terminal.content,
+.shell.osx.dark .content,
+.shell.ubuntu:not(.light) .content {
+    background-color: var(--background, #222) !important;
+}
+.shell .terminal.content {
+    font-size: 12px;
+}
+.cmd {
+    background-color: inherit;
+}
+@supports (--css: variables) {
+    .shell .terminal.content {
+        font-size: calc(var(--size, 1) * 12px);
+    }
+}
+/* fix for Firefox */
+.terminal > .resizer, .terminal > .font .resizer {
+    visibility: visible;
+    pointer-events: none;
+}
+.terminal::-webkit-scrollbar-track
+{
+	border: 1px solid var(--color, #aaa);
+	background-color: var(--background);
+}
+.terminal::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: var(--background);
+}
+.terminal::-webkit-scrollbar-thumb
+{
+	background-color: var(--color, #aaa);
+}

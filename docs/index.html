@@ -21,11 +21,31 @@
     <link href="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/addon/search/matchesonscrollbar.css,npm/codemirror@5.x.x/addon/dialog/dialog.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/theme/seti.css" rel="stylesheet"/>
     <style>
+     :root {
+         --separator: gray;
+         --tab-bg: #1d1e22;
+         --tab-color: #aaaebc;
+         --tab-border-color: #34363e;
+         --tab-color-active: #1236f7;
+     }
      body {
          margin: 0;
      }
+     nav {
+        background: black;
+        padding: 8px 10px;
+        border-bottom: 2px solid var(--separator);
+     }
+     nav h1 {
+        margin: 0;
+        text-indent: -999999999px;
+        width: 120px;
+        height: 35px;
+        background: black url(./brand-white.svg);
+        background-size: contain;
+     }
      main {
-         height: calc(100vh - 27px);
+         height: calc(100vh - 27px - 53px);
      }
      iframe {
          border: none;
@@ -41,12 +61,6 @@
      .hidden {
          display: none !important;
      }
-     :root {
-         --tab-bg: #1d1e22;
-         --tab-color: #aaaebc;
-         --tab-border-color: #34363e;
-         --tab-color-active: #1236f7;
-     }
      .errors ul, .tabs > ul, .config ul {
          list-style: none;
          margin: 0;
@@ -56,7 +70,7 @@
          padding: 5px 10px 0 5px;
          background: black;
          font-family: sans-serif;
-         border-bottom: 2px solid grey
+         border-bottom: 2px solid var(--separator);
      }
      .tabs > ul li {
          background: var(--tab-bg);
@@ -228,6 +242,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
+  <nav>
+    <h1>Gaiman Programming Langauge and Text Advanture Game Engine</h1>
+  </nav>
   <main>
   <div class="tabs">
     <ul>

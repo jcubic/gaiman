@@ -27,18 +27,16 @@
             "alternate": alternative
         };
     }
-    function iife(body) {
-        const result = expression_statement({
-            "type": "CallExpression",
-            "callee": {
-                "type": "FunctionExpression",
-                "id": null,
-                "async": true,
-                "params": [],
-                "body": make_block(body)
-            },
-            "arguments": []
-        });
+    function main(body) {
+        const result = {
+            "type": "FunctionDeclaration",
+            "id": make_identifier('main'),
+            "params": [],
+            "body": make_block(body),
+            "generator": false,
+            "expression": false,
+            "async": true
+        };
         return result;
     }
     function build_list(first, rest) {
@@ -313,7 +311,7 @@ Start = statements:statements {
     return {
         "type": "Program",
         "body": [
-            iife([
+            main([
                 try_catch(statements)
             ])
         ]

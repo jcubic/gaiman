@@ -316,6 +316,7 @@
     --font: monospace;
     --options: {"enabled": false}; /* JSON config for jQuery Terminal */
 }</script>
+<script type="text/x-template" id="html"><div id="root"></div></script>
 <script>
 
  $.fn.cm_refresh = function() {
@@ -601,11 +602,13 @@
      });
      $('#reset').on('click', async function() {
          parse = (code) => gaiman.parse(code);
-         grammar = await fetch_text(`${repo}src/grammar.peg`);
-         code = await fetch_text(`${repo}examples/hello.gs`);
+         state.grammar = await fetch_text(`${repo}src/grammar.peg`);
+         state.code = await fetch_text(`${repo}examples/hello.gs`);
+         state.js = await fetch_text(`${repo}src/prefix.js`);
          update_editor(state.editors.grammar, grammar);
          update_editor(state.editors.css, css.innerHTML);
-         update_editor(state.editors.html, '');
+         update_editor(state.editors.js, state.js);
+         update_editor(state.editors.html, html.innerHTML);
          update_editor(state.editors.input, code);
          return false;
      });
@@ -636,15 +639,14 @@
      query_mapping[SOURCE_FILE] = 'gaiman';
 
      const REF = await hash('master');
-     const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`
+     const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`;
      const state = {
          dev_mode: ls.get(DEV_MODE),
          selected_tab: ls.get(SELECTED_TAB),
          full_output_mode: ls.get(FULL_MODE),
          css: await get_template(CSS_FILE, `${repo}examples/css/`, css),
+         user_html: await get_template(USER_HTML, `${repo}examples/html`, html),
          js: await get_file(SCRIPT_FILE, `${repo}src/prefix.js`),
-         // TODO: use Theme from URL
-         user_html: (await get(USER_HTML)) || '<div id="root"></div>',
          editors: {},
          grammar: await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`),
          code: await get_file(SOURCE_FILE, `${repo}examples/`, 'hello.gs'),
@@ -652,7 +654,7 @@
      };
      window.state = state;
 
-     const html = add_version(await fetch_text(`${repo}src/terminal.html`));
+     const tempate_html = add_version(await fetch_text(`${repo}src/terminal.html`));
      const postfix = await fetch_text(`${repo}src/postfix.js`);
 
      let parse = (code) => gaiman.parse(code);
@@ -848,7 +850,7 @@
          state.user_html = state.editors.html.getValue();
          clear_error('.gaiman-output');
          clear_marks(state.editors.output);
-         state.html = template(html, {
+         state.html = template(tempate_html, {
              STYLE: css_sanitize(state.css),
              HTML: state.user_html + '\n',
              FILE: './_gaiman_output.js'

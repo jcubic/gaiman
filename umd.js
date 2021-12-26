@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Sun, 26 Dec 2021 14:38:50 GMT
+ * Buid time: Sun, 26 Dec 2021 16:41:11 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -340,7 +340,7 @@
 	      return {
 	          "type": "Program",
 	          "body": [
-	              iife([
+	              main([
 	                  try_catch(statements)
 	              ])
 	          ]
@@ -5674,18 +5674,16 @@
 	              "alternate": alternative
 	          };
 	      }
-	      function iife(body) {
-	          const result = expression_statement({
-	              "type": "CallExpression",
-	              "callee": {
-	                  "type": "FunctionExpression",
-	                  "id": null,
-	                  "async": true,
-	                  "params": [],
-	                  "body": make_block(body)
-	              },
-	              "arguments": []
-	          });
+	      function main(body) {
+	          const result = {
+	              "type": "FunctionDeclaration",
+	              "id": make_identifier('main'),
+	              "params": [],
+	              "body": make_block(body),
+	              "generator": false,
+	              "expression": false,
+	              "async": true
+	          };
 	          return result;
 	      }
 	      function build_list(first, rest) {
@@ -5913,7 +5911,7 @@
 	          return new_loc;
 	      }
 	      var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
-	      var sync_commands = ["echo", "prompt", "config", "input", "parse*", "parse", "store"];
+	      var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store"];
 	      var available_commands = async_commands.concat(sync_commands);
 	      var extra_single = ["sleep*", "get*"];
 

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`expressions should call methods 1`] = `
-"(async function () {
+"async function main() {
     try {
         await location.replace(\`/__idb__/_gaiman.js\`);
         let $_x = [
@@ -18,11 +18,11 @@ exports[`expressions should call methods 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`expressions should chain methods 1`] = `
-"(async function () {
+"async function main() {
     try {
         gaiman.echo(await (await [
             1,
@@ -44,11 +44,11 @@ exports[`expressions should chain methods 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`expressions should parse arrays 1`] = `
-"(async function () {
+"async function main() {
     try {
         let $_x = [
             1,
@@ -94,11 +94,11 @@ exports[`expressions should parse arrays 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`expressions should parse assign operators 1`] = `
-"(async function () {
+"async function main() {
     try {
         $_i = 2;
         $_i += 2;
@@ -109,11 +109,11 @@ exports[`expressions should parse assign operators 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`expressions should parse dictionaries 1`] = `
-"(async function () {
+"async function main() {
     try {
         let $_dict = {};
         let $_dict = {
@@ -133,11 +133,11 @@ exports[`expressions should parse dictionaries 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`expressions should parse map function 1`] = `
-"(async function () {
+"async function main() {
     try {
         let $_noop = function lambda($_x) {
         };
@@ -163,11 +163,11 @@ exports[`expressions should parse map function 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`expressions should parse property access 1`] = `
-"(async function () {
+"async function main() {
     try {
         gaiman.echo($_dict[$_i]);
         gaiman.echo(await gaiman.get($_dict[\`hello\`]));
@@ -178,11 +178,11 @@ exports[`expressions should parse property access 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`expressions should parse property access 2`] = `
-"(async function () {
+"async function main() {
     try {
         $_dict[$_i] = 10;
         $_dict[$_i] = { [\`foo\`]: 10 };
@@ -190,22 +190,22 @@ exports[`expressions should parse property access 2`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`expressions should use command as part of expression 1`] = `
-"(async function () {
+"async function main() {
     try {
         await gaiman.echo_extra(await gaiman.get(\`https://jcubic.pl/file.txt\`), 100);
         gaiman.echo(\`<white>\` + await gaiman.ask(\`? \`) + \`</white>\`);
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`functions should compile function calls 1`] = `
-"(async function () {
+"async function main() {
     try {
         async function $_global($_message) {
             gaiman.echo($_message);
@@ -220,11 +220,11 @@ exports[`functions should compile function calls 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`functions should compile function definitions 1`] = `
-"(async function () {
+"async function main() {
     try {
         async function $_foo($_arg) {
         }
@@ -244,11 +244,11 @@ exports[`functions should compile function definitions 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`functions should create factorial function 1`] = `
-"(async function () {
+"async function main() {
     try {
         async function $_factorial($_n) {
             if ($_n <= 0) {
@@ -260,11 +260,11 @@ exports[`functions should create factorial function 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`global should ignore comments 1`] = `
-"(async function () {
+"async function main() {
     try {
         let $_x = {
             [\`foo\`]: 10,
@@ -300,11 +300,11 @@ exports[`global should ignore comments 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`global should parse constant values 1`] = `
-"(async function () {
+"async function main() {
     try {
         let $_a = Infinity;
         let $_b = null;
@@ -313,11 +313,11 @@ exports[`global should parse constant values 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`if statements should compile base if 1`] = `
-"(async function () {
+"async function main() {
     try {
         if ($$__m = String($$__m[1]).match(/foo/)) {
             let $_command = await gaiman.ask(\`? \`);
@@ -328,11 +328,11 @@ exports[`if statements should compile base if 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`if statements should compile if_else 1`] = `
-"(async function () {
+"async function main() {
     try {
         if ($$__m = String($$__m[1]).match(/foo/)) {
             let $_command = await gaiman.ask(\`? \`);
@@ -349,11 +349,11 @@ exports[`if statements should compile if_else 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`if statements should compile multiple if_else  1`] = `
-"(async function () {
+"async function main() {
     try {
         if ($$__m = String($$__m[1]).match(/foo/)) {
             let $_command = await gaiman.ask(\`? \`);
@@ -378,11 +378,11 @@ exports[`if statements should compile multiple if_else  1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`if statements should compile multiple if_else with expressions 1`] = `
-"(async function () {
+"async function main() {
     try {
         gaiman.echo(\`hello\` + \` world\`);
         let $_command = await gaiman.ask(\`? \`);
@@ -405,11 +405,11 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`loop should parse break 1`] = `
-"(async function () {
+"async function main() {
     try {
         let $_x = 0;
         while (true) {
@@ -426,11 +426,11 @@ exports[`loop should parse break 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`loop should parse continue 1`] = `
-"(async function () {
+"async function main() {
     try {
         for (let $_i of [
                 1,
@@ -453,11 +453,11 @@ exports[`loop should parse continue 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`loop should parse for loops 1`] = `
-"(async function () {
+"async function main() {
     try {
         for (let $_chr of \`hello\`) {
             if (gaiman.should_break_loop(1)) {
@@ -528,11 +528,11 @@ exports[`loop should parse for loops 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;
 
 exports[`loop should parse while loops 1`] = `
-"(async function () {
+"async function main() {
     try {
         let $_x = 10;
         while ($_x > 0) {
@@ -566,5 +566,5 @@ exports[`loop should parse while loops 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
-}());"
+}"
 `;

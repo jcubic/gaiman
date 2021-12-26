@@ -271,3 +271,11 @@ try {
         cookie = parse_cookies(document.cookie);
         gaiman = new WebAdapter();
     }
+    main();
+} catch (e) {
+    window.parent.postMessage({
+        message: e.message,
+        colno: null,
+        lineno: null
+    });
+}

@@ -695,9 +695,9 @@
          readOnly: false,
          mode: 'htmlmixed'
      });
-     build_html();
-     set_idb();
-     load();
+     update_html(true);
+     set_idb(true);
+     load(true);
      window.addEventListener('message', async function(event) {
          const { data } = event;
          if (data && data.message) {
@@ -730,7 +730,7 @@
          state.editors[name].on('change', debounce(update, 800));
      });
      ['css', 'html'].forEach(name => {
-         state.editors[name].on('change', debounce(update_html, 800));
+         state.editors[name].on('change', debounce(() => update_html(), 800));
      });
      state.editors.grammar.on('change', debounce(function() {
          if (state.dev_mode) {
@@ -819,19 +819,22 @@
          }
      }
 
-     function set_idb() {
-         set(SOURCE_FILE, state.code);
-         set(USER_HTML, state.user_html);
-         set(HTML_FILE, state.html);
+     function set_idb(init) {
+         if (!init) {
+             set(SOURCE_FILE, state.code);
+             set(GRAMMAR_FILE, state.grammar);
+             set(USER_HTML, state.user_html);
+         }
          set(SCRIPT_FILE, state.js);
          set(OUTPUT_FILE, state.output_full);
-         set(GRAMMAR_FILE, state.grammar);
      }
 
-     function update_html() {
+     function update_html(init) {
          build_html();
-         set(CSS_FILE, state.css);
-         set(USER_HTML, state.user_html);
+         if (!init) {
+             set(CSS_FILE, state.css);
+             set(USER_HTML, state.user_html);
+         }
          set(HTML_FILE, state.html);
          frame.src = `./__idb__/${HTML_FILE}`;
      }
@@ -856,9 +859,9 @@
          load();
      }
 
-     function load() {
+     function load(init) {
          if (has_worker && state.output) {
-             update_html();
+             update_html(init);
              if (state.full_output_mode) {
                  update_editor(state.editors.output, state.output_full);
              } else {

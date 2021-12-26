@@ -6,7 +6,10 @@ CURL=curl
 GREP=grep
 GAIMAN=./bin/compile.js
 ROLLUP=./node_modules/.bin/rollup
+
 README_TMP=readme.html
+USER=jcubic
+REPO=gaiman
 
 .PHONY: test coveralls demo
 
@@ -31,5 +34,5 @@ coveralls:
 	$(CAT) ./coverage/lcov.info | $(COVERALLS)
 
 purge:
-	$(CURL) -s https://github.com/jcubic/gaiman/blob/master/README.md > $(README_TMP)
+	$(CURL) -s https://github.com/$(USER)/$(REPO)/blob/master/README.md > $(README_TMP)
 	$(GREP) -Eo '<img src="[^"]+"' $(README_TMP) | $(GREP) camo | $(GREP) -Eo 'https[^"]+' | xargs -I {} $(CURL) -w "\n" -s -X PURGE {}

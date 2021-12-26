@@ -305,14 +305,7 @@
     </li>
   </ul>
 </div>
-<script type="text/x-template" id="css">body {
-    margin: 0;
-    padding: 0;
-}
-#term {
-    height: 100vh;
-}
-:root {
+<script type="text/x-template" id="css">:root {
     --color: #ccc;
     --background: black;
     --link-color: #3377FF;
@@ -322,6 +315,13 @@
     --animation: terminal-blink;
     --font: monospace;
     --options: {"enabled": false}; /* JSON config for jQuery Terminal */
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+#term {
+    height: 100vh;
 }</script>
 <script type="text/x-template" id="html"><div id="term"></div></script>
 <script>

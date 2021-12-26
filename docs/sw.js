@@ -18,6 +18,19 @@ const mime = {
     js: 'application/javascript'
 };
 
+self.addEventListener('fetch', function (event) {
+    var url = event.request.url;
+    if (url.match(/__idb__/)) {
+        event.respondWith(getStatic(url));
+        return;
+    }
+    if (event.request.cache === 'only-if-cached' &&
+        event.request.mode !== 'same-origin') {
+        return;
+    }
+    event.respondWith(fetch(event.request).catch(() => {}));
+});
+
 function getMime(type) {
     const result = mime[type];
     if (result) {
@@ -26,10 +39,8 @@ function getMime(type) {
     return 'text/plain';
 }
 
-
-self.addEventListener('fetch', function (event) {
-    event.respondWith(new Promise(function(resolve, reject) {
-        var url = event.request.url;
+function getStatic(url) {
+    return new Promise(function(resolve, reject) {
         var m = url.match(/__idb__\/([^?]+)(?:\?.*$)?/);
         function redirect_dir() {
             return resolve(Response.redirect(url + '/', 301));
@@ -52,18 +63,11 @@ self.addEventListener('fetch', function (event) {
             }).catch(error => {
                 resolve(error500(error));
             });
-        } else {
-            if (event.request.cache === 'only-if-cached' &&
-                event.request.mode !== 'same-origin') {
-                return;
-            }
-            //request = credentials: 'include'
-            fetch(event.request).then(resolve).catch(e => {
-                reject(e.message);
-            });
         }
-    }));
-});
+    });
+
+}
+
 function textResponse(string, { init, type = 'text/html' } = {}) {
     var blob = new Blob([string], {
         type

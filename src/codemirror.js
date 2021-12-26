@@ -24,6 +24,7 @@
              // You can match multiple tokens at once. Note that the captured
              // groups must span the whole string in this case
              { regex: /(?:do|then|def|lambda)\b/, token: "keyword", indent: true },
+             { regex: /(?:else(?!\b\s+if))\b/, token: "keyword", indent: true, dedent: true },
              { regex: /(?:end|else)\b/, token: "keyword", dedent: true },
              { regex: new RegExp('(?:' + keywordList.join('|') + ')\\b'), token: "keyword" },
              { regex: /(def)(\s+)([a-z$][\w$]*)/,

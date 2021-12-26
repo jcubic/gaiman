@@ -320,9 +320,11 @@ Start = statements:statements {
     };
 }
 
-statements = statements:(!"end" _ statement* _ / _) {
-    return statements[2].flat(2).filter(Boolean);
+statement_list = !"end" _ statements:statement+ _ {
+    return statements.flat(2).filter(Boolean);
 }
+
+statements = statement_list / null_array
 
 statement = !"end" _ statement:(if / for_loop / while_loop / jump / return / var / expression_statement / function_definition) _ {
    return statement;

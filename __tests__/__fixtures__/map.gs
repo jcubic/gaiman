@@ -1,3 +1,6 @@
+let noop = lambda(x)
+end
+
 def map(fn, list)
     let result = []
     for item in list do

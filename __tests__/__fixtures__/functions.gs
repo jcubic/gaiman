@@ -1,4 +1,7 @@
 def foo(arg)
+end
+
+def foo(arg)
   if arg =~ /foo/ then
     return 10 + 10
   end

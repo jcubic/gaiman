@@ -5,6 +5,10 @@ while x > 0 do
 end
 
 while not true do
+end
+
+
+while not true do
     let i = 0
     while i < 10 do
         i += 1

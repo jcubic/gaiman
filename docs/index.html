@@ -653,7 +653,7 @@ body {
          selected_tab: ls.get(SELECTED_TAB),
          full_output_mode: ls.get(FULL_MODE),
          css: await get_template(CSS_FILE, `${repo}examples/css/`, css),
-         user_html: await get_template(USER_HTML, `${repo}examples/html`, html),
+         user_html: await get_template(USER_HTML, `${repo}examples/html/`, html),
          js: await get_file(SCRIPT_FILE, `${repo}src/prefix.js`),
          editors: {},
          grammar: await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`),

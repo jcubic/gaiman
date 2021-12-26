@@ -31,5 +31,5 @@ coveralls:
 	$(CAT) ./coverage/lcov.info | $(COVERALLS)
 
 purge:
-	$(CURL) https://github.com/jcubic/gaiman/blob/master/README.md > $(README_TMP)
-	$(GREP) -Eo '<img src="[^"]+"' $(README_TMP)  $(GREP) camo | $(GREP) -Eo 'https[^"]+' | xargs -I {} $(CURL) -s -X PURGE {}
+	$(CURL) -s https://github.com/jcubic/gaiman/blob/master/README.md > $(README_TMP)
+	$(GREP) -Eo '<img src="[^"]+"' $(README_TMP) | $(GREP) camo | $(GREP) -Eo 'https[^"]+' | xargs -I {} $(CURL) -w "\n" -s -X PURGE {}

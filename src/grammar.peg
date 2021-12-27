@@ -562,15 +562,6 @@ match = expression:(match_var / property / variable) _ "=~" _ re:re _ {
     };
 }
 
-object = _ "{" _ props:(object_prop ","?)* _ "}" {
-   var props =  props.map(function(prop) { return prop[0]; });
-   return {"properties": props}
-}
-
-object_prop = _ prop:name _ ":" _ value:expression _  {
-  return { prop: prop, value: value };
-}
-
 re = "/" re:([^/] / "\\\\/")* "/" flags:[igsu]* {
     return {
         type: "Literal",

@@ -16,3 +16,16 @@ if command =~ /(foo)/ then
     10 * 10 / 2
   end
 end
+
+let fn = lambda(sring)
+    let cmd = parse(sring)
+    if cmd.length == 1 then
+        return ["dir", "cd"]
+    else
+        let last = cmd.pop()
+    end
+end
+
+(lambda()
+    echo "fun fun"
+end)()

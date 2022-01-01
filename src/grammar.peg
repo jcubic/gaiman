@@ -263,6 +263,7 @@
         return {
             "type": "FunctionExpression",
             "id": make_identifier('lambda'),
+            "async": true,
             "params": params,
             "body": make_block(body)
         };
@@ -286,7 +287,7 @@
         return new_loc;
     }
     var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
-    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store"];
+    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete"];
     var available_commands = async_commands.concat(sync_commands);
     var extra_single = ["sleep*", "get*"];
     var blacklist_properties = ["constructor", "__proto__", "prototype"];
@@ -320,10 +321,10 @@ expression_statement = !keyword expression:expression_like {
     };
 }
 
-expression_like = set / command / expression / function_call
+expression_like = set / command / expression
 
 
-expression = heredoc / function_call / lambda / property / math_expression / bracket_prop_access / dict / match_var / array / any_name / string / literal
+expression = math_expression / heredoc / function_call / lambda / property / bracket_prop_access / dict / match_var / array / any_name / string / literal
 
 command = adapter_command / match
 
@@ -422,8 +423,9 @@ literal_property = array:(array / string) _ "." _ prop:name {
     };
 }
 
-function_call = _ !keyword name:(literal_property / property / variable) _ "(" args:(argument_list / null_array) ")" _ rest:("." _ name _ "(" (argument_list / null_array) ")")* {
+lambda_value = "(" _ lambda:lambda _ ")" { return lambda; }
 
+function_call = _ !keyword expression:(bracket_prop_access / lambda_value / literal_property / property / variable) _ "(" args:(argument_list / null_array) ")" _ rest:("." _ name _ "(" (argument_list / null_array) ")")* {
     return {
         "type": "AwaitExpression",
         "argument": rest.reduce(function(acc, item) {
@@ -438,7 +440,7 @@ function_call = _ !keyword name:(literal_property / property / variable) _ "(" a
                 },
                 "property": make_identifier(name)
             }, ...args);
-        }, call(name, ...args))
+        }, call(expression, ...args))
     };
 }
 
@@ -572,6 +574,7 @@ re = "/" re:([^/] / "\\\\/")* "/" flags:[igsu]* {
         }
     }
 }
+
 property = struct:variable rest:("." name)+ {
     rest = rest.map(arg => arg[1]);
     return property(struct, ...rest.map(make_identifier));
@@ -621,8 +624,8 @@ mul_div
     }
 
 factor
-  = "(" _ expr:(math_expression / adapter_command) _ ")" { return expr; }
-  / bracket_prop_access / function_call / string / literal / match_var / variable / infinity
+  = bracket_prop_access / function_call / property / string / literal / match_var / variable / infinity
+  / "(" _ expr:(adapter_command / expression) _ ")" { return expr; }
 
 any_name = variable:name {
   return make_identifier(variable_prefix + variable);

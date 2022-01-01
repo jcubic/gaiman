@@ -624,7 +624,7 @@ mul_div
     }
 
 factor
-  = bracket_prop_access / function_call / property / string / literal / match_var / variable / infinity
+  = function_call / bracket_prop_access / property / string / literal / match_var / variable / infinity
   / "(" _ expr:(adapter_command / expression) _ ")" { return expr; }
 
 any_name = variable:name {

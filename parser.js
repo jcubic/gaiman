@@ -4711,9 +4711,9 @@ function peg$parse(input, options) {
   function peg$parsefactor() {
     var s0, s1, s2, s3, s4, s5;
 
-    s0 = peg$parsebracket_prop_access();
+    s0 = peg$parsefunction_call();
     if (s0 === peg$FAILED) {
-      s0 = peg$parsefunction_call();
+      s0 = peg$parsebracket_prop_access();
       if (s0 === peg$FAILED) {
         s0 = peg$parseproperty();
         if (s0 === peg$FAILED) {

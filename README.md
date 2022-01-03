@@ -99,7 +99,7 @@ See [Gaiman Playground](https://gaiman.js.org/)
 
 | Operator  | Description                              |
 |-----------|------------------------------------------|
-| []        | array and object access (TODO)           |
+| []        | array and object access                  |
 | ()        | parentheses grouping                     |
 | * / %     | Multiplication, division, modulo         |
 | + -       | Addition (or concatenation), subtraction |

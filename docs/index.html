@@ -637,10 +637,10 @@ body {
          return false;
      });
      $('#download').on('click', function() {
-         var zip = new JSZip();
-         var game = zip.folder("gaiman");
+         const zip = new JSZip();
+         const game = zip.folder("gaiman");
          game.file("index.js", state.output_full);
-         game.file("index.html", html);
+         game.file("index.html", state.html);
          zip.generateAsync({ type:"blob" }).then(function(content) {
              download(content, "gaiman.zip");
          });
@@ -875,7 +875,11 @@ body {
          state.user_html = state.editors.html.getValue();
          clear_error('.gaiman-output');
          clear_marks(state.editors.output);
-         state.html = template(tempate_html, {
+         state.html = get_html();
+     }
+
+     function get_html() {
+         return template(tempate_html, {
              STYLE: css_sanitize(state.css),
              HTML: state.user_html + '\n',
              FILE: './_gaiman_output.js'

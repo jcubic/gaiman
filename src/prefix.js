@@ -194,17 +194,23 @@ class WebAdapter {
     echo(arg) {
         this._term.echo(to_string(arg), { newline: this._config.newline });
     }
+    echo_extra(string, delay) {
+        return this._term.echo(string, { typing: true, delay });
+    }
     ask(message) {
         return this._term.read(message);
     }
     ask_extra(message, delay) {
         return this._term.read(message, { typing: true, delay });
     }
-    echo_extra(string, delay) {
-        return this._term.echo(string, { typing: true, delay });
+    prompt(string) {
+        this._term.set_prompt(string);
     }
     prompt_extra(string, delay) {
         return this._term.set_prompt(string, { typing: true, delay });
+    }
+    input(string) {
+        const term = this._term;
     }
     input_extra(string, delay) {
         return this._term.typing('enter', delay, string);

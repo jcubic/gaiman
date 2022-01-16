@@ -339,9 +339,9 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
                 let $_last = await $_cmd.pop();
             }
         };
-        await async function lambda() {
-            gaiman.echo(\`fun fun\`);
-        }();
+        let $_x = await async function lambda($_x) {
+            return $_x;
+        }(\`fun fun\`);
     } catch (e) {
         gaiman.error(e);
     }

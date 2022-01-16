@@ -26,6 +26,6 @@ let fn = lambda(sring)
     end
 end
 
-(lambda()
-    echo "fun fun"
-end)()
+let x = (lambda(x)
+    return x
+end)("fun fun")

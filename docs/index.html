@@ -590,10 +590,10 @@ body {
 
  function download(blob, filename) {
      const url = URL.createObjectURL(blob);
-     const $li = $(`<a href="${url}" download="${filename}">download</a>`).hide();
-     $li.appendTo('body');
-     $li[0].click();
-     $li.removee();
+     const $a = $(`<a href="${url}" download="${filename}">download</a>`).hide();
+     $a.appendTo('body');
+     $a[0].click();
+     $a.remove();
      URL.revokeObjectURL(url);
  }
 

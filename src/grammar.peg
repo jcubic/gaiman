@@ -637,7 +637,7 @@ mul_div
     }
 
 factor
-  = function_call / bracket_prop_access / property / string / literal / match_var / variable / infinity
+  = function_call / bracket_prop_access / property / string / literal / match_var / infinity / variable
   / "(" _ expr:(adapter_command / expression) _ ")" { return expr; }
 
 any_name = variable:name {
@@ -724,7 +724,7 @@ comment = "#" [^\n]* { return null; }
 
 integer = [0-9]+ { return parseInt(text(), 10); }
 
-keyword = "if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda"
+keyword = ("if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda") !name
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

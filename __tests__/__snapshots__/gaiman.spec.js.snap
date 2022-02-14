@@ -169,6 +169,8 @@ exports[`functions should compile function definitions 1`] = `
                 return await gaiman.ask($_username + \`$ \`);
             }
         }
+        async function $_define() {
+        }
     } catch (e) {
         gaiman.error(e);
     }

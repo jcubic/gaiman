@@ -16,3 +16,7 @@ def login(username)
   end
 end
 
+def define()
+
+end
+

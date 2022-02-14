@@ -5983,7 +5983,7 @@ function peg$parse(input, options) {
                   constants.push({
                       "type": "TemplateElement",
                       "value": {
-                          "raw": token
+                          "raw": escape_quote(token)
                       }
                   });
               }
@@ -5993,6 +5993,9 @@ function peg$parse(input, options) {
               expressions,
               quasis: constants
           };
+      }
+      function escape_quote(str) {
+         return str.replace(/\$\x7b/g, '\\$\x7b');
       }
       function try_catch(body) {
           return {

@@ -590,6 +590,8 @@ exports[`values should parse strings 1`] = `
         gaiman.echo(\`helo \\"xxx\\"\`);
         gaiman.echo(\`hello \\\\\\\\\`);
         gaiman.echo(\`hello \\\\\\\\\\"hello\\\\\\\\\\" hello\`);
+        gaiman.echo(\`hello \${ $_xxx } bar\`);
+        gaiman.echo(\`hello \\\\\${x()} baz\`);
     } catch (e) {
         gaiman.error(e);
     }

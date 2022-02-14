@@ -9,8 +9,16 @@ function fixture(name) {
 }
 
 async function test_fixture(filename) {
-    var code = await fixture(filename);
-    expect(gaiman.compile(code)).toMatchSnapshot();
+    test_compiler(await fixture(filename));
+}
+
+function test_compiler(code) {
+    try {
+        const result = gaiman.compile(code);
+        expect(result).toMatchSnapshot();
+    } catch(e) {
+        expect(e).toMatchSnapshot();
+    }
 }
 
 describe('global', () => {
@@ -100,3 +108,8 @@ describe('expressions', () => {
     });
 });
 
+describe('errors', () => {
+    it('should throw error for multi line string', () => {
+        return test_fixture('mutli_line_string.gs');
+    });
+});

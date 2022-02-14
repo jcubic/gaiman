@@ -473,9 +473,13 @@ function peg$parse(input, options) {
   };
   var peg$f24 = function() { return text(); };
   var peg$f25 = function() { // '
-      var string = text().replace(/\\n/g, '\uFFFF\uFFFF');
-      string = JSON.parse(string).replace(/\\/g, '\\\\').replace(/\uFFFF\uFFFF/g, '\\n');
-      return create_template_literal(string);
+      try {
+          return create_template_literal(parse_string(text()));
+      } catch(e) {
+          const error = new Error(`invalid string literal`);
+          error.location = location();
+          throw error;
+      }
   };
   var peg$f26 = function(value) {
      return {"type": "Literal", "value": value };
@@ -5971,6 +5975,12 @@ function peg$parse(input, options) {
               callee: callee,
               arguments: args
           };
+      }
+      function parse_string(string) {
+          var result = string.replace(/\\n/g, '\uFFFF\uFFFF');
+          result = JSON.parse(result);
+          result = result.replace(/\\/g, '\\\\').replace(/\uFFFF\uFFFF/g, '\\n');
+          return result;
       }
       function create_template_literal(string) {
           var re = /(\$[A-Z_$a-z][A-Z_a-z0-9]*)/;

@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Mon, 14 Feb 2022 15:48:46 GMT
+ * Buid time: Mon, 14 Feb 2022 16:19:15 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -487,9 +487,13 @@
 	  };
 	  var peg$f24 = function() { return text(); };
 	  var peg$f25 = function() { // '
-	      var string = text().replace(/\\n/g, '\uFFFF\uFFFF');
-	      string = JSON.parse(string).replace(/\\/g, '\\\\').replace(/\uFFFF\uFFFF/g, '\\n');
-	      return create_template_literal(string);
+	      try {
+	          return create_template_literal(parse_string(text()));
+	      } catch(e) {
+	          const error = new Error(`invalid string literal`);
+	          error.location = location();
+	          throw error;
+	      }
 	  };
 	  var peg$f26 = function(value) {
 	     return {"type": "Literal", "value": value };
@@ -5923,6 +5927,12 @@
 	              callee: callee,
 	              arguments: args
 	          };
+	      }
+	      function parse_string(string) {
+	          var result = string.replace(/\\n/g, '\uFFFF\uFFFF');
+	          result = JSON.parse(result);
+	          result = result.replace(/\\/g, '\\\\').replace(/\uFFFF\uFFFF/g, '\\n');
+	          return result;
 	      }
 	      function create_template_literal(string) {
 	          var re = /(\$[A-Z_$a-z][A-Z_a-z0-9]*)/;

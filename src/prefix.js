@@ -118,11 +118,14 @@ if (!('Map' in this)) {
 function to_string(object) {
     if (object instanceof Array) {
         object = object.map(to_string);
-    } else if (typeof object !== 'string') {
-        if (object) {
-            object = JSON.stringify(object, null, 2);
+    } else {
+        var type = typeof object;
+        if (type !== 'string' && type !== 'number') {
+            if (object) {
+                object = JSON.stringify(object, null, 2);
+            }
+            object = String(object);
         }
-        object = String(object);
     }
     return object;
 }

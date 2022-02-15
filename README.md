@@ -93,7 +93,10 @@ See [Reference Manual](https://github.com/jcubic/gaiman/wiki/Reference-Manual)
 
 ## Live Demo
 
-See [Gaiman Playground](https://gaiman.js.org/)
+See [Gaiman language Playground](https://gaiman.js.org/)
+
+![Gaiman programming language Playground Demo Session](https://github.com/jcubic/gaiman/blob/master/assets/simple.gif?raw=true)
+
 
 ## Operator precedence
 

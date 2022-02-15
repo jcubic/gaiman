@@ -1,3 +1,8 @@
+# foo
+# bar
+# baz
+let x = 10
+
 # --
 let x = { # --
     "foo" => 10, # --

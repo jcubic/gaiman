@@ -731,7 +731,7 @@ name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 WP = [ \t\n\r]
 
 _ "optional whitespace"
-  = WP* comment / WP* { return []; }
+  = (WP* comment)+ / WP* { return []; }
 
 SP "whitespace"
   = WP+

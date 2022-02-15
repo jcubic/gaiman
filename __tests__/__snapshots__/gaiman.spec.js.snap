@@ -196,6 +196,7 @@ exports[`functions should create factorial function 1`] = `
 exports[`global should ignore comments 1`] = `
 "async function main() {
     try {
+        let $_x = 10;
         let $_x = {
             [\`foo\`]: 10,
             [\`bar\`]: 20

@@ -313,7 +313,7 @@ Start = statements:statements {
     };
 }
 
-statement_list = !"end" _ statements:statement+ _ {
+statement_list = !"end" _ statements:statement* _ {
     return statements.flat(2).filter(Boolean);
 }
 

@@ -120,11 +120,14 @@ function to_string(object) {
         object = object.map(to_string);
     } else {
         var type = typeof object;
-        if (type !== 'string' && type !== 'number') {
+        if (type === 'number') {
+            object = String(object);
+        } else if (type !== 'string') {
             if (object) {
                 object = JSON.stringify(object, null, 2);
+            } else {
+                object = String(object);
             }
-            object = String(object);
         }
     }
     return object;

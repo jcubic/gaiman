@@ -154,7 +154,18 @@ class WebAdapter {
         }
         this._term = root.terminal($.noop, $.extend({
             greetings: false,
-            exit: false
+            exit: false,
+            exceptionHandler(e) {
+                if (is_iframe) {
+                    window.parent.postMessage({
+                        message: 'Internal: ' + e.message,
+                        colno: null,
+                        lineno: null
+                    });
+                } else {
+                    throw e;
+                }
+            }
         }, options));
     }
     config(name, value) {

@@ -839,7 +839,6 @@ body {
          try {
              if (parse) {
                  state.ast = parse(state.code);
-                 console.log(state.ast);
                  state.output = gaiman.generate(state.ast);
                  update_code();
              }

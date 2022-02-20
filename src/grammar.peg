@@ -235,6 +235,19 @@
             quasis: constants
         };
     }
+    function bang_bang(argument) {
+        return {
+            "type": "UnaryExpression",
+            "operator": "!",
+            "argument": {
+                "type": "UnaryExpression",
+                "operator": "!",
+                "argument": argument,
+                "prefix": true
+            },
+            "prefix": true
+        };
+    }
     function escape_quote(str) {
        return str.replace(/\$\x7b/g, '\\$\x7b');
     }
@@ -570,10 +583,22 @@ static_command = _ method:adapter_static_strings _ expr:(adapter_command / expre
 
 match = expression:(match_var / property / variable) _ "=~" _ re:re _ {
     return {
-        type: "AssignmentExpression",
-        operator: "=",
-        left: match_identifer,
-        right: call(property(call(make_identifier('String'), expression), match_method), re)
+        "type": "SequenceExpression",
+        "expressions": [
+            {
+                type: "AssignmentExpression",
+                operator: "=",
+                left: match_identifer,
+                right: call(
+                    property(
+                        call(make_identifier('String'), expression),
+                        match_method
+                    ),
+                    re
+                )
+             },
+             bang_bang(match_identifer)
+         ]
     };
 }
 

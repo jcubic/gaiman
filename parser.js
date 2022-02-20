@@ -520,10 +520,22 @@ function peg$parse(input, options) {
   };
   var peg$f38 = function(expression, re) {
       return {
-          type: "AssignmentExpression",
-          operator: "=",
-          left: match_identifer,
-          right: call(property(call(make_identifier('String'), expression), match_method), re)
+          "type": "SequenceExpression",
+          "expressions": [
+              {
+                  type: "AssignmentExpression",
+                  operator: "=",
+                  left: match_identifer,
+                  right: call(
+                      property(
+                          call(make_identifier('String'), expression),
+                          match_method
+                      ),
+                      re
+                  )
+               },
+               bang_bang(match_identifer)
+           ]
       };
   };
   var peg$f39 = function(re, flags) {
@@ -6039,6 +6051,19 @@ function peg$parse(input, options) {
               type: "TemplateLiteral",
               expressions,
               quasis: constants
+          };
+      }
+      function bang_bang(argument) {
+          return {
+              "type": "UnaryExpression",
+              "operator": "!",
+              "argument": {
+                  "type": "UnaryExpression",
+                  "operator": "!",
+                  "argument": argument,
+                  "prefix": true
+              },
+              "prefix": true
           };
       }
       function escape_quote(str) {

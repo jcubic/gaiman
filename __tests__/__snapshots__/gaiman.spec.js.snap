@@ -137,7 +137,7 @@ exports[`functions should compile function calls 1`] = `
     try {
         async function $_global($_message) {
             gaiman.echo($_message);
-            if ($$__m = String($_message).match(/hello/)) {
+            if ($$__m = String($_message).match(/hello/), !!$$__m) {
                 await $_show_hello();
             }
         }
@@ -157,13 +157,13 @@ exports[`functions should compile function definitions 1`] = `
         async function $_foo($_arg) {
         }
         async function $_foo($_arg) {
-            if ($$__m = String($_arg).match(/foo/)) {
+            if ($$__m = String($_arg).match(/foo/), !!$$__m) {
                 return 10 + 10;
             }
         }
         async function $_login($_username) {
             gaiman.echo(\`what's up?\`);
-            if ($$__m = String($_username).match(/root/)) {
+            if ($$__m = String($_username).match(/root/), !!$$__m) {
                 return await gaiman.ask($_username + \`# \`);
             } else {
                 return await gaiman.ask($_username + \`$ \`);
@@ -250,9 +250,9 @@ exports[`global should parse constant values 1`] = `
 exports[`if statements should compile base if 1`] = `
 "async function main() {
     try {
-        if ($$__m = String($$__m[1]).match(/foo/)) {
+        if ($$__m = String($$__m[1]).match(/foo/), !!$$__m) {
             let $_command = await gaiman.ask(\`? \`);
-            if ($$__m = String($_commad).match(/bar/)) {
+            if ($$__m = String($_commad).match(/bar/), !!$$__m) {
                 gaiman.echo($$__m[1]);
             }
         }
@@ -265,11 +265,11 @@ exports[`if statements should compile base if 1`] = `
 exports[`if statements should compile if_else 1`] = `
 "async function main() {
     try {
-        if ($$__m = String($$__m[1]).match(/foo/)) {
+        if ($$__m = String($$__m[1]).match(/foo/), !!$$__m) {
             let $_command = await gaiman.ask(\`? \`);
-            if ($$__m = String($_commad).match(/(bar)/g)) {
+            if ($$__m = String($_commad).match(/(bar)/g), !!$$__m) {
                 gaiman.echo($$__m[1]);
-            } else if ($$__m = String($_command).match(/(baz)/g)) {
+            } else if ($$__m = String($_command).match(/(baz)/g), !!$$__m) {
                 gaiman.echo($$__m[1]);
             } else {
                 gaiman.echo(\`NOP\`);
@@ -286,11 +286,11 @@ exports[`if statements should compile if_else 1`] = `
 exports[`if statements should compile multiple if_else  1`] = `
 "async function main() {
     try {
-        if ($$__m = String($$__m[1]).match(/foo/)) {
+        if ($$__m = String($$__m[1]).match(/foo/), !!$$__m) {
             let $_command = await gaiman.ask(\`? \`);
-            if ($$__m = String($_commad).match(/(bar)/g)) {
+            if ($$__m = String($_commad).match(/(bar)/g), !!$$__m) {
                 gaiman.echo($$__m[1]);
-            } else if ($$__m = String($_command).match(/(baz)/g)) {
+            } else if ($$__m = String($_command).match(/(baz)/g), !!$$__m) {
                 gaiman.echo($$__m[1]);
             } else {
                 gaiman.echo(\`NOP\`);
@@ -299,9 +299,9 @@ exports[`if statements should compile multiple if_else  1`] = `
             gaiman.echo(\`NOP\`);
         }
         let $_command = await gaiman.ask(\`? \`);
-        if ($$__m = String($_command).match(/foo/)) {
+        if ($$__m = String($_command).match(/foo/), !!$$__m) {
             gaiman.echo(\`1\`);
-        } else if ($$__m = String($_command).match(/bar/)) {
+        } else if ($$__m = String($_command).match(/bar/), !!$$__m) {
             gaiman.echo(\`2\`);
         } else {
             gaiman.echo(\`3\`);
@@ -317,14 +317,14 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
     try {
         gaiman.echo(\`hello\` + \` world\`);
         let $_command = await gaiman.ask(\`? \`);
-        if ($$__m = String($_command).match(/(foo)/)) {
+        if ($$__m = String($_command).match(/(foo)/), !!$$__m) {
             let $_command = await gaiman.ask(\`? \`);
             let $_foo = 30 * 30 / 2;
             let $_bar = +$_command;
             let $_baz = 10;
             let $_quux = -$_baz;
             10 * 10 + 3;
-            if ($$__m = String($_commad).match(/(bar)/)) {
+            if ($$__m = String($_commad).match(/(bar)/), !!$$__m) {
                 gaiman.echo($$__m[1] + \`foo\`);
                 let $_bar = 10 + 10 * 20;
                 let $_baz = 30 * 30 / 2;

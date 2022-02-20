@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Wed, 16 Feb 2022 09:47:52 GMT
+ * Buid time: Sun, 20 Feb 2022 19:01:35 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -534,10 +534,22 @@
 	  };
 	  var peg$f38 = function(expression, re) {
 	      return {
-	          type: "AssignmentExpression",
-	          operator: "=",
-	          left: match_identifer,
-	          right: call(property(call(make_identifier('String'), expression), match_method), re)
+	          "type": "SequenceExpression",
+	          "expressions": [
+	              {
+	                  type: "AssignmentExpression",
+	                  operator: "=",
+	                  left: match_identifer,
+	                  right: call(
+	                      property(
+	                          call(make_identifier('String'), expression),
+	                          match_method
+	                      ),
+	                      re
+	                  )
+	               },
+	               bang_bang(match_identifer)
+	           ]
 	      };
 	  };
 	  var peg$f39 = function(re, flags) {
@@ -5991,6 +6003,19 @@
 	              type: "TemplateLiteral",
 	              expressions,
 	              quasis: constants
+	          };
+	      }
+	      function bang_bang(argument) {
+	          return {
+	              "type": "UnaryExpression",
+	              "operator": "!",
+	              "argument": {
+	                  "type": "UnaryExpression",
+	                  "operator": "!",
+	                  "argument": argument,
+	                  "prefix": true
+	              },
+	              "prefix": true
 	          };
 	      }
 	      function escape_quote(str) {

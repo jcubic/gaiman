@@ -498,13 +498,13 @@ return = _ "return" _ expression:expression_like _ {
     };
 }
 
-var = _ "let" _ name:(variable) _ "=" _ expression:expression_like _ {
+var = _ "let" _ name:(variable) _ rest:("=" _ expression_like)? _ {
     return {
         "type": "VariableDeclaration",
         "declarations": [{
             "type": "VariableDeclarator",
             "id": name,
-            "init": expression
+            "init": rest && rest[2]
         }],
         "kind": "let"
     };

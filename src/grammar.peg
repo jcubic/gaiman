@@ -308,6 +308,14 @@
         };
         return new_loc;
     }
+    function is_number_literal(obj) {
+        if (!obj || obj instanceof Array) {
+            return false;
+        }
+        return typeof obj === 'object' &&
+            obj.type === 'Literal' &&
+            typeof obj.value === 'number';
+    }
     var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
     var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete"];
     var available_commands = async_commands.concat(sync_commands);
@@ -563,9 +571,13 @@ extra_commands = _ method:adapter_asterisk_strings _ expr:(adapter_command / exp
     ("," _ expression)+ / '' {
       error(`Command ${method} require at least two arguments`);
     }) _ {
+    args = args.map(x => x[2]);
+    if (!is_number_literal(args[0])) {
+        error(`animation command ${method} require number as second argument`);
+    }
     return  {
         "type": "AwaitExpression",
-        "argument": gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]))
+        "argument": gaiman_call(map_extra_method(method), expr, ...args)
     };
 }
 

@@ -214,11 +214,30 @@ class WebAdapter {
     echo_extra(string, delay) {
         return this._term.echo(string, { typing: true, delay });
     }
-    ask(message) {
-        return this._term.read(message);
+    ask(message, validator) {
+        return this._term.read(message).then(async result => {
+            if (typeof validator !== 'function') {
+                throw new Error('ask validator needs to be a function');
+            }
+            if (await validator(result)) {
+                return result;
+            }
+            return this.ask(message, validator);
+        });
     }
-    ask_extra(message, delay) {
-        return this._term.read(message, { typing: true, delay });
+    ask_extra(message, delay, validator) {
+        return this._term.read(message, {
+            typing: true,
+            delay
+        }).then(async result => {
+            if (typeof validator !== 'function') {
+                throw new Error('ask* validator needs to be a function');
+            }
+            if (await validator(result)) {
+                return result;
+            }
+            return this.ask_extra(message, validator);
+        });
     }
     prompt(string) {
         this._term.set_prompt(string);

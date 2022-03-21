@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Fri, 18 Mar 2022 12:08:50 GMT
+ * Buid time: Mon, 21 Mar 2022 15:13:08 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -518,9 +518,13 @@
 	        error(`Command ${method} require at least two arguments`);
 	      };
 	  var peg$f35 = function(method, expr, args) {
+	      args = args.map(x => x[2]);
+	      if (!is_number_literal(args[0])) {
+	          error(`animation command ${method} require number as second argument`);
+	      }
 	      return  {
 	          "type": "AwaitExpression",
-	          "argument": gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]))
+	          "argument": gaiman_call(map_extra_method(method), expr, ...args)
 	      };
 	  };
 	  var peg$f36 = function(method, expr, args) {
@@ -6083,6 +6087,14 @@
 	              }
 	          };
 	          return new_loc;
+	      }
+	      function is_number_literal(obj) {
+	          if (!obj || obj instanceof Array) {
+	              return false;
+	          }
+	          return typeof obj === 'object' &&
+	              obj.type === 'Literal' &&
+	              typeof obj.value === 'number';
 	      }
 	      var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
 	      var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete"];

@@ -504,9 +504,13 @@ function peg$parse(input, options) {
         error(`Command ${method} require at least two arguments`);
       };
   var peg$f35 = function(method, expr, args) {
+      args = args.map(x => x[2]);
+      if (!is_number_literal(args[0])) {
+          error(`animation command ${method} require number as second argument`);
+      }
       return  {
           "type": "AwaitExpression",
-          "argument": gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]))
+          "argument": gaiman_call(map_extra_method(method), expr, ...args)
       };
   };
   var peg$f36 = function(method, expr, args) {
@@ -6131,6 +6135,14 @@ function peg$parse(input, options) {
               }
           };
           return new_loc;
+      }
+      function is_number_literal(obj) {
+          if (!obj || obj instanceof Array) {
+              return false;
+          }
+          return typeof obj === 'object' &&
+              obj.type === 'Literal' &&
+              typeof obj.value === 'number';
       }
       var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
       var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete"];

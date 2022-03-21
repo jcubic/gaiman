@@ -214,7 +214,7 @@ class WebAdapter {
     echo_extra(string, delay) {
         return this._term.echo(string, { typing: true, delay });
     }
-    ask(message, validator) {
+    ask(message, validator = () => true) {
         return this._term.read(message).then(async result => {
             if (typeof validator !== 'function') {
                 throw new Error('ask validator needs to be a function');
@@ -225,7 +225,7 @@ class WebAdapter {
             return this.ask(message, validator);
         });
     }
-    ask_extra(message, delay, validator) {
+    ask_extra(message, delay, validator = () => true) {
         return this._term.read(message, {
             typing: true,
             delay

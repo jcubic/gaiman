@@ -215,28 +215,44 @@ class WebAdapter {
         return this._term.echo(string, { typing: true, delay });
     }
     ask(message, validator = () => true) {
-        return this._term.read(message).then(async result => {
-            if (typeof validator !== 'function') {
-                throw new Error('ask validator needs to be a function');
-            }
-            if (await validator(result)) {
-                return result;
-            }
-            return this.ask(message, validator);
+        return new Promise(resolve => {
+            this._term.push(result => {
+                return Promise.resolve().then(async () => {
+                    if (typeof validator !== 'function') {
+                        throw new Error('ask validator needs to be a function');
+                    }
+                    if (await validator(result)) {
+                        this._term.pop();
+                        resolve(result);
+                    }
+                });
+            }, {
+                prompt: message
+            });
         });
     }
     ask_extra(message, delay, validator = () => true) {
-        return this._term.read(message, {
-            typing: true,
-            delay
-        }).then(async result => {
-            if (typeof validator !== 'function') {
-                throw new Error('ask* validator needs to be a function');
-            }
-            if (await validator(result)) {
-                return result;
-            }
-            return this.ask_extra(message, validator);
+        return new Promise(resolve => {
+            const prompt = this._term.get_prompt();
+            this._term.push(result => {
+                return Promise.resolve().then(async () => {
+                    if (typeof validator !== 'function') {
+                        throw new Error('ask* validator needs to be a function');
+                    }
+                    if (await validator(result)) {
+                        this._term.pop().set_prompt(prompt);
+                        resolve(result);
+                    } else {
+                        this._term.set_prompt(message, {
+                            typing: true,
+                            delay
+                        });
+                    }
+                })
+            }).set_prompt(message, {
+                typing: true,
+                delay
+            });
         });
     }
     prompt(string) {

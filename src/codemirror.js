@@ -27,10 +27,10 @@
              { regex: /(?:else(?!\b\s+if))\b/, token: "keyword", indent: true, dedent: true },
              { regex: /(?:end|else)\b/, token: "keyword", dedent: true },
              { regex: new RegExp('(?:' + keywordList.join('|') + ')\\b'), token: "keyword" },
-             { regex: /(def)(\s+)([a-z$][\w$]*)/,
+             { regex: /(def)(\s+)([A-Za-z$][\w$]*)/,
               token: ["keyword", null, "variable-2"] },
              { regex: /true|false|null|undefined/, token: "atom" },
-             { regex: /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
+             { regex: /0x[A-Fa-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i,
                token: "number" },
              { regex: /#.*/, token: "comment" },
              { regex: /\/(?:[^\\]|\\.)*?\//, token: "variable-3" },
@@ -38,7 +38,7 @@
              // indent and dedent properties guide autoindentation
              { regex: /[\{\[\(]/, indent: true },
              { regex: /[\}\]\)]/, dedent: true },
-             { regex: /[a-z$][\w$]*/, token: "variable" },
+             { regex: /[_A-Za-z$][\w$]*/, token: "variable" },
              { regex: /<</, token: "meta", mode: {spec: "xml", end: />>/} }
          ],
          meta: {

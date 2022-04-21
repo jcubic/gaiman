@@ -747,7 +747,7 @@ heredoc = "<<<" beginMarker "\n" text:content endMarker {
     };
 }
 
-__ = (!"\n" !" " .)
+__ = (![ \n),] .)
 
 marker 'Marker' = $__+
 

@@ -49,6 +49,9 @@ describe('values', () => {
     it('should parse strings', () => {
         return test_fixture('strings.gs');
     });
+    it('should parse heredocs', () => {
+        return test_fixture('heredocs.gs');
+    });
     it('should parse arrays', () => {
         return test_fixture('arrays.gs');
     });

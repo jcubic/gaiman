@@ -588,6 +588,8 @@ exports[`values should parse dictionaries 1`] = `
 }"
 `;
 
+exports[`values should parse heredocs 1`] = `[SyntaxError: Command echo* require at least two arguments]`;
+
 exports[`values should parse strings 1`] = `
 "async function main() {
     try {

@@ -262,10 +262,10 @@ class WebAdapter {
         return this._term.set_prompt(string, { typing: true, delay });
     }
     input(string) {
-        const term = this._term;
+        return this._term.exec(string);
     }
     input_extra(string, delay) {
-        return this._term.typing('enter', delay, string);
+        return this._term.exec(string, { typing: true, delay });
     }
 }
 

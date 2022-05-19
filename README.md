@@ -28,6 +28,10 @@ gaiman -o directory input.gs
 This will compile your source file and generate `dir/index.html` and `dir/index.js` files.
 And you can open generated html file in browser and run the game.
 
+## Documentation
+
+See [Reference Manual on Wiki](https://github.com/jcubic/gaiman/wiki/Reference-Manual).
+
 ## Examples
 
 

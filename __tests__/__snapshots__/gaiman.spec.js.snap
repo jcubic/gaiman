@@ -147,6 +147,14 @@ exports[`functions should compile function calls 1`] = `
             gaiman.echo(\`hello\`);
         }
         await $_global(\`hello\`);
+        await (await $_list[$_cmd](10))();
+        await (await $_list[$_cmd](10)).foo.bar();
+        await $_list[$_cmd][$_cmd]();
+        await $_list[$_cmd][$_cmd].foo.bar();
+        await (await $_list[$_cmd][$_cmd]()).foo.bar();
+        await (await (await $_list[$_cmd](10)).foo.bar())();
+        await (await (await $_list[$_cmd].foo(10)).foo.bar())();
+        await (await (await $_list.inner[$_cmd].foo.bar(10)).foo.bar())();
     } catch (e) {
         gaiman.error(e);
     }

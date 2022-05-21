@@ -454,23 +454,41 @@ dict = _ "{" _ properties:(dict_list / null_array)  _ "}" _ {
 
 lambda_value = "(" _ lambda:lambda _ ")" { return lambda; }
 
-function_call = _ !keyword expression:(prop_access / lambda_value / variable) _ "(" args:(argument_list / null_array) ")" _ rest:("." _ name _ "(" (argument_list / null_array) ")")* {
-    return {
-        "type": "AwaitExpression",
-        "argument": rest.reduce(function(acc, item) {
-            const args = item[5];
-            const name = item[2];
-            return call({
+call = "(" args:(argument_list / null_array) ")"
+
+
+function_call = _ !keyword expression:(prop_access / lambda_value / variable) _ "(" args:(argument_list / null_array) ")" _ rest:(call / bracket_prop / dot_prop)* {
+    if (rest.length === 0) {
+        return {
+            "type": "AwaitExpression",
+            "argument": call(expression, ...args)
+        };
+    }
+    return rest.reduce(function(acc, item) {
+        if (acc.type === 'CallExpression') {
+            acc = {
+                "type": "AwaitExpression",
+                "argument": acc
+            };
+        }
+        if (item[0] == "(") {
+            return {
+                "type": "AwaitExpression",
+                "argument": call(acc, ...item[1])
+            };
+        } else {
+            let result = {
                 "type": "MemberExpression",
-                "computed": false,
-                "object": {
-                    "type": "AwaitExpression",
-                    "argument": acc
-                },
-                "property": make_identifier(name)
-            }, ...args);
-        }, call(expression, ...args))
-    };
+                "object": acc,
+                property: item
+            };
+            if (item[0] == "[") {
+                result.computed = true;
+                result.property = item[2];
+            }
+            return result;
+        }
+    }, call(expression, ...args))
 }
 
 function_definition = _ "def" _ name:variable _ "(" args:(param_list / null_array) ")" _  body:statements _ "end" _ {

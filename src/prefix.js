@@ -255,6 +255,9 @@ class WebAdapter {
             });
         });
     }
+    update(index, string) {
+        this._term.update(index, string);
+    }
     prompt(string) {
         this._term.set_prompt(string);
     }

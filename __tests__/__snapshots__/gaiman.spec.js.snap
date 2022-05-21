@@ -103,6 +103,8 @@ exports[`expressions should parse property access 1`] = `
         $_dict[$_i] = 10;
         $_dict[$_i] = { [\`foo\`]: 10 };
         $_dict[$_i][\`hello\`][\`world\`][$_nice];
+        $_dict.foo.bar.baz[\`hello\`][$_nice].quux;
+        $_dict[$_i][\`hello\`].foo.bar.baz[\`hello\`][$_nice].quux;
     } catch (e) {
         gaiman.error(e);
     }

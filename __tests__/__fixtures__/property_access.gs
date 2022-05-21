@@ -6,3 +6,5 @@ dict[i] = {
   "foo" => 10
 }
 dict[i]["hello"]["world"][nice]
+dict.foo.bar.baz["hello"][nice].quux
+dict[i]["hello"].foo.bar.baz["hello"][nice].quux

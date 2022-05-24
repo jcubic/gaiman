@@ -46,6 +46,9 @@ describe('if statements', () => {
 });
 
 describe('values', () => {
+    it('should parse numbers', () => {
+        return test_fixture('numbers.gs');
+    });
     it('should parse strings', () => {
         return test_fixture('strings.gs');
     });

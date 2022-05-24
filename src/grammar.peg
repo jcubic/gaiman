@@ -795,10 +795,10 @@ binary_number = "0b" digits:$binary_digit+ {
 
 hex_digit
   = [0-9a-f]i
-  
+
 octal_digit
   = [0-7]
-  
+
 binary_digit
   = [01]
 

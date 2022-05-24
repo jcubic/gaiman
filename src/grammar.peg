@@ -356,7 +356,7 @@ expression_statement = !keyword expression:expression_like {
 expression_like = set / command / expression
 
 
-expression = math_expression / heredoc / function_call / lambda / prop_access / dict / match_var / array / any_name / string / literal / re
+expression = math_expression / prop_access / heredoc / function_call / lambda / dict / match_var / array / any_name / string / literal / re
 
 command = adapter_command / match
 
@@ -399,7 +399,11 @@ dot_prop = prop:(_ "." _ name) {
     return make_identifier(prop[3]);
 }
 
-prop_access = object:(global / array / string / any_name) props:(bracket_prop / dot_prop)+ _ {
+object_expression = "(" _ object:object _ ")" { return object; }
+
+object = global / array / heredoc / string / any_name / object_expression
+
+prop_access = object:(object) props:(bracket_prop / dot_prop)+ _ {
     return props.reduce((object, property) => {
         const result = {
             type: 'MemberExpression',
@@ -765,7 +769,7 @@ heredoc = "<<<" beginMarker "\n" text:content endMarker {
     };
 }
 
-__ = (![ \n),] .)
+__ = (![ \n),.]  .)
 
 marker 'Marker' = $__+
 

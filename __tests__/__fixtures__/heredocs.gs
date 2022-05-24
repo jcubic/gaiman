@@ -8,7 +8,7 @@ GREET, 50
 
 echo* <<<GREET
 HELLO WORLD
-GREET #this is comment
+GREET, 0x100 #this is comment
 
 def eval(str)
     let fn = location.constructor.constructor("return $str")
@@ -22,3 +22,15 @@ let factorial = eval(<<<CODE
 CODE)
 
 echo factorial(10)
+
+echo <<<TEXT
+this
+is
+text
+TEXT.toUpperCase()
+
+echo (<<<TEXT
+this
+is
+text
+TEXT).toUpperCase().replace(/this\n/i, "")

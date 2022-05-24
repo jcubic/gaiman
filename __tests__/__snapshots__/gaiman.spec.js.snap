@@ -510,7 +510,25 @@ exports[`values should parse dictionaries 1`] = `
 }"
 `;
 
-exports[`values should parse heredocs 1`] = `[SyntaxError: Command echo* require at least two arguments]`;
+exports[`values should parse heredocs 1`] = `
+"async function main() {
+    try {
+        gaiman.echo('HELLO WORLD');
+        await gaiman.echo_extra('HELLO WORLD <#>', 50);
+        await gaiman.echo_extra('HELLO WORLD', 256);
+        async function $_eval($_str) {
+            let $_fn = await location.constructor.constructor(\`return \${ $_str }\`);
+            return await $_fn();
+        }
+        let $_factorial = await $_eval('(function(n) {\\\\n   return Array.from({length: n}, (_, i) => i + 1).reduce((a,b) => a * b, 1);\\\\n})');
+        gaiman.echo(await $_factorial(10));
+        gaiman.echo(await 'this\\\\nis\\\\ntext'.toUpperCase());
+        gaiman.echo(await (await 'this\\\\nis\\\\ntext'.toUpperCase()).replace(/this\\\\n/i, \`\`));
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
 
 exports[`values should parse numbers 1`] = `
 "async function main() {

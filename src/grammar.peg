@@ -11,14 +11,7 @@
  *
  * Released under GNU GPL v3 or later
  */
-{
-
-    var heredoc_begin = null;
-    var $$__m; // result of match
-    var variable_prefix = '$_';
-    var match_identifer = make_identifier('$$__m');
-    var match_method = make_identifier('match');
-
+{{
     function make_if(test, body, alternative) {
         return {
             "type": "IfStatement",
@@ -93,50 +86,6 @@
             "kind": "let"
         };
     }
-    var for_loop = with_loop_guard(function(variable, value, body) {
-        if (variable instanceof Array) {
-            return {
-                "type": "ForOfStatement",
-                "await": false,
-                "left": {
-                    "type": "VariableDeclaration",
-                    "declarations": [{
-                        "type": "VariableDeclarator",
-                        "id": {
-                            "type": "ArrayPattern",
-                            "elements": variable
-                        },
-                        "init": null
-                     }],
-                     "kind": "let"
-                },
-                "right": call(method('Object', 'entries'), value),
-                "body": make_block(body)
-            };
-        }
-        return {
-            "type": "ForOfStatement",
-            "await": false,
-            "left": {
-                "type": "VariableDeclaration",
-                "declarations": [{
-                    "type": "VariableDeclarator",
-                    "id": variable,
-                    "init": null
-                }],
-                "kind": "let"
-            },
-            "right": value,
-            "body": make_block(body)
-        };
-    });
-    var while_loop = with_loop_guard(function(test, body) {
-        return {
-            "type": "WhileStatement",
-            "test": test,
-            "body": make_block(body)
-        };
-    });
     function literal(value) {
         return { type: 'Literal', value }
     }
@@ -144,35 +93,6 @@
         return {
             "type": "ExpressionStatement",
             "expression": expression
-        };
-    }
-    let loop_count = 0;
-    function with_loop_guard(fn) {
-        var guard_var = make_identifier('loop_guard');
-        var cond = {
-            "type": "UnaryExpression",
-            "operator": "!",
-            "argument": {
-                "type": "UpdateExpression",
-                "operator": "--",
-                "argument": guard_var,
-                "prefix": true
-            },
-            "prefix": true
-        };
-        return function(...args) {
-            const last = args.length - 1;
-            const body = args[last];
-            args[last] = [
-                make_if(gaiman_call('should_break_loop', literal(++loop_count)), [
-                     jump('break')
-                ]),
-                ...body
-            ];
-            return [
-                fn(...args),
-                expression_statement(gaiman_call('exit_loop', literal(loop_count)))
-            ];
         };
     }
     function expression_fold(type) {
@@ -321,6 +241,88 @@
     var available_commands = async_commands.concat(sync_commands);
     var extra_single = ["sleep*", "get*"];
     var blacklist_properties = ["constructor", "__proto__", "prototype"];
+}}
+
+{
+    var loop_count = 0;
+
+    function with_loop_guard(fn) {
+        var guard_var = make_identifier('loop_guard');
+        var cond = {
+            "type": "UnaryExpression",
+            "operator": "!",
+            "argument": {
+                "type": "UpdateExpression",
+                "operator": "--",
+                "argument": guard_var,
+                "prefix": true
+            },
+            "prefix": true
+        };
+        return function(...args) {
+            const last = args.length - 1;
+            const body = args[last];
+            args[last] = [
+                make_if(gaiman_call('should_break_loop', literal(++loop_count)), [
+                     jump('break')
+                ]),
+                ...body
+            ];
+            return [
+                fn(...args),
+                expression_statement(gaiman_call('exit_loop', literal(loop_count)))
+            ];
+        };
+    }
+    var for_loop = with_loop_guard(function(variable, value, body) {
+        if (variable instanceof Array) {
+            return {
+                "type": "ForOfStatement",
+                "await": false,
+                "left": {
+                    "type": "VariableDeclaration",
+                    "declarations": [{
+                        "type": "VariableDeclarator",
+                        "id": {
+                            "type": "ArrayPattern",
+                            "elements": variable
+                        },
+                        "init": null
+                     }],
+                     "kind": "let"
+                },
+                "right": call(method('Object', 'entries'), value),
+                "body": make_block(body)
+            };
+        }
+        return {
+            "type": "ForOfStatement",
+            "await": false,
+            "left": {
+                "type": "VariableDeclaration",
+                "declarations": [{
+                    "type": "VariableDeclarator",
+                    "id": variable,
+                    "init": null
+                }],
+                "kind": "let"
+            },
+            "right": value,
+            "body": make_block(body)
+        };
+    });
+    var while_loop = with_loop_guard(function(test, body) {
+        return {
+            "type": "WhileStatement",
+            "test": test,
+            "body": make_block(body)
+        };
+    });
+    var heredoc_begin = null;
+    var $$__m; // result of match
+    var variable_prefix = '$_';
+    var match_identifer = make_identifier('$$__m');
+    var match_method = make_identifier('match');
 }
 
 Start = statements:statements {
@@ -435,6 +437,11 @@ argument_list = first:argument rest:(_ "," _ argument _)* _ {
 }
 
 array = "[" values:(argument_list / null_array) "]" {
+    return {
+        "type": "NewExpression",
+        "callee": make_identifier("GaimanArray"),
+        "arguments": values
+    };
     return {
         "type": "ArrayExpression",
         "elements": values

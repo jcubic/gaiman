@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Sat, 21 May 2022 18:53:12 GMT
+ * Buid time: Tue, 24 May 2022 18:27:10 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -17,6 +17,211 @@
 })(this, (function () { 'use strict';
 
 	var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
+
+	function make_if(test, body, alternative) {
+	        return {
+	            "type": "IfStatement",
+	            "test": test,
+	            "consequent": make_block(body),
+	            "alternate": alternative
+	        };
+	    }
+	    function main$2(body) {
+	        const result = {
+	            "type": "FunctionDeclaration",
+	            "id": make_identifier('main'),
+	            "params": [],
+	            "body": make_block(body),
+	            "generator": false,
+	            "expression": false,
+	            "async": true
+	        };
+	        return result;
+	    }
+	    function build_list(first, rest) {
+	        const list = rest.map(prop => prop[3]);
+	        list.unshift(first);
+	        return list;
+	    }
+	    function method(...props) {
+	        return property(...props.map(make_identifier));
+	    }
+	    function gaiman_prop(method) {
+	        return property(make_identifier("gaiman"), make_identifier(method));
+	    }
+	    function gaiman_call(method, ...args) {
+	        return call(gaiman_prop(method), ...args);
+	    }
+	    function map_extra_method(method) {
+	        return method.replace(/\*$/, '_extra')
+	    }
+	    function make_block(body) {
+	        return {
+	            "type": "BlockStatement",
+	            "body": body
+	        }
+	    }
+	    function make_identifier(name) {
+	        return {
+	            type: 'Identifier',
+	            name: name
+	        };
+	    }
+	    function literal(value) {
+	        return { type: 'Literal', value }
+	    }
+	    function expression_statement(expression) {
+	        return {
+	            "type": "ExpressionStatement",
+	            "expression": expression
+	        };
+	    }
+	    function expression_fold(type) {
+	        return function fold(head, tail, mapping) {
+	             return tail.reduce(function(result, element) {
+	                var opertator = mapping ? mapping[element[1]] : element[1];
+	                return {
+	                    "type": type,
+	                    "operator": opertator,
+	                    "left": result,
+	                    "right": element[3]
+	                };
+	            }, head);
+	        }
+	    }
+	    var binary_fold = expression_fold("BinaryExpression");
+	    var logical_fold = expression_fold("LogicalExpression");
+	    function property(...args) {
+	        return args.reduce(function(result, item) {
+	            return {
+	                type: "MemberExpression",
+	                computed: false,
+	                object: result,
+	                property: item
+	            };
+	        });
+	    }
+	    function call(callee, ...args) {
+	        return {
+	            type: "CallExpression",
+	            callee: callee,
+	            arguments: args
+	        };
+	    }
+	    function parse_string(string) {
+	        var result = string.replace(/\\n/g, '\uFFFF\uFFFF');
+	        result = JSON.parse(result);
+	        result = result.replace(/\\/g, '\\\\').replace(/\uFFFF\uFFFF/g, '\\n');
+	        return result;
+	    }
+	    function create_template_literal(string) {
+	        var re = /(\$[A-Z_$a-z][A-Z_a-z0-9]*)/;
+	        var expressions = [];
+	        var constants = [];
+	        string.split(re).map(token => {
+	            if (token.match(re)) {
+	                expressions.push(make_identifier(token.replace(/^\$/, '$_')));
+	            } else {
+	                constants.push({
+	                    "type": "TemplateElement",
+	                    "value": {
+	                        "raw": escape_quote(token)
+	                    }
+	                });
+	            }
+	        });
+	        return {
+	            type: "TemplateLiteral",
+	            expressions,
+	            quasis: constants
+	        };
+	    }
+	    function bang_bang(argument) {
+	        return {
+	            "type": "UnaryExpression",
+	            "operator": "!",
+	            "argument": {
+	                "type": "UnaryExpression",
+	                "operator": "!",
+	                "argument": argument,
+	                "prefix": true
+	            },
+	            "prefix": true
+	        };
+	    }
+	    function escape_quote(str) {
+	       return str.replace(/\$\x7b/g, '\\$\x7b');
+	    }
+	    function try_catch(body) {
+	        return {
+	            "type": "TryStatement",
+	            "block": make_block(body),
+	            "handler": {
+	                "type": "CatchClause",
+	                "param": {
+	                    "type": "Identifier",
+	                    "name": "e"
+	                },
+	                "body": {
+	                    "type": "BlockStatement",
+	                    "body": [{
+	                        "type": "ExpressionStatement",
+	                          "expression": gaiman_call('error', make_identifier("e"))
+	                    }]
+	                }
+	            }
+	        };
+	    }
+	    function jump(name) {
+	        const mapping = {
+	            "break": "BreakStatement",
+	            "continue": "ContinueStatement"
+	        };
+	        return {
+	            "type": mapping[name],
+	            "label": null
+	        };
+	    }
+	    function lambda(params, body) {
+	        return {
+	            "type": "FunctionExpression",
+	            "id": make_identifier('lambda'),
+	            "async": true,
+	            "params": params,
+	            "body": make_block(body)
+	        };
+	    }
+	    // move error location without mutation
+	    function move_location(loc, start, end) {
+	        const { start: loc_start, end: loc_end } = loc;
+	        const new_loc = {
+	            ...loc,
+	            start: {
+	                ...loc_start,
+	                column: loc_start.column + start,
+	                offset: loc_start.offset + start
+	            },
+	            end: {
+	                ...loc_end,
+	                column: loc_end.column + end,
+	                offset: loc_end.offset + end
+	            }
+	        };
+	        return new_loc;
+	    }
+	    function is_number_literal(obj) {
+	        if (!obj || obj instanceof Array) {
+	            return false;
+	        }
+	        return typeof obj === 'object' &&
+	            obj.type === 'Literal' &&
+	            typeof obj.value === 'number';
+	    }
+	    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
+	    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update"];
+	    var available_commands = async_commands.concat(sync_commands);
+	    var extra_single = ["sleep*", "get*"];
+
 
 	function peg$subclass(child, parent) {
 	  function C() { this.constructor = child; }
@@ -340,7 +545,7 @@
 	      return {
 	          "type": "Program",
 	          "body": [
-	              main([
+	              main$2([
 	                  try_catch(statements)
 	              ])
 	          ]
@@ -417,8 +622,9 @@
 	  };
 	  var peg$f15 = function(values) {
 	      return {
-	          "type": "ArrayExpression",
-	          "elements": values
+	          "type": "NewExpression",
+	          "callee": make_identifier("GaimanArray"),
+	          "arguments": values
 	      };
 	  };
 	  var peg$f16 = function(properties) {
@@ -5614,59 +5820,22 @@
 	  }
 
 
+	      var loop_count = 0;
 
-	      var heredoc_begin = null;
-	      var variable_prefix = '$_';
-	      var match_identifer = make_identifier('$$__m');
-	      var match_method = make_identifier('match');
-
-	      function make_if(test, body, alternative) {
-	          return {
-	              "type": "IfStatement",
-	              "test": test,
-	              "consequent": make_block(body),
-	              "alternate": alternative
-	          };
-	      }
-	      function main(body) {
-	          const result = {
-	              "type": "FunctionDeclaration",
-	              "id": make_identifier('main'),
-	              "params": [],
-	              "body": make_block(body),
-	              "generator": false,
-	              "expression": false,
-	              "async": true
-	          };
-	          return result;
-	      }
-	      function build_list(first, rest) {
-	          const list = rest.map(prop => prop[3]);
-	          list.unshift(first);
-	          return list;
-	      }
-	      function method(...props) {
-	          return property(...props.map(make_identifier));
-	      }
-	      function gaiman_prop(method) {
-	          return property(make_identifier("gaiman"), make_identifier(method));
-	      }
-	      function gaiman_call(method, ...args) {
-	          return call(gaiman_prop(method), ...args);
-	      }
-	      function map_extra_method(method) {
-	          return method.replace(/\*$/, '_extra')
-	      }
-	      function make_block(body) {
-	          return {
-	              "type": "BlockStatement",
-	              "body": body
-	          }
-	      }
-	      function make_identifier(name) {
-	          return {
-	              type: 'Identifier',
-	              name: name
+	      function with_loop_guard(fn) {
+	          return function(...args) {
+	              const last = args.length - 1;
+	              const body = args[last];
+	              args[last] = [
+	                  make_if(gaiman_call('should_break_loop', literal(++loop_count)), [
+	                       jump('break')
+	                  ]),
+	                  ...body
+	              ];
+	              return [
+	                  fn(...args),
+	                  expression_statement(gaiman_call('exit_loop', literal(loop_count)))
+	              ];
 	          };
 	      }
 	      var for_loop = with_loop_guard(function(variable, value, body) {
@@ -5713,177 +5882,10 @@
 	              "body": make_block(body)
 	          };
 	      });
-	      function literal(value) {
-	          return { type: 'Literal', value }
-	      }
-	      function expression_statement(expression) {
-	          return {
-	              "type": "ExpressionStatement",
-	              "expression": expression
-	          };
-	      }
-	      let loop_count = 0;
-	      function with_loop_guard(fn) {
-	          return function(...args) {
-	              const last = args.length - 1;
-	              const body = args[last];
-	              args[last] = [
-	                  make_if(gaiman_call('should_break_loop', literal(++loop_count)), [
-	                       jump('break')
-	                  ]),
-	                  ...body
-	              ];
-	              return [
-	                  fn(...args),
-	                  expression_statement(gaiman_call('exit_loop', literal(loop_count)))
-	              ];
-	          };
-	      }
-	      function expression_fold(type) {
-	          return function fold(head, tail, mapping) {
-	               return tail.reduce(function(result, element) {
-	                  var opertator = mapping ? mapping[element[1]] : element[1];
-	                  return {
-	                      "type": type,
-	                      "operator": opertator,
-	                      "left": result,
-	                      "right": element[3]
-	                  };
-	              }, head);
-	          }
-	      }
-	      var binary_fold = expression_fold("BinaryExpression");
-	      var logical_fold = expression_fold("LogicalExpression");
-	      function property(...args) {
-	          return args.reduce(function(result, item) {
-	              return {
-	                  type: "MemberExpression",
-	                  computed: false,
-	                  object: result,
-	                  property: item
-	              };
-	          });
-	      }
-	      function call(callee, ...args) {
-	          return {
-	              type: "CallExpression",
-	              callee: callee,
-	              arguments: args
-	          };
-	      }
-	      function parse_string(string) {
-	          var result = string.replace(/\\n/g, '\uFFFF\uFFFF');
-	          result = JSON.parse(result);
-	          result = result.replace(/\\/g, '\\\\').replace(/\uFFFF\uFFFF/g, '\\n');
-	          return result;
-	      }
-	      function create_template_literal(string) {
-	          var re = /(\$[A-Z_$a-z][A-Z_a-z0-9]*)/;
-	          var expressions = [];
-	          var constants = [];
-	          string.split(re).map(token => {
-	              if (token.match(re)) {
-	                  expressions.push(make_identifier(token.replace(/^\$/, '$_')));
-	              } else {
-	                  constants.push({
-	                      "type": "TemplateElement",
-	                      "value": {
-	                          "raw": escape_quote(token)
-	                      }
-	                  });
-	              }
-	          });
-	          return {
-	              type: "TemplateLiteral",
-	              expressions,
-	              quasis: constants
-	          };
-	      }
-	      function bang_bang(argument) {
-	          return {
-	              "type": "UnaryExpression",
-	              "operator": "!",
-	              "argument": {
-	                  "type": "UnaryExpression",
-	                  "operator": "!",
-	                  "argument": argument,
-	                  "prefix": true
-	              },
-	              "prefix": true
-	          };
-	      }
-	      function escape_quote(str) {
-	         return str.replace(/\$\x7b/g, '\\$\x7b');
-	      }
-	      function try_catch(body) {
-	          return {
-	              "type": "TryStatement",
-	              "block": make_block(body),
-	              "handler": {
-	                  "type": "CatchClause",
-	                  "param": {
-	                      "type": "Identifier",
-	                      "name": "e"
-	                  },
-	                  "body": {
-	                      "type": "BlockStatement",
-	                      "body": [{
-	                          "type": "ExpressionStatement",
-	                            "expression": gaiman_call('error', make_identifier("e"))
-	                      }]
-	                  }
-	              }
-	          };
-	      }
-	      function jump(name) {
-	          const mapping = {
-	              "break": "BreakStatement",
-	              "continue": "ContinueStatement"
-	          };
-	          return {
-	              "type": mapping[name],
-	              "label": null
-	          };
-	      }
-	      function lambda(params, body) {
-	          return {
-	              "type": "FunctionExpression",
-	              "id": make_identifier('lambda'),
-	              "async": true,
-	              "params": params,
-	              "body": make_block(body)
-	          };
-	      }
-	      // move error location without mutation
-	      function move_location(loc, start, end) {
-	          const { start: loc_start, end: loc_end } = loc;
-	          const new_loc = {
-	              ...loc,
-	              start: {
-	                  ...loc_start,
-	                  column: loc_start.column + start,
-	                  offset: loc_start.offset + start
-	              },
-	              end: {
-	                  ...loc_end,
-	                  column: loc_end.column + end,
-	                  offset: loc_end.offset + end
-	              }
-	          };
-	          return new_loc;
-	      }
-	      function is_number_literal(obj) {
-	          if (!obj || obj instanceof Array) {
-	              return false;
-	          }
-	          return typeof obj === 'object' &&
-	              obj.type === 'Literal' &&
-	              typeof obj.value === 'number';
-	      }
-	      var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
-	      var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update"];
-	      var available_commands = async_commands.concat(sync_commands);
-	      var extra_single = ["sleep*", "get*"];
+	      var heredoc_begin = null;
+	      var variable_prefix = '$_';
+	      var match_identifer = make_identifier('$$__m');
+	      var match_method = make_identifier('match');
 
 
 	  peg$result = peg$startRuleFunction();

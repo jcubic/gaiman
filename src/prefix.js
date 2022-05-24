@@ -280,39 +280,39 @@ $.ajaxSetup({
 
 extend(Gaiman, WebAdapter.prototype);
 
-(function(map) {
-   Array.prototype.map = function(...args) {
-       var result = map.apply(this, args);
-       var has_promise = result.some(is_promise);
-       if (has_promise) {
-           return Promise.all(result);
-       } else {
-           return result;
-       }
-   };
-})(Array.prototype.map);
-
-(function(filter) {
-    function call(fn, arr, ctx) {
-        return filter.call(ctx, (_, i) => {
-            return arr[i];
-        });
+class GaimanArray extends Array {
+    map(...args) {
+        function call(arr) {
+            return new GaimanArray(...arr);
+        }
+        const arr = super.map.apply(this, args);
+        const some = super.some;
+        const has_promise = some.call(arr, is_promise);
+        if (has_promise) {
+            return Promise.all(arr).then(call);
+        } else {
+            return call(arr);
+        }
     }
-    Array.prototype.filter = function(fn, ctx) {
-        var items = this.map(fn, ctx);
+    forEach(...args) {
+        return this.map(...args);
+    }
+    filter(fn, ctx) {
+        const filter = super.filter;
+        function call(arr) {
+            return new GaimanArray(...filter.call(arr, x => x));
+        }
+        const items = this.map(fn, ctx);
         if (is_promise(items)) {
             return items.then(arr => {
-                return call(fn, arr, this);
+                return call(arr);
             });
         } else {
-            return call(fn, items, this);
+            return call(items);
         }
-    };
-})(Array.prototype.filter);
-
-(function(reduce) {
-    Array.prototype.reduce = function(fn, init) {
-        return reduce.call(this, function(acc, ...args) {
+    }
+    reduce(fn, init) {
+        return new GaimanArray(...super.reduce.call(this, function(acc, ...args) {
             if (is_promise(acc)) {
                 return acc.then(acc => {
                     return fn(acc, ...args);
@@ -320,9 +320,81 @@ extend(Gaiman, WebAdapter.prototype);
             } else {
                 return fn(acc, ...args);
             }
-        }, init);
-    };
-})(Array.prototype.reduce);
+        }, init));
+    }
+    sort(fn = defaultSortFn) {
+        return mergeSort(this, fn);
+    }
+    some(fn, ctx) {
+        const some = super.some;
+        return this.mapWithCallback(fn, (arr) => {
+            return some.call(arr, x => x);
+        }, ctx);
+    }
+    every(fn, ctx) {
+        const every = super.every;
+        return this.mapWithCallback(fn, (arr) => {
+            return every.call(arr, x => x);
+        }, ctx);
+    }
+    find(fn, ctx) {
+        return this.mapWithCallback(fn, (arr) => {
+            const index = arr.findIndex(x => x);
+            return this[index];
+        }, ctx);
+    }
+    flatMap(fn, ...args) {
+        return this.map(...args).flat();
+    }
+    mapWithCallback(fn, callback, ctx) {
+        const items = this.map(fn, ctx);
+        if (is_promise(items)) {
+            return items.then(arr => {
+                return callback(arr);
+            });
+        } else {
+            return callback(items);
+        }
+    }
+}
+
+function defaultSortFn(a, b) {
+    if (typeof a !== 'string') {
+        a = String(a);
+    }
+    if (typeof b !== 'string') {
+        b = String(b);
+    }
+    if (a < b) {
+        return -1;
+    }
+    if (a > b) {
+        return 1;
+    }
+    return 0;
+}
+
+// based on: https://rosettacode.org/wiki/Sorting_algorithms/Merge_sort#JavaScript
+async function mergeSort(array, fn = defaultSortFn) {
+    if (array.length <= 1) {
+        return array;
+    }
+    const mid = Math.floor(array.length / 2),
+          left = array.slice(0, mid), right = array.slice(mid);
+    await mergeSort(left, fn);
+    await mergeSort(right, fn);
+    let ia = 0, il = 0, ir = 0;
+    while (il < left.length && ir < right.length) {
+        array[ia++] = (await fn(left[il], right[ir]) <= 0) ? left[il++] : right[ir++];
+    }
+    while (il < left.length) {
+        array[ia++] = left[il++];
+    }
+    while (ir < right.length) {
+        array[ia++] = right[ir++];
+    }
+    return array;
+}
 
 var cookie, argv, gaiman, $$__m;
 try {

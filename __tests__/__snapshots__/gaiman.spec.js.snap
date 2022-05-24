@@ -6,12 +6,7 @@ exports[`expressions should call methods 1`] = `
 "async function main() {
     try {
         await location.replace(\`/__idb__/_gaiman.js\`);
-        let $_x = [
-            1,
-            2,
-            3,
-            4
-        ];
+        let $_x = new GaimanArray(1, 2, 3, 4);
         async function $_square($_x) {
             return $_x * $_x;
         }
@@ -26,21 +21,8 @@ exports[`expressions should call methods 1`] = `
 exports[`expressions should chain methods 1`] = `
 "async function main() {
     try {
-        gaiman.echo(await (await [
-            1,
-            0,
-            2,
-            3,
-            0,
-            4
-        ].map($_square)).filter($_identity));
-        let $_arr = [
-            1,
-            2,
-            3,
-            4,
-            5
-        ];
+        gaiman.echo(await (await new GaimanArray(1, 0, 2, 3, 0, 4).map($_square)).filter($_identity));
+        let $_arr = new GaimanArray(1, 2, 3, 4, 5);
         gaiman.echo(await (await (await $_arr.map($_square)).filter($_identity)).join(\`\`));
         gaiman.echo(await (await \`foo\`.split(\`\`)).join(\`:\`));
     } catch (e) {
@@ -70,7 +52,7 @@ exports[`expressions should parse map function 1`] = `
         let $_noop = async function lambda($_x) {
         };
         async function $_map($_fn, $_list) {
-            let $_result = [];
+            let $_result = new GaimanArray();
             for (let $_item of $_list) {
                 if (gaiman.should_break_loop(1)) {
                     break;
@@ -82,12 +64,7 @@ exports[`expressions should parse map function 1`] = `
         }
         gaiman.echo(await $_map(async function lambda($_x) {
             return $_x * $_x;
-        }, [
-            1,
-            2,
-            3,
-            4
-        ]));
+        }, new GaimanArray(1, 2, 3, 4)));
     } catch (e) {
         gaiman.error(e);
     }
@@ -211,12 +188,7 @@ exports[`global should ignore comments 1`] = `
             [\`foo\`]: 10,
             [\`bar\`]: 20
         };
-        let $_y = [
-            1,
-            2,
-            3,
-            4
-        ];
+        let $_y = new GaimanArray(1, 2, 3, 4);
         async function $_foo() {
             return 10;
         }
@@ -227,11 +199,7 @@ exports[`global should ignore comments 1`] = `
             $_x;
         }
         gaiman.exit_loop(1);
-        for (let $_i of [
-                1,
-                2,
-                3
-            ]) {
+        for (let $_i of new GaimanArray(1, 2, 3)) {
             if (gaiman.should_break_loop(2)) {
                 break;
             }
@@ -346,10 +314,7 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
         let $_fn = async function lambda($_sring) {
             let $_cmd = gaiman.parse($_sring);
             if ($_cmd.length === 1) {
-                return [
-                    \`dir\`,
-                    \`cd\`
-                ];
+                return new GaimanArray(\`dir\`, \`cd\`);
             } else {
                 let $_last = await $_cmd.pop();
             }
@@ -387,15 +352,7 @@ exports[`loop should parse break 1`] = `
 exports[`loop should parse continue 1`] = `
 "async function main() {
     try {
-        for (let $_i of [
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7
-            ]) {
+        for (let $_i of new GaimanArray(1, 2, 3, 4, 5, 6, 7)) {
             if (gaiman.should_break_loop(1)) {
                 break;
             }
@@ -435,41 +392,21 @@ exports[`loop should parse for loops 1`] = `
             gaiman.echo(\`\${ $_key } => \${ $_value }\`);
         }
         gaiman.exit_loop(3);
-        for (let $_i of [
-                1,
-                2,
-                3,
-                4
-            ]) {
+        for (let $_i of new GaimanArray(1, 2, 3, 4)) {
             if (gaiman.should_break_loop(4)) {
                 break;
             }
         }
         gaiman.exit_loop(4);
-        for (let $_i of [
-                1,
-                2,
-                3,
-                4
-            ]) {
+        for (let $_i of new GaimanArray(1, 2, 3, 4)) {
             if (gaiman.should_break_loop(7)) {
                 break;
             }
-            for (let $_j of [
-                    1,
-                    2,
-                    3,
-                    4
-                ]) {
+            for (let $_j of new GaimanArray(1, 2, 3, 4)) {
                 if (gaiman.should_break_loop(6)) {
                     break;
                 }
-                for (let $_k of [
-                        1,
-                        2,
-                        3,
-                        4
-                    ]) {
+                for (let $_k of new GaimanArray(1, 2, 3, 4)) {
                     if (gaiman.should_break_loop(5)) {
                         break;
                     }
@@ -527,45 +464,24 @@ exports[`loop should parse while loops 1`] = `
 exports[`values should parse arrays 1`] = `
 "async function main() {
     try {
-        let $_x = [
-            1,
-            2,
-            3,
-            4
-        ];
-        for (let $_word of [
-                \`lorem\`,
-                \`ipsum\`,
-                \`dolor\`
-            ]) {
+        let $_x = new GaimanArray(1, 2, 3, 4);
+        for (let $_word of new GaimanArray(\`lorem\`, \`ipsum\`, \`dolor\`)) {
             if (gaiman.should_break_loop(1)) {
                 break;
             }
             gaiman.echo($_word);
         }
         gaiman.exit_loop(1);
-        for (let $_i of [
-                1,
-                2,
-                3
-            ]) {
+        for (let $_i of new GaimanArray(1, 2, 3)) {
             if (gaiman.should_break_loop(2)) {
                 break;
             }
             gaiman.echo($_i);
         }
         gaiman.exit_loop(2);
-        let $_names = [
-            \`helo\`,
-            \`world\`
-        ];
+        let $_names = new GaimanArray(\`helo\`, \`world\`);
         gaiman.echo($_names[0] + \` \` + $_names[1]);
-        gaiman.echo(await [
-            1,
-            2,
-            3,
-            4
-        ].map(async function lambda($_x) {
+        gaiman.echo(await new GaimanArray(1, 2, 3, 4).map(async function lambda($_x) {
             return $_x * $_x;
         }));
     } catch (e) {
@@ -581,11 +497,7 @@ exports[`values should parse dictionaries 1`] = `
         let $_dict = {
             [\`foo\`]: 10,
             [\`bar\`]: \`hello\`,
-            [\`baz\`]: [
-                1,
-                2,
-                3
-            ],
+            [\`baz\`]: new GaimanArray(1, 2, 3),
             [\`quux\`]: {
                 [\`1\`]: 10,
                 [\`2\`]: 20,

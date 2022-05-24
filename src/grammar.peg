@@ -554,7 +554,7 @@ string = '"' DoubleStringCharacter*  '"' { // '
     }
 }
 
-literal = value:(integer / boolean / null) {
+literal = value:(number / boolean / null) {
    return {"type": "Literal", "value": value };
 }
 
@@ -778,6 +778,61 @@ content = $(!endMarker .)*
 comment = "#" [^\n]* { return null; }
 
 integer = [0-9]+ { return parseInt(text(), 10); }
+
+number = hex_number / binary_number / octal_number / decimal_number
+
+hex_number = "0x"i digits:$hex_digit+ {
+      return parseInt(digits, 16);
+}
+
+octal_number = "0" digits:$octal_digit+ {
+      return parseInt(digits, 8);
+}
+
+binary_number = "0b" digits:$binary_digit+ {
+      return parseInt(digits, 2);
+}
+
+hex_digit
+  = [0-9a-f]i
+  
+octal_digit
+  = [0-7]
+  
+binary_digit
+  = [01]
+
+decimal_number "number"
+  = minus? int frac? exp? { return parseFloat(text()); }
+
+decimal_point
+  = "."
+
+digit1_9
+  = [1-9]
+
+e
+  = [eE]
+
+exp
+  = e (minus / plus)? DIGIT+
+
+frac
+  = decimal_point DIGIT+
+
+int
+  = zero / (digit1_9 DIGIT*)
+
+minus
+  = "-"
+
+plus
+  = "+"
+
+zero
+  = "0"
+
+DIGIT  = [0-9]
 
 keyword = ("if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda") !name
 

@@ -356,7 +356,7 @@ expression_statement = !keyword expression:expression_like {
 expression_like = set / command / expression
 
 
-expression = math_expression / heredoc / function_call / lambda / prop_access / dict / match_var / array / any_name / string / literal
+expression = math_expression / heredoc / function_call / lambda / prop_access / dict / match_var / array / any_name / string / literal / re
 
 command = adapter_command / match
 

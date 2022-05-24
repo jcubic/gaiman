@@ -1278,6 +1278,9 @@ function peg$parse(input, options) {
                       s0 = peg$parsestring();
                       if (s0 === peg$FAILED) {
                         s0 = peg$parseliteral();
+                        if (s0 === peg$FAILED) {
+                          s0 = peg$parsere();
+                        }
                       }
                     }
                   }

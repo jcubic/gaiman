@@ -101,21 +101,6 @@ See [Gaiman language Playground](https://gaiman.js.org/)
 
 ![Gaiman programming language Playground Demo Session](https://github.com/jcubic/gaiman/blob/master/assets/simple.gif?raw=true)
 
-
-## Operator precedence
-
-| Operator  | Description                              |
-|-----------|------------------------------------------|
-| []        | array and object access                  |
-| ()        | parentheses grouping                     |
-| * / %     | Multiplication, division, modulo         |
-| + -       | Addition (or concatenation), subtraction |
-| < > <= >= | boolean compare                          |
-| == !=     | equal, not equal                         |
-| and       | Boolean and                              |
-| or        | Boolean or                               |
-| not       | Boolean not                              |
-
 ## Roadmap
 
 See Wiki [TODO & Roadmap](https://github.com/jcubic/gaiman/wiki/TODO-&-Roadmap).

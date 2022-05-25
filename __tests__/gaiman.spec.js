@@ -28,6 +28,9 @@ describe('global', () => {
     it('should parse constant values', () => {
         return test_fixture('constants.gs');
     });
+    it('should parse do blocks', () => {
+        return test_fixture('blocks.gs');
+    });
 });
 
 describe('if statements', () => {

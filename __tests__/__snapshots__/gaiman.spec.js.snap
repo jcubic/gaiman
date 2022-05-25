@@ -231,6 +231,21 @@ exports[`global should parse constant values 1`] = `
 }"
 `;
 
+exports[`global should parse do blocks 1`] = `
+"async function main() {
+    try {
+        let $_x = 20;
+        {
+            let $_x = 10;
+            $_x = $_x + 10;
+        }
+        gaiman.echo($_x);
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
 exports[`if statements should compile base if 1`] = `
 "async function main() {
     try {

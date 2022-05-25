@@ -342,7 +342,7 @@ statement_list = !"end" _ statements:statement* _ {
 
 statements = statement_list / null_array
 
-statement = !"end" _ statement:(if / for_loop / while_loop / jump / return / var / expression_statement / function_definition) _ {
+statement = !"end" _ statement:(if / for_loop / while_loop / jump / return / var / do_block / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -500,6 +500,13 @@ function_call = _ !keyword expression:(prop_access / lambda_value / variable) _ 
             return result;
         }
     }, call(expression, ...args))
+}
+
+do_block = _ "do" _ body:statements _ "end" _ {
+    return {
+        "type": "BlockStatement",
+        body: body
+    };
 }
 
 function_definition = _ "def" _ name:variable _ "(" args:(param_list / null_array) ")" _  body:statements _ "end" _ {

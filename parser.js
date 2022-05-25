@@ -791,16 +791,20 @@ function peg$parse(input, options) {
       };
   };
   var peg$f38 = function(method, expr) {
-        error(`Command ${method} require at least two arguments`);
+          if (expr.type !== 'SpreadElement') {
+              error(`Command ${method} require at least two arguments`);
+          }
       };
   var peg$f39 = function(method, expr, args) {
-      args = args.map(x => x[2]);
-      if (!is_number_literal(args[0])) {
-          error(`animation command ${method} require number as second argument`);
+      if (args) {
+          args = args.map(x => x[2]);
+          if (!is_number_literal(args[0])) {
+              error(`animation command ${method} require number as second argument`);
+          }
       }
       return  {
           "type": "AwaitExpression",
-          "argument": gaiman_call(map_extra_method(method), expr, ...args)
+          "argument": gaiman_call(map_extra_method(method), expr, ...(args || []))
       };
   };
   var peg$f40 = function(method, expr, args) {
@@ -3772,6 +3776,20 @@ function peg$parse(input, options) {
     return s0;
   }
 
+  function peg$parsecommand_argument() {
+    var s0;
+
+    s0 = peg$parseadapter_command();
+    if (s0 === peg$FAILED) {
+      s0 = peg$parseexpression();
+      if (s0 === peg$FAILED) {
+        s0 = peg$parsesplat_arg();
+      }
+    }
+
+    return s0;
+  }
+
   function peg$parseextra_commands_single() {
     var s0, s1, s2, s3, s4, s5;
 
@@ -3781,10 +3799,7 @@ function peg$parse(input, options) {
       s2 = peg$parseextra_single();
       if (s2 !== peg$FAILED) {
         s3 = peg$parseSPACE();
-        s4 = peg$parseadapter_command();
-        if (s4 === peg$FAILED) {
-          s4 = peg$parseexpression();
-        }
+        s4 = peg$parsecommand_argument();
         if (s4 !== peg$FAILED) {
           s5 = peg$parse_();
           if (s5 !== peg$FAILED) {
@@ -3819,10 +3834,7 @@ function peg$parse(input, options) {
       s2 = peg$parseadapter_asterisk_strings();
       if (s2 !== peg$FAILED) {
         s3 = peg$parseSPACE();
-        s4 = peg$parseadapter_command();
-        if (s4 === peg$FAILED) {
-          s4 = peg$parseexpression();
-        }
+        s4 = peg$parsecommand_argument();
         if (s4 !== peg$FAILED) {
           s5 = peg$parseSPACE();
           s6 = [];
@@ -3940,10 +3952,7 @@ function peg$parse(input, options) {
         }
         if (s3 !== peg$FAILED) {
           s4 = peg$parseSPACE();
-          s5 = peg$parseadapter_command();
-          if (s5 === peg$FAILED) {
-            s5 = peg$parseexpression();
-          }
+          s5 = peg$parsecommand_argument();
           if (s5 !== peg$FAILED) {
             s6 = peg$parseSPACE();
             s7 = [];
@@ -4065,10 +4074,7 @@ function peg$parse(input, options) {
             if (peg$silentFails === 0) { peg$fail(peg$e34); }
           }
         }
-        s5 = peg$parseadapter_command();
-        if (s5 === peg$FAILED) {
-          s5 = peg$parseexpression();
-        }
+        s5 = peg$parsecommand_argument();
         if (s5 !== peg$FAILED) {
           s4 = [s4, s5];
           s3 = s4;

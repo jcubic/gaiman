@@ -9,3 +9,5 @@ echo get ask "?"
 
 echo (get (ask "? ").toLowerCase()).replace(/engine/, "Engine")
 echo (get ask "? ").toUpperCase().replace(/engine/, "Engine")
+
+echo* *["hello", 100]

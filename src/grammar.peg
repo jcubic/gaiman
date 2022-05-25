@@ -609,36 +609,42 @@ adapter_command = extra_commands_single / extra_commands / async_command / stati
 
 extra_single = word:asterisk_name &{ return extra_single.includes(word); } { return word; }
 
-extra_commands_single = _ method:extra_single SPACE expr:(adapter_command / expression) _ {
+command_argument = adapter_command / expression / splat_arg
+
+extra_commands_single = _ method:extra_single SPACE expr:command_argument _ {
     return  {
         "type": "AwaitExpression",
         "argument": gaiman_call(map_extra_method(method), expr)
     };
 }
 
-extra_commands = _ method:adapter_asterisk_strings SPACE expr:(adapter_command / expression) SPACE args:(
+extra_commands = _ method:adapter_asterisk_strings SPACE expr:command_argument SPACE args:(
     ("," _ expression)+ / '' {
-      error(`Command ${method} require at least two arguments`);
+        if (expr.type !== 'SpreadElement') {
+            error(`Command ${method} require at least two arguments`);
+        }
     }) _ {
-    args = args.map(x => x[2]);
-    if (!is_number_literal(args[0])) {
-        error(`animation command ${method} require number as second argument`);
+    if (args) {
+        args = args.map(x => x[2]);
+        if (!is_number_literal(args[0])) {
+            error(`animation command ${method} require number as second argument`);
+        }
     }
     return  {
         "type": "AwaitExpression",
-        "argument": gaiman_call(map_extra_method(method), expr, ...args)
+        "argument": gaiman_call(map_extra_method(method), expr, ...(args || []))
     };
 }
 
 
-async_command = _ method:adapter_async_strings " " SPACE expr:(adapter_command / expression) SPACE args:("," _ expression _)* {
+async_command = _ method:adapter_async_strings " " SPACE expr:command_argument SPACE args:("," _ expression _)* {
     return  {
         "type": "AwaitExpression",
         "argument": gaiman_call(method, expr, ...args.map(x => x[2]))
     };
 }
 
-static_command = _ method:adapter_static_strings expr:([ ]* (adapter_command / expression))? SPACE args:("," _ expression)* {
+static_command = _ method:adapter_static_strings expr:([ ]* command_argument)? SPACE args:("," _ expression)* {
     if (!expr) {
         return gaiman_call(map_extra_method(method), ...args.map(x => x[2]));
     }

@@ -109,6 +109,7 @@ exports[`expressions should use command as part of expression 1`] = `
         gaiman.echo(await gaiman.get(await gaiman.ask(\`?\`)));
         gaiman.echo(await (await gaiman.get(await (await gaiman.ask(\`? \`)).toLowerCase())).replace(/engine/, \`Engine\`));
         gaiman.echo(await (await (await gaiman.get(await gaiman.ask(\`? \`))).toUpperCase()).replace(/engine/, \`Engine\`));
+        await gaiman.echo_extra(...new GaimanArray(\`hello\`, 100));
     } catch (e) {
         gaiman.error(e);
     }

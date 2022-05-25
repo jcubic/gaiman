@@ -1,15 +1,22 @@
 PEG=./node_modules/.bin/peggy
 JEST=./node_modules/.bin/jest
 COVERALLS=./node_modules/coveralls/bin/coveralls.js
+GAIMAN=./bin/compile.js
+ROLLUP=./node_modules/.bin/rollup
 CAT=cat
 CURL=curl
 GREP=grep
-GAIMAN=./bin/compile.js
-ROLLUP=./node_modules/.bin/rollup
+GIT=git
+CD=cd
+RM=rm
+NPM=npm
+URL=`git config --get remote.origin.url`
 
 README_TMP=readme.html
 USER=jcubic
 REPO=gaiman
+
+
 
 .PHONY: test coveralls demo
 
@@ -32,6 +39,16 @@ test-accept-snapshots: parser.js
 
 coveralls:
 	$(CAT) ./coverage/lcov.info | $(COVERALLS)
+
+publish-beta:
+	$(GIT) clone $(URL) --depth 1 npm
+	$(CD) npm && $(NPM) publish --tag beta
+	$(RM) -rf npm
+
+publish:
+	$(GIT) clone $(URL) --depth 1 npm
+	$(CD) npm && $(NPM) publish
+	$(RM) -rf npm
 
 purge:
 	$(CURL) -s https://github.com/$(USER)/$(REPO)/blob/master/README.md > $(README_TMP)

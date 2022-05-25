@@ -4,3 +4,5 @@ examples
 .*
 assets
 _*
+docs
+rollup.config.js

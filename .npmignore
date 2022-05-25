@@ -6,3 +6,4 @@ assets
 _*
 docs
 rollup.config.js
+Makefile

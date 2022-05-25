@@ -4,11 +4,11 @@
  * / /_/ / /_/ / / / / / / / /_/ / / / /
  * \____/\__,_/_/_/ /_/ /_/\__,_/_/ /_/
  *
- * Storytelling Text Based Game Engine 0.1.0-alpha
+ * Storytelling Text Based Game Engine 1.0.0-beta
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Wed, 25 May 2022 14:23:51 GMT
+ * Buid time: Wed, 25 May 2022 20:18:41 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -774,16 +774,20 @@
 	      };
 	  };
 	  var peg$f38 = function(method, expr) {
-	        error(`Command ${method} require at least two arguments`);
+	          if (expr.type !== 'SpreadElement') {
+	              error(`Command ${method} require at least two arguments`);
+	          }
 	      };
 	  var peg$f39 = function(method, expr, args) {
-	      args = args.map(x => x[2]);
-	      if (!is_number_literal(args[0])) {
-	          error(`animation command ${method} require number as second argument`);
+	      if (args) {
+	          args = args.map(x => x[2]);
+	          if (!is_number_literal(args[0])) {
+	              error(`animation command ${method} require number as second argument`);
+	          }
 	      }
 	      return  {
 	          "type": "AwaitExpression",
-	          "argument": gaiman_call(map_extra_method(method), expr, ...args)
+	          "argument": gaiman_call(map_extra_method(method), expr, ...(args || []))
 	      };
 	  };
 	  var peg$f40 = function(method, expr, args) {
@@ -3731,6 +3735,20 @@
 	    return s0;
 	  }
 
+	  function peg$parsecommand_argument() {
+	    var s0;
+
+	    s0 = peg$parseadapter_command();
+	    if (s0 === peg$FAILED) {
+	      s0 = peg$parseexpression();
+	      if (s0 === peg$FAILED) {
+	        s0 = peg$parsesplat_arg();
+	      }
+	    }
+
+	    return s0;
+	  }
+
 	  function peg$parseextra_commands_single() {
 	    var s0, s1, s2, s4, s5;
 
@@ -3740,10 +3758,7 @@
 	      s2 = peg$parseextra_single();
 	      if (s2 !== peg$FAILED) {
 	        peg$parseSPACE();
-	        s4 = peg$parseadapter_command();
-	        if (s4 === peg$FAILED) {
-	          s4 = peg$parseexpression();
-	        }
+	        s4 = peg$parsecommand_argument();
 	        if (s4 !== peg$FAILED) {
 	          s5 = peg$parse_();
 	          if (s5 !== peg$FAILED) {
@@ -3778,10 +3793,7 @@
 	      s2 = peg$parseadapter_asterisk_strings();
 	      if (s2 !== peg$FAILED) {
 	        peg$parseSPACE();
-	        s4 = peg$parseadapter_command();
-	        if (s4 === peg$FAILED) {
-	          s4 = peg$parseexpression();
-	        }
+	        s4 = peg$parsecommand_argument();
 	        if (s4 !== peg$FAILED) {
 	          peg$parseSPACE();
 	          s6 = [];
@@ -3850,7 +3862,7 @@
 	            s6 = peg$currPos;
 	            s7 = '';
 	            peg$savedPos = s6;
-	            s7 = peg$f38(s2);
+	            s7 = peg$f38(s2, s4);
 	            s6 = s7;
 	          }
 	          if (s6 !== peg$FAILED) {
@@ -3899,10 +3911,7 @@
 	        }
 	        if (s3 !== peg$FAILED) {
 	          peg$parseSPACE();
-	          s5 = peg$parseadapter_command();
-	          if (s5 === peg$FAILED) {
-	            s5 = peg$parseexpression();
-	          }
+	          s5 = peg$parsecommand_argument();
 	          if (s5 !== peg$FAILED) {
 	            peg$parseSPACE();
 	            s7 = [];
@@ -4024,10 +4033,7 @@
 	            if (peg$silentFails === 0) { peg$fail(peg$e34); }
 	          }
 	        }
-	        s5 = peg$parseadapter_command();
-	        if (s5 === peg$FAILED) {
-	          s5 = peg$parseexpression();
-	        }
+	        s5 = peg$parsecommand_argument();
 	        if (s5 !== peg$FAILED) {
 	          s4 = [s4, s5];
 	          s3 = s4;
@@ -13824,8 +13830,8 @@
 	}(escodegen$1));
 
 	var name = "gaiman";
-	var version$1 = "0.1.0-alpha";
-	var description = "![Gaiman Text based advanture games engine](assets/banner.svg)";
+	var version$1 = "1.0.0-beta";
+	var description = "Gaiman Text based advanture games engine and programming language";
 	var main = "index.js";
 	var scripts = {
 		build: "pegjs -o parser.js src/gaiman.pegjs"

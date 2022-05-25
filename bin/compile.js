@@ -13,8 +13,10 @@ const { readFile, writeFile, stat, mkdir } = fs.promises;
 const options = lily(process.argv.slice(2), { boolean: ['debug', 'raw'] });
 const executable = path.basename(process.argv[1]);
 
-if (options._.length !== 1) {
-    console.error(`usage: ${executable} -o <output directory> <input.gs>`);
+if (options.v || options.version) {
+  console.log(`Gaiman version: ${json.version}`);
+} else if (options._.length !== 1) {
+    console.error(`usage: ${executable} -v | -o <output directory> <input.gs>`);
 } else {
     readFile(options._[0]).then(async buffer => {
         const source = buffer.toString();

@@ -172,7 +172,9 @@ class WebAdapter {
         if (typeof name === 'string') {
             this._config[name] = value;
         } else {
-            $.extend(this._config, name);
+            const { completion, ...rest } = name;
+            this._term.settings().completion = completion;
+            $.extend(rest, name);
         }
     }
     store(name, ...args) {

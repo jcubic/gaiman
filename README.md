@@ -2,6 +2,7 @@
 
 ![Gaiman: Text based advanture games engine and programming language](assets/banner.svg)
 
+[![npm](https://img.shields.io/badge/npm-1.0.0%E2%80%93beta.1-blue.svg)](https://www.npmjs.com/package/gaiman)
 [![Build and test](https://github.com/jcubic/gaiman/actions/workflows/build.yaml/badge.svg)](https://github.com/jcubic/gaiman/actions/workflows/build.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/jcubic/gaiman/badge.svg?branch=master)](https://coveralls.io/github/jcubic/gaiman?branch=master)
 [![LICENSE GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/jcubic/gaiman/blob/master/LICENSE)
@@ -16,7 +17,7 @@ It support browser based CLI applications and in the future also native command 
 ## Installation
 
 ```
-npm install -g gaiman
+npm install -g gaiman@beta
 ```
 
 ## Usage
@@ -38,7 +39,7 @@ See [Reference Manual on Wiki](https://github.com/jcubic/gaiman/wiki/Reference-M
 This is Hello world Gaiman DSL example:
 
 ```ruby
-echo* "Hi, What is your name?", 50 # Typing animattion with 50ms delay
+echo* "Hi, What is your name?", 50 # Typing animation with 50ms delay
 let name = ask "name? "
 echo "Hello $name, nice to meet you."
 ```
@@ -110,7 +111,7 @@ See Wiki [TODO & Roadmap](https://github.com/jcubic/gaiman/wiki/TODO-&-Roadmap).
 Name came from [Neil Gaiman](https://en.wikipedia.org/wiki/Neil_Gaiman),
 Author of novels, comic books, graphic novels and films. Great storyteller.
 
-You can read about the origin of the languguage in the begining of the article:
+You can read about the origin of the language in the beginning of the article:
 * [How to create programming language that compiles to JavaScript](https://hackernoon.com/creating-your-own-javascript-based-programming-language-has-never-been-easier-wju33by)
 
 ## Acknowledge

@@ -1,7 +1,7 @@
 {
   "name": "gaiman",
-  "version": "0.1.0-alpha",
-  "description": "![Gaiman Text based advanture games engine](assets/banner.svg)",
+  "version": "1.0.0-beta",
+  "description": "Gaiman Text based advanture games engine and programming language",
   "main": "index.js",
   "scripts": {
     "build": "pegjs -o parser.js src/gaiman.pegjs"

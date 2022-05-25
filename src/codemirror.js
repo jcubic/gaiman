@@ -41,10 +41,6 @@
     }
 
     function tokenBase(stream, state) {
-      if (stream.sol() && stream.match("=begin") && stream.eol()) {
-        state.tokenize.push(readBlockComment);
-        return "comment";
-      }
       if (stream.eatSpace()) return null;
       var ch = stream.next(), m;
       if (ch == '"') {
@@ -175,12 +171,6 @@
         else stream.skipToEnd();
         return "string";
       };
-    }
-    function readBlockComment(stream, state) {
-      if (stream.sol() && stream.match("=end") && stream.eol())
-        state.tokenize.pop();
-      stream.skipToEnd();
-      return "comment";
     }
 
     return {

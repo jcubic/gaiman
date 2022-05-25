@@ -20,3 +20,14 @@ list[cmd][cmd]().foo.bar()
 list[cmd](10).foo.bar()()
 list[cmd].foo(10).foo.bar()()
 list.inner[cmd].foo.bar(10).foo.bar()()
+
+echo ( <<<TEXT
+this
+is
+text
+TEXT.toUpperCase() ).replace(/this\n/i, "")
+echo ( (<<<TEXT
+this
+is
+text
+TEXT).toUpperCase() ).replace(/this\n/i, "")

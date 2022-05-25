@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Wed, 25 May 2022 08:51:43 GMT
+ * Buid time: Wed, 25 May 2022 09:17:18 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -1910,9 +1910,15 @@
 	    if (s1 !== peg$FAILED) {
 	      s2 = peg$parse_();
 	      if (s2 !== peg$FAILED) {
-	        s3 = peg$parsecommand();
+	        s3 = peg$parsefunction_call();
 	        if (s3 === peg$FAILED) {
-	          s3 = peg$parseobject();
+	          s3 = peg$parseprop_access();
+	          if (s3 === peg$FAILED) {
+	            s3 = peg$parsecommand();
+	            if (s3 === peg$FAILED) {
+	              s3 = peg$parseobject();
+	            }
+	          }
 	        }
 	        if (s3 !== peg$FAILED) {
 	          s4 = peg$parse_();

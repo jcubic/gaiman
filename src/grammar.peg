@@ -399,7 +399,7 @@ dot_prop = prop:(_ "." _ name) {
     return make_identifier(prop[3]);
 }
 
-object_expression = "(" _ object:(command / object) _ ")" { return object; }
+object_expression = "(" _ object:(function_call / prop_access / command / object) _ ")" { return object; }
 
 object = object_expression / global / array / heredoc / string / any_name
 

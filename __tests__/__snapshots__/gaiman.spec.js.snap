@@ -136,6 +136,8 @@ exports[`functions should compile function calls 1`] = `
         await (await (await $_list[$_cmd](10)).foo.bar())();
         await (await (await $_list[$_cmd].foo(10)).foo.bar())();
         await (await (await $_list.inner[$_cmd].foo.bar(10)).foo.bar())();
+        gaiman.echo(await (await 'this\\\\nis\\\\ntext'.toUpperCase()).replace(/this\\\\n/i, \`\`));
+        gaiman.echo(await (await 'this\\\\nis\\\\ntext'.toUpperCase()).replace(/this\\\\n/i, \`\`));
     } catch (e) {
         gaiman.error(e);
     }

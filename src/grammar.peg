@@ -430,13 +430,27 @@ dict_prop = _ name:string _ "=>" _ value:expression _ {
     };
 }
 
-param_list = first:variable rest:(_ "," _ variable _)* _ {
+splat_param = "*" variable:variable {
+    return {
+        "type": "RestElement",
+        "argument": variable
+    };
+}
+
+param_list = first:(variable / splat_param) rest:(_ "," _ (variable / splat_param) _)* _ {
     return build_list(first, rest);
 }
 
 argument = expression_like / variable
 
-argument_list = first:argument rest:(_ "," _ argument _)* _ {
+splat_arg = "*" argument:argument {
+    return {
+        "type": "SpreadElement",
+        "argument": argument
+    };
+}
+
+argument_list = first:(splat_arg / argument) rest:(_ "," _ (splat_arg / argument) _)* _ {
     return build_list(first, rest);
 }
 

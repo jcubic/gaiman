@@ -11,6 +11,10 @@ end
 
 global("hello")
 
+hello(1, *[1,2,3])
+hello(*[1,2,3])
+
+
 
 list[cmd](10)()
 list[cmd](10).foo.bar()

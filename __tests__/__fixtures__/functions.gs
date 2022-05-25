@@ -20,3 +20,10 @@ def define()
 
 end
 
+def define(*args)
+
+end
+
+def define(a, *args)
+
+end

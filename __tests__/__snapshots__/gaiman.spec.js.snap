@@ -128,6 +128,8 @@ exports[`functions should compile function calls 1`] = `
             gaiman.echo(\`hello\`);
         }
         await $_global(\`hello\`);
+        await $_hello(1, ...new GaimanArray(1, 2, 3));
+        await $_hello(...new GaimanArray(1, 2, 3));
         await (await $_list[$_cmd](10))();
         await (await $_list[$_cmd](10)).foo.bar();
         await $_list[$_cmd][$_cmd]();
@@ -163,6 +165,10 @@ exports[`functions should compile function definitions 1`] = `
             }
         }
         async function $_define() {
+        }
+        async function $_define(...$_args) {
+        }
+        async function $_define($_a, ...$_args) {
         }
     } catch (e) {
         gaiman.error(e);

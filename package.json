@@ -1,6 +1,6 @@
 {
   "name": "gaiman",
-  "version": "1.0.0-beta",
+  "version": "1.0.0-beta.1",
   "description": "Gaiman Text based advanture games engine and programming language",
   "main": "index.js",
   "scripts": {

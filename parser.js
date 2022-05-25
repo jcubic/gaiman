@@ -1951,7 +1951,10 @@ function peg$parse(input, options) {
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       if (s2 !== peg$FAILED) {
-        s3 = peg$parseobject();
+        s3 = peg$parsecommand();
+        if (s3 === peg$FAILED) {
+          s3 = peg$parseobject();
+        }
         if (s3 !== peg$FAILED) {
           s4 = peg$parse_();
           if (s4 !== peg$FAILED) {
@@ -1992,17 +1995,17 @@ function peg$parse(input, options) {
   function peg$parseobject() {
     var s0;
 
-    s0 = peg$parseglobal();
+    s0 = peg$parseobject_expression();
     if (s0 === peg$FAILED) {
-      s0 = peg$parsearray();
+      s0 = peg$parseglobal();
       if (s0 === peg$FAILED) {
-        s0 = peg$parseheredoc();
+        s0 = peg$parsearray();
         if (s0 === peg$FAILED) {
-          s0 = peg$parsestring();
+          s0 = peg$parseheredoc();
           if (s0 === peg$FAILED) {
-            s0 = peg$parseany_name();
+            s0 = peg$parsestring();
             if (s0 === peg$FAILED) {
-              s0 = peg$parseobject_expression();
+              s0 = peg$parseany_name();
             }
           }
         }

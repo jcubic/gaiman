@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Tue, 24 May 2022 19:34:13 GMT
+ * Buid time: Wed, 25 May 2022 08:51:43 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -1910,7 +1910,10 @@
 	    if (s1 !== peg$FAILED) {
 	      s2 = peg$parse_();
 	      if (s2 !== peg$FAILED) {
-	        s3 = peg$parseobject();
+	        s3 = peg$parsecommand();
+	        if (s3 === peg$FAILED) {
+	          s3 = peg$parseobject();
+	        }
 	        if (s3 !== peg$FAILED) {
 	          s4 = peg$parse_();
 	          if (s4 !== peg$FAILED) {
@@ -1951,17 +1954,17 @@
 	  function peg$parseobject() {
 	    var s0;
 
-	    s0 = peg$parseglobal();
+	    s0 = peg$parseobject_expression();
 	    if (s0 === peg$FAILED) {
-	      s0 = peg$parsearray();
+	      s0 = peg$parseglobal();
 	      if (s0 === peg$FAILED) {
-	        s0 = peg$parseheredoc();
+	        s0 = peg$parsearray();
 	        if (s0 === peg$FAILED) {
-	          s0 = peg$parsestring();
+	          s0 = peg$parseheredoc();
 	          if (s0 === peg$FAILED) {
-	            s0 = peg$parseany_name();
+	            s0 = peg$parsestring();
 	            if (s0 === peg$FAILED) {
-	              s0 = peg$parseobject_expression();
+	              s0 = peg$parseany_name();
 	            }
 	          }
 	        }
@@ -10866,7 +10869,7 @@
 	var _args = [
 		[
 			"escodegen@2.0.0",
-			"/home/kuba/projects/jcubic/gaiman"
+			"/home/users/jankiewj/projects/jcubic/gaiman"
 		]
 	];
 	var _from = "escodegen@2.0.0";
@@ -10892,7 +10895,7 @@
 	];
 	var _resolved = "https://registry.npmjs.org/escodegen/-/escodegen-2.0.0.tgz";
 	var _spec = "2.0.0";
-	var _where = "/home/kuba/projects/jcubic/gaiman";
+	var _where = "/home/users/jankiewj/projects/jcubic/gaiman";
 	var bin$1 = {
 		esgenerate: "bin/esgenerate.js",
 		escodegen: "bin/escodegen.js"

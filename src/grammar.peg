@@ -399,11 +399,11 @@ dot_prop = prop:(_ "." _ name) {
     return make_identifier(prop[3]);
 }
 
-object_expression = "(" _ object:object _ ")" { return object; }
+object_expression = "(" _ object:(command / object) _ ")" { return object; }
 
-object = global / array / heredoc / string / any_name / object_expression
+object = object_expression / global / array / heredoc / string / any_name
 
-prop_access = object:(object) props:(bracket_prop / dot_prop)+ _ {
+prop_access = object:object props:(bracket_prop / dot_prop)+ _ {
     return props.reduce((object, property) => {
         const result = {
             type: 'MemberExpression',

@@ -407,6 +407,27 @@ async function mergeSort(array, fn = defaultSortFn) {
     return array;
 }
 
+// STD library
+function $_ord(x) {
+    const type = typeof x;
+    if (type !== 'string') {
+        throw new Error(`ord: Invalid argument, expected string got ${type}`);
+    }
+    const len = [...x].length;
+    if (len > 1) {
+        throw new Error('ord: argument need to be string of length 1');
+    }
+    return x.codePointAt(0);
+}
+
+function $_chr(x) {
+    const type = typeof x;
+    if (type !== 'number') {
+        throw new Error(`chr: Invalid argument, expected number got ${type}`);
+    }
+    return String.fromCodePoint(x);
+}
+
 var cookie, argv, gaiman, $$__m;
 try {
     if (is_node()) {

@@ -27,7 +27,7 @@
     "type", "ask*", "echo*", "input*", "update", "clear", "mask"
   ], keywords = wordObj(keywordList);
 
-  var indentWords = wordObj(["def", "for", "do", "then", "lambda"]);
+  var indentWords = wordObj(["def", "do", "then", "lambda"]);
   var dedentWords = wordObj(["end"]);
   var opening = {"[": "]", "{": "}", "(": ")"};
   var closing = {"]": "[", "}": "{", ")": "("};

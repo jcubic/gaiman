@@ -428,6 +428,38 @@ function $_chr(x) {
     return String.fromCodePoint(x);
 }
 
+function $_range(start, stop, step) {
+    if (!stop) {
+        stop = start;
+        start = 0;
+    }
+    if (!step) {
+        if (start > stop) {
+            step = -1;
+        } else {
+            step = 1;
+        }
+    }
+    if (start > stop && step > 0) {
+        return new GaimanArray();
+    }
+    let result = new GaimanArray();
+    function run() {
+        result.push(start);
+        start += step;
+    }
+    if (start > stop) {
+        while (start > stop) {
+            run();
+        }
+    } else {
+        while (start < stop) {
+            run();
+        }
+    }
+    return result;
+}
+
 var cookie, argv, gaiman, $$__m;
 try {
     if (is_node()) {

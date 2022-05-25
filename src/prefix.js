@@ -272,6 +272,9 @@ class WebAdapter {
     input_extra(string, delay) {
         return this._term.exec(string, { typing: true, delay });
     }
+    clear() {
+        this._term.clear();
+    }
 }
 
 $.ajaxSetup({

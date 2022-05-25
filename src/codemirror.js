@@ -24,7 +24,7 @@
     "ask", "def", "echo", "else", "end", "false", "for", "get", "if", "in",
     "let", "not", "or", "post", "return", "sleep", "then", "true", "while",
     "throw", "lambda", "do", "continue", "break", "store", "config", "parse",
-    "type", "ask*", "echo*", "input*", "update"
+    "type", "ask*", "echo*", "input*", "update", "clear"
   ], keywords = wordObj(keywordList);
 
   var indentWords = wordObj(["def", "for", "do", "then", "lambda"]);

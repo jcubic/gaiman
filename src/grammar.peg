@@ -237,7 +237,7 @@
             typeof obj.value === 'number';
     }
     var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
-    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update"];
+    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update", "clear"];
     var available_commands = async_commands.concat(sync_commands);
     var extra_single = ["sleep*", "get*"];
     var blacklist_properties = ["constructor", "__proto__", "prototype"];
@@ -588,14 +588,14 @@ adapter_command = extra_commands_single / extra_commands / async_command / stati
 
 extra_single = word:asterisk_name &{ return extra_single.includes(word); } { return word; }
 
-extra_commands_single = _ method:extra_single _ expr:(adapter_command / expression) _ {
+extra_commands_single = _ method:extra_single SPACE expr:(adapter_command / expression) _ {
     return  {
         "type": "AwaitExpression",
         "argument": gaiman_call(map_extra_method(method), expr)
     };
 }
 
-extra_commands = _ method:adapter_asterisk_strings _ expr:(adapter_command / expression) _ args:(
+extra_commands = _ method:adapter_asterisk_strings SPACE expr:(adapter_command / expression) SPACE args:(
     ("," _ expression)+ / '' {
       error(`Command ${method} require at least two arguments`);
     }) _ {
@@ -610,15 +610,18 @@ extra_commands = _ method:adapter_asterisk_strings _ expr:(adapter_command / exp
 }
 
 
-async_command = _ method:adapter_async_strings " " _ expr:(adapter_command / expression) _ args:("," _ expression _)* {
+async_command = _ method:adapter_async_strings " " SPACE expr:(adapter_command / expression) SPACE args:("," _ expression _)* {
     return  {
         "type": "AwaitExpression",
         "argument": gaiman_call(method, expr, ...args.map(x => x[2]))
     };
 }
 
-static_command = _ method:adapter_static_strings _ expr:(adapter_command / expression) _ args:("," _ expression)* {
-    return gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]));
+static_command = _ method:adapter_static_strings expr:([ ]* (adapter_command / expression))? SPACE args:("," _ expression)* {
+    if (!expr) {
+        return gaiman_call(map_extra_method(method), ...args.map(x => x[2]));
+    }
+    return gaiman_call(map_extra_method(method), expr[1], ...args.map(x => x[2]));
 }
 
 match = expression:(match_var / prop_access / variable) _ "=~" _ re:re _ {
@@ -843,6 +846,8 @@ keyword = ("if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "fo
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 
 WP = [ \t\n\r]
+
+SPACE = [ ]*
 
 _ "optional whitespace"
   = (WP* comment)+ / WP* { return []; }

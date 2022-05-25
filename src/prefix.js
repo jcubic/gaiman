@@ -201,6 +201,12 @@ class WebAdapter {
     sleep_extra(timeout) {
         return this.sleep(timeout, true);
     }
+    mask(char) {
+        if (arguments.length === 0) {
+            return this._term.cmd().mask();
+        }
+        this._term.set_mask(char);
+    }
     error(e) {
         var message;
         if (e.statusText) {

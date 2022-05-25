@@ -24,7 +24,7 @@
     "ask", "def", "echo", "else", "end", "false", "for", "get", "if", "in",
     "let", "not", "or", "post", "return", "sleep", "then", "true", "while",
     "throw", "lambda", "do", "continue", "break", "store", "config", "parse",
-    "type", "ask*", "echo*", "input*", "update", "clear"
+    "type", "ask*", "echo*", "input*", "update", "clear", "mask"
   ], keywords = wordObj(keywordList);
 
   var indentWords = wordObj(["def", "for", "do", "then", "lambda"]);
@@ -228,7 +228,7 @@
           (state.continuedLine ? config.indentUnit : 0);
       },
 
-      electricInput: /^\s*(?:end|do|then|else|\})$/,
+      electricInput: /^\s*(?:end|do|then|lambda|else|\})$/,
       lineComment: "#",
       fold: "indent"
     };

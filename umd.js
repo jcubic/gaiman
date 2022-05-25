@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Wed, 25 May 2022 13:09:33 GMT
+ * Buid time: Wed, 25 May 2022 14:23:51 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -166,7 +166,7 @@
 	                    "type": "BlockStatement",
 	                    "body": [{
 	                        "type": "ExpressionStatement",
-	                          "expression": gaiman_call('error', make_identifier("e"))
+	                        "expression": gaiman_call('error', make_identifier("e"))
 	                    }]
 	                }
 	            }
@@ -11052,7 +11052,7 @@
 	var _args = [
 		[
 			"escodegen@2.0.0",
-			"/home/users/jankiewj/projects/jcubic/gaiman"
+			"/home/kuba/projects/jcubic/gaiman"
 		]
 	];
 	var _from = "escodegen@2.0.0";
@@ -11078,7 +11078,7 @@
 	];
 	var _resolved = "https://registry.npmjs.org/escodegen/-/escodegen-2.0.0.tgz";
 	var _spec = "2.0.0";
-	var _where = "/home/users/jankiewj/projects/jcubic/gaiman";
+	var _where = "/home/kuba/projects/jcubic/gaiman";
 	var bin$1 = {
 		esgenerate: "bin/esgenerate.js",
 		escodegen: "bin/escodegen.js"

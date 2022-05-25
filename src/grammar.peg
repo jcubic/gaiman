@@ -185,7 +185,7 @@
                     "type": "BlockStatement",
                     "body": [{
                         "type": "ExpressionStatement",
-                          "expression": gaiman_call('error', make_identifier("e"))
+                        "expression": gaiman_call('error', make_identifier("e"))
                     }]
                 }
             }

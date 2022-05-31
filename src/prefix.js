@@ -459,6 +459,49 @@ function $_range(start, stop, step) {
     }
     return result;
 }
+let $_abs = Math.abs;
+let $_acos = Math.acos;
+let $_acosh = Math.acosh;
+let $_asin = Math.asin;
+let $_asinh = Math.asinh;
+let $_atan = Math.atan;
+let $_atanh = Math.atanh;
+let $_atan2 = Math.atan2;
+let $_ceil = Math.ceil;
+let $_cbrt = Math.cbrt;
+let $_expm1 = Math.expm1;
+let $_clz32 = Math.clz32;
+let $_cos = Math.cos;
+let $_cosh = Math.cosh;
+let $_exp = Math.exp;
+let $_floor = Math.floor;
+let $_fround = Math.fround;
+let $_hypot = Math.hypot;
+let $_imul = Math.imul;
+let $_log = Math.log;
+let $_log1p = Math.log1p;
+let $_log2 = Math.log2;
+let $_log10 = Math.log10;
+let $_max = Math.max;
+let $_min = Math.min;
+let $_pow = Math.pow;
+let $_random = Math.random;
+let $_round = Math.round;
+let $_sign = Math.sign;
+let $_sin = Math.sin;
+let $_sinh = Math.sinh;
+let $_sqrt = Math.sqrt;
+let $_tan = Math.tan;
+let $_tanh = Math.tanh;
+let $_trunc = Math.trunc;
+let $_E = Math.E;
+let $_LN10 = Math.LN10;
+let $_LN2 = Math.LN2;
+let $_LOG10E = Math.LOG10E;
+let $_LOG2E = Math.LOG2E;
+let $_PI = Math.PI;
+let $_SQRT1_2 = Math.SQRT1_2;
+let $_SQRT2 = Math.SQRT2;
 
 var cookie, argv, gaiman, $$__m;
 try {

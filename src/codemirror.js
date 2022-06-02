@@ -189,6 +189,7 @@
         return {
           basecol: basecol || 0,
           indentDepth: 0,
+          context: {type: "top"},
           else_block: false,
           tokenize: [tokenBase]
         };

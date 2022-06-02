@@ -493,7 +493,7 @@ exports[`values should parse arrays 1`] = `
 "async function main() {
     try {
         let $_x = new GaimanArray(1, 2, 3, 4);
-        let $_x = new GaimanArray(1, 2, 3, 4);
+        $_x = new GaimanArray(1, 2, 3, 4);
         for (let $_word of new GaimanArray(\`lorem\`, \`ipsum\`, \`dolor\`)) {
             if (gaiman.should_break_loop(1)) {
                 break;

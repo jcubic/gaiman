@@ -1,4 +1,4 @@
-// Gaiman Codemirror mode based on Ruby mode
+// Gaiman Codemirror mode based on Ruby and Lua mode
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 //             copyright (c) Jakub T. Jankiewicz
 //
@@ -36,10 +36,6 @@
     "type", "ask*", "echo*", "input*", "update", "clear", "mask"
   ], keywords = wordRE(keywordList);
 
-  /*
-  var indentWords = wordObj(["def", "do", "then", "lambda", "else"]);
-  var dedentWords = wordObj(["end", "else"]);
-   */
   var indentTokens = wordRE(["def", "if", "lambda", "do", "\\(", "{"]);
   var dedentTokens = wordRE(["end", "\\)", "}"]);
   var dedentPartial = prefixRE(["end", "else", "\\)", "}", "else\\s+if"]);

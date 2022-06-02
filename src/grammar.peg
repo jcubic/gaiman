@@ -479,10 +479,10 @@ dict = _ "{" _ properties:(dict_list / null_array)  _ "}" _ {
 
 lambda_value = "(" _ lambda:lambda _ ")" { return lambda; }
 
-call = "(" args:(argument_list / null_array) ")"
+call = "(" _ args:(argument_list / null_array) _ ")"
 
 
-function_call = _ !keyword expression:(prop_access / lambda_value / variable) _ "(" args:(argument_list / null_array) ")" _ rest:(call / bracket_prop / dot_prop)* {
+function_call = _ !keyword expression:(prop_access / lambda_value / variable) _ "(" _ args:(argument_list / null_array) ")" _ rest:(call / bracket_prop / dot_prop)* {
     if (rest.length === 0) {
         return {
             "type": "AwaitExpression",

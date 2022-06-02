@@ -454,7 +454,7 @@ argument_list = first:(splat_arg / argument) rest:(_ "," _ (splat_arg / argument
     return build_list(first, rest);
 }
 
-array = "[" values:(argument_list / null_array) "]" {
+array = "[" _ values:(argument_list / null_array) _ "]" {
     return {
         "type": "NewExpression",
         "callee": make_identifier("GaimanArray"),

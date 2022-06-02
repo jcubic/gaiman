@@ -20,19 +20,34 @@
     return o;
   }
 
+  function prefixRE(words) {
+    return new RegExp("^(?:" + words.join("|") + ")", "i");
+  }
+  function wordRE(words) {
+    return new RegExp("^(?:" + words.join("|") + ")$", "i");
+  }
+
+  var builtins = wordRE([]);
+
   var keywordList = [
     "ask", "def", "echo", "else", "end", "false", "for", "get", "if", "in",
     "let", "not", "or", "post", "return", "sleep", "then", "true", "while",
     "throw", "lambda", "do", "continue", "break", "store", "config", "parse",
     "type", "ask*", "echo*", "input*", "update", "clear", "mask"
-  ], keywords = wordObj(keywordList);
+  ], keywords = wordRE(keywordList);
 
-  var indentWords = wordObj(["def", "do", "then", "lambda"]);
-  var dedentWords = wordObj(["end"]);
+  /*
+  var indentWords = wordObj(["def", "do", "then", "lambda", "else"]);
+  var dedentWords = wordObj(["end", "else"]);
+   */
+  var indentTokens = wordRE(["def", "if", "lambda", "do", "\\(", "{"]);
+  var dedentTokens = wordRE(["end", "\\)", "}"]);
+  var dedentPartial = prefixRE(["end", "else", "\\)", "}", "else\\s+if"]);
   var opening = {"[": "]", "{": "}", "(": ")"};
   var closing = {"]": "[", "}": "{", ")": "("};
 
   CodeMirror.defineMode("gaiman", function(config) {
+    var indentUnit = config.indentUnit;
     var curPunc;
 
     function chain(newtok, stream, state) {
@@ -174,61 +189,45 @@
     }
 
     return {
-      startState: function() {
-        return {tokenize: [tokenBase],
-                indented: 0,
-                context: {type: "top", indented: -config.indentUnit},
-                continuedLine: false,
-                lastTok: null,
-                varList: false};
+      startState: function(basecol) {
+        return {
+          basecol: basecol || 0,
+          indentDepth: 0,
+          else_block: false,
+          tokenize: [tokenBase]
+        };
       },
 
       token: function(stream, state) {
-        curPunc = null;
-        if (stream.sol()) state.indented = stream.indentation();
-        var style = state.tokenize[state.tokenize.length-1](stream, state), kwtype;
-        var thisTok = curPunc;
+        if (stream.eatSpace()) return null;
+        var style = state.tokenize[state.tokenize.length-1](stream, state);
+        var word = stream.current();
         if (style == "ident") {
-          var word = stream.current();
-          style = state.lastTok == "." ? "property"
-            : keywords.propertyIsEnumerable(stream.current()) ? "keyword"
-            : /^[A-Z]/.test(word) ? "tag"
-            : (state.lastTok == "def" || state.lastTok == "class" || state.varList) ? "def"
-            : "variable";
-          if (style == "keyword") {
-            thisTok = word;
-            if (indentWords.propertyIsEnumerable(word)) kwtype = "indent";
-            else if (dedentWords.propertyIsEnumerable(word)) kwtype = "dedent";
-            else if ((word == "if" || word == "unless") && stream.column() == stream.indentation())
-              kwtype = "indent";
-            else if (word == "do" && state.context.indented < state.indented)
-              kwtype = "indent";
+          if (keywords.test(word)) style = "keyword";
+          else if (builtins.test(word)) style = "builtin";
+          else style = "variable";
+          if (word == 'else') {
+            state.else_block = true;
+          } else if (word == 'if' && state.else_block) {
+            state.else_block = false;
+            return style;
+          } else {
+            state.else_block = false;
           }
         }
-        if (curPunc || (style && style != "comment")) state.lastTok = thisTok;
-        if (curPunc == "|") state.varList = !state.varList;
-
-        if (kwtype == "indent" || /[\(\[\{]/.test(curPunc))
-          state.context = {prev: state.context, type: curPunc || style, indented: state.indented};
-        else if ((kwtype == "dedent" || /[\)\]\}]/.test(curPunc)) && state.context.prev)
-          state.context = state.context.prev;
-
-        if (stream.eol())
-          state.continuedLine = (curPunc == "\\" || style == "operator");
+        if (style != "comment" && style != "string") {
+          if (indentTokens.test(word)) ++state.indentDepth;
+          else if (dedentTokens.test(word)) --state.indentDepth;
+        }
         return style;
       },
 
       indent: function(state, textAfter) {
-        if (state.tokenize[state.tokenize.length-1] != tokenBase) return CodeMirror.Pass;
-        var firstChar = textAfter && textAfter.charAt(0);
-        var ct = state.context;
-        var closed = ct.type == closing[firstChar] ||
-            ct.type == "keyword" && /^(?:end|else)\b/.test(textAfter);
-        return ct.indented + (closed ? 0 : config.indentUnit) +
-          (state.continuedLine ? config.indentUnit : 0);
+        var closing = dedentPartial.test(textAfter);
+        return state.basecol + indentUnit * (state.indentDepth - (closing ? 1 : 0));
       },
 
-      electricInput: /^\s*(?:end|do|then|lambda|else|\})$/,
+      electricInput: /^\s*(?:end|else|\})$/,
       lineComment: "#",
       fold: "indent"
     };

@@ -4,11 +4,11 @@
  * / /_/ / /_/ / / / / / / / /_/ / / / /
  * \____/\__,_/_/_/ /_/ /_/\__,_/_/ /_/
  *
- * Storytelling Text Based Game Engine 1.0.0-beta
+ * Storytelling Text Based Game Engine 1.0.0-beta.1
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Wed, 25 May 2022 20:18:41 GMT
+ * Buid time: Thu, 02 Jun 2022 15:20:56 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -208,14 +208,6 @@
 	            }
 	        };
 	        return new_loc;
-	    }
-	    function is_number_literal(obj) {
-	        if (!obj || obj instanceof Array) {
-	            return false;
-	        }
-	        return typeof obj === 'object' &&
-	            obj.type === 'Literal' &&
-	            typeof obj.value === 'number';
 	    }
 	    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
 	    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update", "clear", "mask"];
@@ -781,9 +773,6 @@
 	  var peg$f39 = function(method, expr, args) {
 	      if (args) {
 	          args = args.map(x => x[2]);
-	          if (!is_number_literal(args[0])) {
-	              error(`animation command ${method} require number as second argument`);
-	          }
 	      }
 	      return  {
 	          "type": "AwaitExpression",
@@ -13830,7 +13819,7 @@
 	}(escodegen$1));
 
 	var name = "gaiman";
-	var version$1 = "1.0.0-beta";
+	var version$1 = "1.0.0-beta.1";
 	var description = "Gaiman Text based advanture games engine and programming language";
 	var main = "index.js";
 	var scripts = {

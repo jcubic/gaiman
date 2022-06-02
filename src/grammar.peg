@@ -626,9 +626,6 @@ extra_commands = _ method:adapter_asterisk_strings SPACE expr:command_argument S
     }) _ {
     if (args) {
         args = args.map(x => x[2]);
-        if (!is_number_literal(args[0])) {
-            error(`animation command ${method} require number as second argument`);
-        }
     }
     return  {
         "type": "AwaitExpression",

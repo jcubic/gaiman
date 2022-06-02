@@ -798,9 +798,6 @@ function peg$parse(input, options) {
   var peg$f39 = function(method, expr, args) {
       if (args) {
           args = args.map(x => x[2]);
-          if (!is_number_literal(args[0])) {
-              error(`animation command ${method} require number as second argument`);
-          }
       }
       return  {
           "type": "AwaitExpression",

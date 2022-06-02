@@ -503,6 +503,26 @@ let $_PI = Math.PI;
 let $_SQRT1_2 = Math.SQRT1_2;
 let $_SQRT2 = Math.SQRT2;
 
+// Fisher-Yates (aka Knuth) Shuffle
+// ref: https://stackoverflow.com/a/2450976/387194
+function $_shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
 var cookie, argv, gaiman, $$__m;
 try {
     if (is_node()) {

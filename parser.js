@@ -633,7 +633,7 @@ function peg$parse(input, options) {
               property
           };
           if (property[0] == "[") {
-              result.computed = true
+              result.computed = true;
               result.property = property[2];
           }
           return result;
@@ -700,7 +700,7 @@ function peg$parse(input, options) {
           if (item[0] == "(") {
               return {
                   "type": "AwaitExpression",
-                  "argument": call(acc, ...item[1])
+                  "argument": call(acc, ...item[2])
               };
           } else {
               let result = {

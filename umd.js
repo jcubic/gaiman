@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Thu, 02 Jun 2022 23:06:14 GMT
+ * Buid time: Fri, 03 Jun 2022 08:49:17 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -675,7 +675,7 @@
 	          if (item[0] == "(") {
 	              return {
 	                  "type": "AwaitExpression",
-	                  "argument": call(acc, ...item[1])
+	                  "argument": call(acc, ...item[2])
 	              };
 	          } else {
 	              let result = {

@@ -36,7 +36,7 @@
     "type", "ask*", "echo*", "input*", "update", "clear", "mask"
   ], keywords = wordRE(keywordList);
 
-  var indentTokens = wordRE(["def", "if", "lambda", "do", "\\(", "{"]);
+  var indentTokens = wordRE(["def", "then", "lambda", "do", "\\(", "{"]);
   var dedentTokens = wordRE(["end", "\\)", "}"]);
   var dedentPartial = prefixRE(["end", "else", "\\)", "}", "else\\s+if"]);
   var opening = {"[": "]", "{": "}", "(": ")"};

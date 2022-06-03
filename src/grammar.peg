@@ -411,7 +411,7 @@ prop_access = object:object props:(bracket_prop / dot_prop)+ _ {
             property
         };
         if (property[0] == "[") {
-            result.computed = true
+            result.computed = true;
             result.property = property[2];
         }
         return result;
@@ -499,7 +499,7 @@ function_call = _ !keyword expression:(prop_access / lambda_value / variable) _ 
         if (item[0] == "(") {
             return {
                 "type": "AwaitExpression",
-                "argument": call(acc, ...item[1])
+                "argument": call(acc, ...item[2])
             };
         } else {
             let result = {

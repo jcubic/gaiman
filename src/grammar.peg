@@ -743,23 +743,7 @@ variable = global / scoped
 set = set_cookie / set_local
 
 set_cookie = "cookie." name:name _ "=" _ expr:expression {
-    return {
-        "type": "AssignmentExpression",
-        "operator": "=",
-        "left": property(
-            make_identifier('document'),
-            make_identifier('cookie')
-        ),
-        "right": {
-            "type": "BinaryExpression",
-            "operator": "+",
-            "left": {
-                "type": "Literal",
-                "value": name + "="
-            },
-            "right": call(make_identifier('String'), expr)
-        }
-    };
+    return gaiman_call("set_cookie", literal(name), expr);
 }
 
 assign_operator = $("=" !"=" / "*=" / "+=" / "-=" / "%=" / "/=")

@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Fri, 03 Jun 2022 08:49:17 GMT
+ * Buid time: Fri, 03 Jun 2022 23:50:13 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -850,23 +850,7 @@
 	      return make_identifier(variable);
 	  };
 	  var peg$f54 = function(name, expr) {
-	      return {
-	          "type": "AssignmentExpression",
-	          "operator": "=",
-	          "left": property(
-	              make_identifier('document'),
-	              make_identifier('cookie')
-	          ),
-	          "right": {
-	              "type": "BinaryExpression",
-	              "operator": "+",
-	              "left": {
-	                  "type": "Literal",
-	                  "value": name + "="
-	              },
-	              "right": call(make_identifier('String'), expr)
-	          }
-	      };
+	      return gaiman_call("set_cookie", literal(name), expr);
 	  };
 	  var peg$f55 = function(left, operator, right) {
 	      return {

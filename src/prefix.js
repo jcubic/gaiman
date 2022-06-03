@@ -106,6 +106,10 @@ const Gaiman = {
     },
     get_extra(url) {
         return $.get(url, $.noop, "text");
+    },
+    set_cookie(name, value) {
+        document.cookie = `${name}=${value}`;
+        cookie[name] = value;
     }
 };
 

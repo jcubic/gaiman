@@ -875,23 +875,7 @@ function peg$parse(input, options) {
       return make_identifier(variable);
   };
   var peg$f54 = function(name, expr) {
-      return {
-          "type": "AssignmentExpression",
-          "operator": "=",
-          "left": property(
-              make_identifier('document'),
-              make_identifier('cookie')
-          ),
-          "right": {
-              "type": "BinaryExpression",
-              "operator": "+",
-              "left": {
-                  "type": "Literal",
-                  "value": name + "="
-              },
-              "right": call(make_identifier('String'), expr)
-          }
-      };
+      return gaiman_call("set_cookie", literal(name), expr);
   };
   var peg$f55 = function(left, operator, right) {
       return {

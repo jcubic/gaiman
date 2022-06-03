@@ -207,6 +207,7 @@
             state.else_block = true;
           } else if (word == 'if' && state.else_block) {
             state.else_block = false;
+            --state.indentDepth;
             return style;
           } else {
             state.else_block = false;

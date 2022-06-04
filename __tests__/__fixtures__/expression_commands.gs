@@ -1,6 +1,14 @@
 echo* (get "https://jcubic.pl/file.txt"), 100
 echo "<white>" + (ask "? ") + "</white>"
 
+let x = ask "? ", lambda(name)
+  return name != ""
+end
+
+let x = ask* "? ", 0, lambda(name)
+  return name != ""
+end
+
 echo* <<<TEXT
 this is <red>Text</red>
 TEXT, 50

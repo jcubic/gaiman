@@ -105,6 +105,12 @@ exports[`expressions should use command as part of expression 1`] = `
     try {
         await gaiman.echo_extra(await gaiman.get(\`https://jcubic.pl/file.txt\`), 100);
         gaiman.echo(\`<white>\` + await gaiman.ask(\`? \`) + \`</white>\`);
+        let $_x = await gaiman.ask(\`? \`, async function lambda($_name) {
+            return $_name !== \`\`;
+        });
+        let $_x = await gaiman.ask_extra(\`? \`, 0, async function lambda($_name) {
+            return $_name !== \`\`;
+        });
         await gaiman.echo_extra('this is <red>Text</red>', 50);
         gaiman.echo(await gaiman.get(await gaiman.ask(\`?\`)));
         gaiman.echo(await (await gaiman.get(await (await gaiman.ask(\`? \`)).toLowerCase())).replace(/engine/, \`Engine\`));

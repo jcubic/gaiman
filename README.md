@@ -50,7 +50,9 @@ More advanced example:
 def ask_details(msg)
     echo msg
     echo "Do you want me to contact you with updates?"
-    let confirm = ask "yes/no: "
+    let confirm = ask "yes/no: ", lambda(answer)
+        return answer =~ /^(y|yes|n|no)$/i
+    end
     if confirm =~ /y|yes/i then
         echo "what is your name?"
         let name = ask "name: ", lambda(name)
@@ -73,6 +75,8 @@ def ask_details(msg)
         if response then
             echo "Welcome $user. You're successfully registered"
         end
+    else
+        echo "Ok, as you wish. Bye"
     end
 end
 

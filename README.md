@@ -47,48 +47,45 @@ echo "Hello $name, nice to meet you."
 More advanced example:
 
 ```ruby
-def ask_email(message)
-   let reply = ask message
-   if reply =~ /y|yes/i then
-      echo "OK"
-   else if reply =~ /n|no/i then
-      echo "FAIL"
-   else
-      global(message)
-   end
-end
-
-def global(command)
-   if command =~ /help/ then
-      echo "available commands help"
-   else if command =~ /ls/ then
-      echo get "/exec?command=ls"
-   else
-      echo "wrong command"
-   end
-end
-
-if cookie.visited then
-  if cookie.USER_NAME then
-    echo "hello $user"
-  else if cookie.EMAIL then
-    echo "Will contact with with any updates"
-  else
+def ask_details(msg)
+    echo msg
     echo "Do you want me to contact you with updates?"
     let confirm = ask "yes/no: "
     if confirm =~ /y|yes/i then
-      echo "what is your name?"
-      let command = ask "name: "
-      if command then
-        let user = command
-        cookie.user = command
-        let response = post "/register", { "name" => user, "email" => email }
-        if response then
-          echo "Welcome $user. You're successfully registered"
+        echo "what is your name?"
+        let name = ask "name: ", lambda(name)
+            let valid = name != ""
+            if not valid then
+                echo "You need to type something"
+            end
+            return valid
         end
-      end
+        cookie.user = name
+        let email = ask "email: ", lambda(email)
+            let valid = email =~ /^.+@.+\..+$/
+            if not valid then
+                echo "wrong email"
+            end
+            return valid
+        end
+        cookie.email = email
+        let response = post "/register", { "name" => name, "email" => email }
+        if response then
+            echo "Welcome $user. You're successfully registered"
+        end
     end
-  end
+end
+
+if cookie.visited then
+    if cookie.user then
+        let user = cookie.user
+        echo "Hello $user, welcome back"
+    else
+        ask_details("Welcome back strager")
+    end
+else
+    cookie.visited = true
+    ask_details("Welcome stranger")
 end
 ```
 

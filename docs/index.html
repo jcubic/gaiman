@@ -644,7 +644,7 @@ body {
          const zip = new JSZip();
          const game = zip.folder("gaiman");
          game.file("index.js", state.output_full);
-         game.file("index.html", state.html);
+         game.file("index.html", get_html('index.js'));
          zip.generateAsync({ type:"blob" }).then(function(content) {
              download(content, "gaiman.zip");
          });
@@ -881,11 +881,11 @@ body {
          state.html = get_html();
      }
 
-     function get_html() {
+     function get_html(js_file_name = './_gaiman_output.js') {
          return template(tempate_html, {
              STYLE: css_sanitize(state.css),
              HTML: state.user_html + '\n',
-             FILE: './_gaiman_output.js'
+             FILE: js_file_name
          });
      }
 

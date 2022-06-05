@@ -31,18 +31,23 @@
      body {
          margin: 0;
      }
-     nav {
-        background: black;
-        padding: 8px 10px;
-        border-bottom: 2px solid var(--separator);
+     header {
+         background: black;
+         font-family: sans-serif;
+         color: white;
+         padding: 8px 10px;
+         border-bottom: 2px solid var(--separator);
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
      }
-     nav h1 {
-        margin: 0;
-        text-indent: -999999999px;
-        width: 120px;
-        height: 35px;
-        background: black url(./brand-white.svg);
-        background-size: contain;
+     header h1 {
+         margin: 0;
+         text-indent: -999999999px;
+         width: 120px;
+         height: 35px;
+         background: black url(./brand-white.svg);
+         background-size: contain;
      }
      main {
          height: calc(100vh - 27px - 53px);
@@ -191,7 +196,7 @@
          display:inline-block;
          cursor:pointer;
          color:#ffffff;
-         font-family:Arial;
+         font-family:Arial, sans-serif;
          font-size:15px;
          padding:9px 23px;
          text-decoration:none;
@@ -246,9 +251,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
-  <nav>
+  <header>
     <h1>Gaiman Programming Langauge and Text Advanture Game Engine</h1>
-  </nav>
+    <div class="right">
+      <label for="examples">Examples:</label>
+      <select id="examples">
+        <option>File Name</option>
+      </select>
+    </div>
+  </header>
   <main>
   <div class="tabs">
     <ul>
@@ -534,6 +545,45 @@ body {
      }
  }
 
+
+ async function list_directory(user, repo, directory) {
+     const url = `https://api.github.com/repos/${user}/${repo}/git/trees/master`;
+     directory = directory.split('/').filter(Boolean);
+     const dir = await directory.reduce(async (acc, dir) => {
+         const { url } = await acc;
+         const list = await fetch(url).then(res => res.json());
+         return list.tree.find(node => node.path === dir);
+     }, { url });
+     if (dir) {
+         const list = await fetch(dir.url).then(res => res.json());
+         return list.tree.map(node => node.path);
+     }
+ }
+
+ const TIMEOUT = 3600;
+
+ async function get_examples(timeout = TIMEOUT) {
+     async function fetch() {
+         const examples = (await list_directory('jcubic', 'gaiman', 'examples')).filter(name => {
+             return name.match(/\.gs$/);
+         });
+         await idbKeyval.set(key, { time: timestamp, examples });
+         return examples;
+     }
+     const key = 'examples';
+     const timestamp = +new Date();
+     const data = await idbKeyval.get(key);
+     if (!data) {
+         return fetch();
+     } else {
+         let { time, examples } = data;
+         if (timestamp + timeout > time) {
+             return fetch();
+         }
+         return examples;
+     }
+ }
+
  function clear_error(editor) {
      var $editor = $(editor);
      $editor.find('.errors ul').empty();
@@ -640,6 +690,13 @@ body {
          update_editor(state.editors.input, state.code);
          return false;
      });
+     $(examples).on('change', async function() {
+         const value = this.value;
+         if (value) {
+             state.code = await fetch_text(`${repo}/examples/${value}`)
+             update_editor(state.editors.input, state.code);
+         }
+     });
      $('#download').on('click', function() {
          const zip = new JSZip();
          const game = zip.folder("gaiman");
@@ -714,6 +771,11 @@ body {
      });
      make_parser();
      compile();
+     get_examples().then(list => {
+         list.forEach(name => {
+             $(`<option value="${name}">${name}</option>`).appendTo(examples);
+         });
+     });
      state.editors.output = make_editor('.output', state.output);
      state.editors.ast = make_editor('.ast', to_json(state.ast || {}));
      state.editors.grammar = make_editor('.gaiman-grammar', state.grammar, {

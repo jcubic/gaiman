@@ -259,6 +259,17 @@ exports[`global should parse do blocks 1`] = `
 }"
 `;
 
+exports[`global should parse imports 1`] = `
+"async function main() {
+    try {
+        const $_$ = $;
+        const $_firebase = firebase;
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
 exports[`if statements should compile base if 1`] = `
 "async function main() {
     try {
@@ -594,6 +605,19 @@ exports[`values should parse strings 1`] = `
         gaiman.echo(\`hello \\\\\\\\\\"hello\\\\\\\\\\" hello\`);
         gaiman.echo(\`hello \${ $_xxx } bar\`);
         gaiman.echo(\`hello \\\\\${x()} baz\`);
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
+exports[`values should setting values 1`] = `
+"async function main() {
+    try {
+        let $_foo = 10;
+        await JSON.stringify({ [\`foo\`]: 10 }, null, 2);
+        document.cookie = 'foo=' + String(10);
+        location.href = \`https://example.com\`;
     } catch (e) {
         gaiman.error(e);
     }

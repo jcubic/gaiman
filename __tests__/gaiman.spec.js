@@ -29,7 +29,10 @@ describe('global', () => {
         return test_fixture('constants.gs');
     });
     it('should parse do blocks', () => {
-        return test_fixture('blocks.gs');s
+        return test_fixture('blocks.gs');
+    });
+    it('should parse imports', () => {
+        return test_fixture('imports.gs');
     });
 });
 
@@ -49,6 +52,9 @@ describe('if statements', () => {
 });
 
 describe('values', () => {
+    it('should setting values', () => {
+        return test_fixture('setting_values.gs');
+    });
     it('should parse numbers', () => {
         return test_fixture('numbers.gs');
     });

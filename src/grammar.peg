@@ -342,7 +342,7 @@ statement_list = !"end" _ statements:statement* _ {
 
 statements = statement_list / null_array
 
-statement = !"end" _ statement:(if / for_loop / while_loop / jump / return / var / do_block / expression_statement / function_definition) _ {
+statement = !"end" _ statement:(if / for_loop / while_loop / jump / return / import / var / do_block / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -567,6 +567,19 @@ var = _ "let" _ name:(variable) _ rest:("=" _ expression_like)? _ {
     };
 }
 
+
+import = "import " _ name:name {
+    return {
+        "type": "VariableDeclaration",
+        "declarations": [{
+            "type": "VariableDeclarator",
+            "id": make_identifier(variable_prefix + name),
+            "init": make_identifier(name)
+        }],
+        "kind": "const"
+    };
+}
+
 DoubleStringCharacter = !('"' / "\\") . / "\\" . { return text(); } // "
 
 string = '"' DoubleStringCharacter*  '"' { // '
@@ -743,11 +756,26 @@ variable = global / scoped
 set = set_cookie / set_local
 
 set_cookie = "cookie." name:name _ "=" _ expr:expression {
-    return gaiman_call("set_cookie", literal(name), expr);
+    return {
+        "type": "AssignmentExpression",
+        "operator": "=",
+        "left": property(
+            make_identifier('document'),
+            make_identifier('cookie')
+        ),
+        "right": {
+            "type": "BinaryExpression",
+            "operator": "+",
+            "left": {
+                "type": "Literal",
+                "value": name + "="
+            },
+            "right": call(make_identifier('String'), expr)
+        }
+    };
 }
 
 assign_operator = $("=" !"=" / "*=" / "+=" / "-=" / "%=" / "/=")
-
 
 set_local = left:(prop_access / scoped) _ operator:assign_operator _  right:(expression_like / variable) {
     return {

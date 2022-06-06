@@ -25,7 +25,7 @@ all: umd.js
 parser.js: Makefile ./src/grammar.peg
 	$(PEG) -o parser.js ./src/grammar.peg
 
-umd.js: parser.js index.js rollup.config.js ./src/banner.js
+umd.js: parser.js index.js rollup.config.js ./src/banner.js package.json
 	$(ROLLUP) -c
 
 demo:

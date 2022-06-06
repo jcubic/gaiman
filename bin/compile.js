@@ -8,7 +8,13 @@ const escodegen = require('escodegen');
 const json = require('../package.json');
 const fs = require('fs');
 
-const { readFile, writeFile, stat, mkdir } = fs.promises;
+const { writeFile, stat, mkdir } = fs.promises;
+
+function readFile(filepath) {
+    const abs_path = require.resolve(filepath);
+    return fs.promises.readFile(abs_path);
+}
+
 
 const options = lily(process.argv.slice(2), { boolean: ['debug', 'raw'] });
 const executable = path.basename(process.argv[1]);
@@ -18,7 +24,7 @@ if (options.v || options.version) {
 } else if (options._.length !== 1) {
     console.error(`usage: ${executable} -v | -o <output directory> <input.gs>`);
 } else {
-    readFile(options._[0]).then(async buffer => {
+    fs.promises.readFile(options._[0]).then(async buffer => {
         const source = buffer.toString();
         try {
             const ast = parser.parse(source);
@@ -86,15 +92,15 @@ async function directory_exists(path) {
 }
 
 async function wrap_code(code) {
-    var prefx = await readFile('./src/prefix.js');
-    var postfix = await readFile('./src/postfix.js');
+    var prefx = await readFile('../src/prefix.js');
+    var postfix = await readFile('../src/postfix.js');
     var result = [prefx, code, postfix].join('\n');
     return add_version(result);
 }
 
 async function get_terminal(mapping) {
-    const html = (await readFile('./src/terminal.html')).toString();
-    const css = (await readFile('./src/terminal.css')).toString();
+    const html = (await readFile('../src/terminal.html')).toString();
+    const css = (await readFile('../src/terminal.css')).toString();
     return template(html, Object.assign({
         STYLE: css,
         HTML: '<div id="term"></div>',

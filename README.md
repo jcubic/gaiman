@@ -1,6 +1,6 @@
 # Gaiman Engine and Programming Language
 
-![Gaiman: Text based advanture games engine and programming language](assets/banner.svg)
+![Gaiman: Text based advanture games engine and programming language](https://raw.githubusercontent.com/jcubic/gaiman/master/assets/banner.svg)
 
 [![npm](https://img.shields.io/badge/npm-1.0.0%E2%80%93beta.2-blue.svg)](https://www.npmjs.com/package/gaiman)
 [![Build and test](https://github.com/jcubic/gaiman/actions/workflows/build.yaml/badge.svg)](https://github.com/jcubic/gaiman/actions/workflows/build.yaml)

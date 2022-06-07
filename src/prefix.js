@@ -101,10 +101,16 @@ const Gaiman = {
     post_extra(url, data = {}) {
         return $.post(url, data, $.noop, "text");
     },
-    get(url) {
+    get(url, data) {
+        if (data) {
+            return $.get(url, data);
+        }
         return $.get(url);
     },
-    get_extra(url) {
+    get_extra(url, data) {
+        if (data) {
+            return $.get(url, data, $.noop, "text");
+        }
         return $.get(url, $.noop, "text");
     },
     set_cookie(name, value) {

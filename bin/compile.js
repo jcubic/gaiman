@@ -12,7 +12,7 @@ const { writeFile, stat, mkdir } = fs.promises;
 
 function readFile(filepath) {
     const abs_path = require.resolve(filepath);
-    return fs.promises.readFile(abs_path);
+    return fs.promises.readFile(abs_path, 'utf8');
 }
 
 
@@ -22,7 +22,7 @@ const executable = path.basename(process.argv[1]);
 if (options.v || options.version) {
   console.log(`Gaiman version: ${json.version}`);
 } else if (options._.length !== 1) {
-    console.error(`usage: ${executable} -v | -o <output directory> <input.gs>`);
+    console.error(`usage: ${executable} -v | [-t <html template>] -o <output directory> <input.gs>`);
 } else {
     fs.promises.readFile(options._[0]).then(async buffer => {
         const source = buffer.toString();
@@ -39,7 +39,13 @@ if (options.v || options.version) {
                     }
                     const output_code = await wrap_code(code);
                     writeFile(path.join(options.o, 'index.js'), output_code);
-                    writeFile(path.join(options.o, 'index.html'), await get_terminal());
+                    let template;
+                    if (options.t) {
+                        template = await fs.promises.readFile(options.t, 'utf8');
+                    } else {
+                        template = await get_terminal();
+                    }
+                    writeFile(path.join(options.o, 'index.html'), template);
                 } else {
                     console.log(code);
                 }
@@ -99,8 +105,8 @@ async function wrap_code(code) {
 }
 
 async function get_terminal(mapping) {
-    const html = (await readFile('../src/terminal.html')).toString();
-    const css = (await readFile('../src/terminal.css')).toString();
+    const html = await readFile('../src/terminal.html');
+    const css = await readFile('../src/terminal.css');
     return template(html, Object.assign({
         STYLE: css,
         HTML: '<div id="term"></div>',

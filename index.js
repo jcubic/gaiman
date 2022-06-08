@@ -5,7 +5,7 @@
  * \____/\__,_/_/_/ /_/ /_/\__,_/_/ /_/
  *
  * Storytelling Text Based Game Engine
- * Copyrigth (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
+ * Copyrigth (C) 2021-2022 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
  */

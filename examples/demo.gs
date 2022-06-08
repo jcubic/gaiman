@@ -27,7 +27,7 @@ let greetings = <<<GREET
                   \____|\__,_|_|_| |_| |_|\__,_|_| |_|
 
                 Gaiman Engine
-                Copyright (C) 2021 Jakub Jankiewicz <https://jcubic.pl/me>
+                Copyright (C) 2021-2022 Jakub Jankiewicz <https://jcubic.pl/me>
                 Released under GPLv3 license
 
                 GREET

@@ -35,3 +35,5 @@ def range(start, stop, step)
 
     return result
 end
+
+echo range(10)

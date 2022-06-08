@@ -4,7 +4,10 @@ sleep* 5000
 clear
 echo* "The Matrix has you...", 50
 sleep* 5000
-clear 
+clear
 echo* "Follow the white rabbit.", 50
 sleep* 5000
+clear
 echo "Knock, knock, Neo."
+sleep* 5000
+clear

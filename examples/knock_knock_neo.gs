@@ -1,4 +1,10 @@
-ask* "Wake up, Neo..."
+prompt ""
+echo* "Wake up, Neo...", 50
 sleep* 5000
-ask* "The Matrix has you..."
+clear
+echo* "The Matrix has you...", 50
 sleep* 5000
+clear 
+echo* "Follow the white rabbit.", 50
+sleep* 5000
+echo "Knock, knock, Neo."

@@ -34,7 +34,7 @@
     "let", "not", "or", "post", "return", "sleep", "then", "true", "while",
     "throw", "lambda", "do", "continue", "break", "store", "config", "parse",
     "type", "ask*", "echo*", "input*", "update", "clear", "mask", "import",
-    "prompt", "rpc"
+    "prompt", "rpc", "load"
   ], keywords = wordRE(keywordList);
 
   var indentTokens = wordRE(["def", "then", "lambda", "do", "\\(", "{"]);

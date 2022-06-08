@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Wed, 08 Jun 2022 14:28:42 GMT
+ * Buid time: Wed, 08 Jun 2022 15:03:47 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -209,7 +209,7 @@
 	        };
 	        return new_loc;
 	    }
-	    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*", "rpc"];
+	    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*", "rpc", "load"];
 	    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update", "clear", "mask"];
 	    var available_commands = async_commands.concat(sync_commands);
 	    var extra_single = ["sleep*", "get*"];
@@ -11158,7 +11158,7 @@
 	var _args = [
 		[
 			"escodegen@2.0.0",
-			"/home/users/jankiewj/projects/jcubic/gaiman"
+			"/home/kuba/projects/jcubic/gaiman"
 		]
 	];
 	var _from = "escodegen@2.0.0";
@@ -11184,7 +11184,7 @@
 	];
 	var _resolved = "https://registry.npmjs.org/escodegen/-/escodegen-2.0.0.tgz";
 	var _spec = "2.0.0";
-	var _where = "/home/users/jankiewj/projects/jcubic/gaiman";
+	var _where = "/home/kuba/projects/jcubic/gaiman";
 	var bin$1 = {
 		esgenerate: "bin/esgenerate.js",
 		escodegen: "bin/escodegen.js"

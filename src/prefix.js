@@ -95,6 +95,10 @@ const Gaiman = {
     parse_extra(input) {
         return $.terminal.split_arguments(input);
     },
+    set_cookie(name, value) {
+        document.cookie = `${name}=${value}`;
+        cookie[name] = value;
+    },
     post(url, data = {}) {
         return $.post(url, data);
     },
@@ -113,9 +117,8 @@ const Gaiman = {
         }
         return $.get(url, $.noop, "text");
     },
-    set_cookie(name, value) {
-        document.cookie = `${name}=${value}`;
-        cookie[name] = value;
+    load(url) {
+        return $.getScript(url);
     },
     async rpc(url) {
         // TODO: add Open-RPC

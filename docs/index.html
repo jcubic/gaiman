@@ -313,6 +313,7 @@
         <li><a href="#">CSS</a></li>
         <li><a href="#">HTML</a></li>
         <li><a href="#" class="dev hidden">JavaScript</a></li>
+        <li><a href="#" class="dev hidden">CodeMirror</a></li>
       </ul>
       <div class="content">
         <div class="gaiman-code editor active">
@@ -323,6 +324,7 @@
         <div class="css-editor editor"></div>
         <div class="html-editor editor"></div>
         <div class="js-editor editor"></div>
+        <div class="cm-editor editor"></div>
       </div>
     </div>
   </aside>
@@ -694,6 +696,7 @@ body {
          state.grammar = await fetch_text(`${repo}src/grammar.peg`);
          state.code = await fetch_text(`${repo}examples/hello.gs`);
          state.js = await fetch_text(`${repo}src/prefix.js`);
+         state.cm = await fetch_text(`${repo}src/codemirror.js`);
          update_editor(state.editors.grammar, state.grammar);
          update_editor(state.editors.css, css.innerHTML);
          update_editor(state.editors.js, state.js);
@@ -726,6 +729,7 @@ body {
      const SOURCE_FILE = '_gaiman_source.gs';
      const GRAMMAR_FILE = '_gaiman_grammar.peg';
      const OUTPUT_FILE = '_gaiman_output.js';
+     const CODEMIRROR_FILE = '_gaiman_cm.js';
      const CSS_FILE = '_gaiman.css';
      const SCRIPT_FILE = '_gaiman.js';
      const HTML_FILE = '_gaiman.html';
@@ -746,6 +750,7 @@ body {
          js: await get_file(SCRIPT_FILE, `${repo}src/prefix.js`),
          editors: {},
          grammar: await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`),
+         cm: await get_file(CODEMIRROR_FILE, `${repo}src/codemirror.js`),
          code: await get_file(SOURCE_FILE, `${repo}examples/`, 'hello.gs'),
          ast: {}
      };
@@ -781,6 +786,7 @@ body {
          }
      });
      make_parser();
+     update_codemirror();
      compile();
      get_examples().then(list => {
          list.forEach(name => {
@@ -800,6 +806,10 @@ body {
      state.editors.html = make_editor('.html-editor', state.user_html, {
          readOnly: false,
          mode: 'htmlmixed'
+     });
+     state.editors.cm = make_editor('.cm-editor', state.cm, {
+         readOnly: false,
+         mode: 'javascript'
      });
      update_html(true);
      set_idb(true);
@@ -838,6 +848,10 @@ body {
      ['css', 'html'].forEach(name => {
          state.editors[name].on('change', debounce(() => update_html(), 800));
      });
+     state.editors.cm.on('change', debounce(async () => {
+         state.cm = state.editors.cm.getValue();
+         update_codemirror();
+     }, 800));
      state.editors.grammar.on('change', debounce(function() {
          if (state.dev_mode) {
              state.grammar = state.editors.grammar.getValue();
@@ -943,6 +957,15 @@ body {
          }
          set(HTML_FILE, state.html);
          frame.src = `./__idb__/${HTML_FILE}`;
+     }
+
+     async function update_codemirror() {
+         if (state.dev_mode) {
+             await set(CODEMIRROR_FILE, state.cm);
+             await $.getScript(`./__idb__/${CODEMIRROR_FILE}`);
+             state.editors.input.setOption('mode', 'text');
+             state.editors.input.setOption('mode', 'gaiman');
+         }
      }
 
      function build_html() {

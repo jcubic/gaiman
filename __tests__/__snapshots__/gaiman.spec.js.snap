@@ -120,6 +120,8 @@ exports[`expressions should use command as part of expression 1`] = `
         gaiman.echo(\`Hello\`);
         gaiman.clear();
         gaiman.clear();
+        await gaiman.echo_extra(\`message.\`, 50);
+        gaiman.echo(await gaiman.ask(\`?\`));
     } catch (e) {
         gaiman.error(e);
     }

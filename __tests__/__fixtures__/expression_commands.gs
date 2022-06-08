@@ -23,4 +23,8 @@ echo* *["hello", 100]
 clear
 echo "Hello"
 clear
-clear
+clear 
+echo* "message.", 50
+echo(
+    ask "?"
+)

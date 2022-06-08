@@ -127,4 +127,4 @@ Logo use:
 ## License
 
 Released under GNU GPL v3 or later<br/>
-Copyright (c) 2021 [Jakub T. Jankiewicz](https://jcubic.pl/me)
+Copyright (c) 2021-2022 [Jakub T. Jankiewicz](https://jcubic.pl/me)

@@ -7,7 +7,7 @@
  * Storytelling Text Based Game Engine
  * This file is PEG grammar for Gaiman programming language
  *
- * Copyrigth (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
+ * Copyrigth (C) 2021-2022 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
  */
@@ -624,14 +624,14 @@ extra_single = word:asterisk_name &{ return extra_single.includes(word); } { ret
 
 command_argument = adapter_command / expression / splat_arg
 
-extra_commands_single = _ method:extra_single SPACE expr:command_argument _ {
+extra_commands_single = SPACE method:extra_single SPACE expr:command_argument _ {
     return  {
         "type": "AwaitExpression",
         "argument": gaiman_call(map_extra_method(method), expr)
     };
 }
 
-extra_commands = _ method:adapter_asterisk_strings SPACE expr:command_argument SPACE args:(
+extra_commands = SPACE method:adapter_asterisk_strings SPACE expr:command_argument SPACE args:(
     ("," _ expression)+ / '' {
         if (expr.type !== 'SpreadElement') {
             error(`Command ${method} require at least two arguments`);
@@ -647,14 +647,14 @@ extra_commands = _ method:adapter_asterisk_strings SPACE expr:command_argument S
 }
 
 
-async_command = _ method:adapter_async_strings " " SPACE expr:command_argument SPACE args:("," _ expression _)* {
+async_command = SPACE method:adapter_async_strings " " SPACE expr:command_argument SPACE args:("," _ expression _)* {
     return  {
         "type": "AwaitExpression",
         "argument": gaiman_call(method, expr, ...args.map(x => x[2]))
     };
 }
 
-static_command = _ method:adapter_static_strings expr:(([ ]+ / &"(") command_argument)? SPACE args:("," _ expression)* {
+static_command = SPACE method:adapter_static_strings expr:(([ ]+ / &"(") command_argument)? SPACE args:("," [ ]* expression)* {
     if (!expr) {
         return gaiman_call(map_extra_method(method), ...args.map(x => x[2]));
     }

@@ -1,6 +1,9 @@
 echo* (get "https://jcubic.pl/file.txt"), 100
 echo "<white>" + (ask "? ") + "</white>"
 
+import gaiman
+import name from "file.js"
+
 let x = ask "? ", lambda(name)
   return name != ""
 end

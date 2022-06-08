@@ -17,8 +17,8 @@ if command =~ /(foo)/ then
   end
 end
 
-let fn = lambda(sring)
-    let cmd = parse(sring)
+let fn = lambda(string)
+    let cmd = parse(string)
     if cmd.length == 1 then
         return ["dir", "cd"]
     else

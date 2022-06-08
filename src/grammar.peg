@@ -654,7 +654,7 @@ async_command = _ method:adapter_async_strings " " SPACE expr:command_argument S
     };
 }
 
-static_command = _ method:adapter_static_strings expr:([ ]* command_argument)? SPACE args:("," _ expression)* {
+static_command = _ method:adapter_static_strings expr:(([ ]+ / &"(") command_argument)? SPACE args:("," _ expression)* {
     if (!expr) {
         return gaiman_call(map_extra_method(method), ...args.map(x => x[2]));
     }

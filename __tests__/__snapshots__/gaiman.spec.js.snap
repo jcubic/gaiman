@@ -116,6 +116,10 @@ exports[`expressions should use command as part of expression 1`] = `
         gaiman.echo(await (await gaiman.get(await (await gaiman.ask(\`? \`)).toLowerCase())).replace(/engine/, \`Engine\`));
         gaiman.echo(await (await (await gaiman.get(await gaiman.ask(\`? \`))).toUpperCase()).replace(/engine/, \`Engine\`));
         await gaiman.echo_extra(...new GaimanArray(\`hello\`, 100));
+        gaiman.clear();
+        gaiman.echo(\`Hello\`);
+        gaiman.clear();
+        gaiman.clear();
     } catch (e) {
         gaiman.error(e);
     }
@@ -356,8 +360,8 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
                 10 * 10 / 2;
             }
         }
-        let $_fn = async function lambda($_sring) {
-            let $_cmd = gaiman.parse($_sring);
+        let $_fn = async function lambda($_string) {
+            let $_cmd = gaiman.parse($_string);
             if ($_cmd.length === 1) {
                 return new GaimanArray(\`dir\`, \`cd\`);
             } else {

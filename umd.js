@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Mon, 06 Jun 2022 20:39:03 GMT
+ * Buid time: Wed, 08 Jun 2022 11:40:28 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -4092,20 +4092,47 @@
 	          s5 = peg$FAILED;
 	          if (peg$silentFails === 0) { peg$fail(peg$e35); }
 	        }
-	        while (s5 !== peg$FAILED) {
-	          s4.push(s5);
-	          if (peg$r1.test(input.charAt(peg$currPos))) {
-	            s5 = input.charAt(peg$currPos);
+	        if (s5 !== peg$FAILED) {
+	          while (s5 !== peg$FAILED) {
+	            s4.push(s5);
+	            if (peg$r1.test(input.charAt(peg$currPos))) {
+	              s5 = input.charAt(peg$currPos);
+	              peg$currPos++;
+	            } else {
+	              s5 = peg$FAILED;
+	              if (peg$silentFails === 0) { peg$fail(peg$e35); }
+	            }
+	          }
+	        } else {
+	          s4 = peg$FAILED;
+	        }
+	        if (s4 === peg$FAILED) {
+	          s4 = peg$currPos;
+	          peg$silentFails++;
+	          if (input.charCodeAt(peg$currPos) === 40) {
+	            s5 = peg$c14;
 	            peg$currPos++;
 	          } else {
 	            s5 = peg$FAILED;
-	            if (peg$silentFails === 0) { peg$fail(peg$e35); }
+	            if (peg$silentFails === 0) { peg$fail(peg$e14); }
+	          }
+	          peg$silentFails--;
+	          if (s5 !== peg$FAILED) {
+	            peg$currPos = s4;
+	            s4 = undefined;
+	          } else {
+	            s4 = peg$FAILED;
 	          }
 	        }
-	        s5 = peg$parsecommand_argument();
-	        if (s5 !== peg$FAILED) {
-	          s4 = [s4, s5];
-	          s3 = s4;
+	        if (s4 !== peg$FAILED) {
+	          s5 = peg$parsecommand_argument();
+	          if (s5 !== peg$FAILED) {
+	            s4 = [s4, s5];
+	            s3 = s4;
+	          } else {
+	            peg$currPos = s3;
+	            s3 = peg$FAILED;
+	          }
 	        } else {
 	          peg$currPos = s3;
 	          s3 = peg$FAILED;

@@ -116,6 +116,25 @@ const Gaiman = {
     set_cookie(name, value) {
         document.cookie = `${name}=${value}`;
         cookie[name] = value;
+    },
+    async rpc(url) {
+        // TODO: add Open-RPC
+        return new Proxy({}, {
+            get(target, name) {
+                if (name in target) {
+                    return target[name];
+                }
+                if (name === 'then') {
+                    return undefined;
+                }
+                return (...args) => {
+                    return $.rpc(url, name, args);
+                };
+            },
+            set() {
+                throw new Error("You can't set properties on rpc object");
+            }
+        });
     }
 };
 

@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Wed, 08 Jun 2022 11:47:06 GMT
+ * Buid time: Wed, 08 Jun 2022 14:28:42 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -209,7 +209,7 @@
 	        };
 	        return new_loc;
 	    }
-	    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*"];
+	    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*", "rpc"];
 	    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update", "clear", "mask"];
 	    var available_commands = async_commands.concat(sync_commands);
 	    var extra_single = ["sleep*", "get*"];
@@ -11158,7 +11158,7 @@
 	var _args = [
 		[
 			"escodegen@2.0.0",
-			"/home/kuba/projects/jcubic/gaiman"
+			"/home/users/jankiewj/projects/jcubic/gaiman"
 		]
 	];
 	var _from = "escodegen@2.0.0";
@@ -11184,7 +11184,7 @@
 	];
 	var _resolved = "https://registry.npmjs.org/escodegen/-/escodegen-2.0.0.tgz";
 	var _spec = "2.0.0";
-	var _where = "/home/kuba/projects/jcubic/gaiman";
+	var _where = "/home/users/jankiewj/projects/jcubic/gaiman";
 	var bin$1 = {
 		esgenerate: "bin/esgenerate.js",
 		escodegen: "bin/escodegen.js"
@@ -13990,7 +13990,7 @@
 	 * \____/\__,_/_/_/ /_/ /_/\__,_/_/ /_/
 	 *
 	 * Storytelling Text Based Game Engine
-	 * Copyrigth (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
+	 * Copyrigth (C) 2021-2022 Jakub T. Jankiewicz <https://jcubic.pl/me>
 	 *
 	 * Released under GNU GPL v3 or later
 	 */

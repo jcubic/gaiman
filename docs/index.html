@@ -138,6 +138,9 @@
          background: red !important;
          color: black !important;
      }
+     .cm-s-seti span.cm-string, .cm-s-seti span.cm-string-2 {
+         color: #1c9d34;
+     }
      .config {
          position: fixed;
          bottom: 27px;
@@ -247,11 +250,11 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/lib/codemirror.js"></script>
-    <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/addon/search/search.js,npm/codemirror@5.x.x/addon/search/matchesonscrollbar.js,npm/codemirror@5.x.x/addon/search/searchcursor.js,npm/codemirror@5.x.x/addon/search/jump-to-line.js,npm/codemirror@5.x.x/addon/scroll/annotatescrollbar.js"></script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/addon/search/search.js,npm/codemirror@5.x.x/addon/search/matchesonscrollbar.js,npm/codemirror@5.x.x/addon/search/searchcursor.js,npm/codemirror@5.x.x/addon/search/jump-to-line.js,npm/codemirror@5.x.x/addon/scroll/annotatescrollbar.js,npm/codemirror@5.x.x/addon/edit/matchbrackets.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/codemirror@5.x.x/addon/dialog/dialog.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/peggy"></script>
     <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.x.x/mode/javascript/javascript.js,npm/codemirror@5.x.x/mode/pegjs/pegjs.js,npm/codemirror@5.x.x/mode/css/css.js"></script>
-    <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.65.0/mode/xml/xml.js,npm/codemirror@5.65.0/mode/htmlmixed/htmlmixed.js,npm/codemirror@5/addon/mode/simple.js"></script>
+    <script src="https://cdn.jsdelivr.net/combine/npm/codemirror@5.65.0/mode/xml/xml.js,npm/codemirror@5.65.0/mode/htmlmixed/htmlmixed.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman@master/src/codemirror.js"></script>
     <!--
     <script src="../src/codemirror.js"></script>
@@ -298,6 +301,7 @@
     <div class="tabs dev hidden">
       <ul>
         <li class="active"><a href="#">PEG (Peggy) grammar</a></li>
+        <li><a href="#">CodeMirror</a></li>
       </ul>
       <div class="content">
         <div class="gaiman-grammar active editor">
@@ -305,6 +309,7 @@
             <ul></ul>
           </div>
         </div>
+        <div class="peg-cm-editor editor"></div>
       </div>
     </div>
     <div class="tabs user-input">
@@ -522,6 +527,7 @@ body {
          theme: 'seti',
          lineWrapping: true,
          lineNumbers: true,
+         matchBrackets: true,
          extraKeys: { Tab: better_tab, "Alt-F": "findPersistent" },
          readOnly: true,
          indentUnit: 4,
@@ -697,11 +703,14 @@ body {
          state.code = await fetch_text(`${repo}examples/hello.gs`);
          state.js = await fetch_text(`${repo}src/prefix.js`);
          state.cm = await fetch_text(`${repo}src/codemirror.js`);
+         state.peg_cm = await fetch_text(pegjs);
          update_editor(state.editors.grammar, state.grammar);
          update_editor(state.editors.css, css.innerHTML);
          update_editor(state.editors.js, state.js);
          update_editor(state.editors.html, html.innerHTML);
          update_editor(state.editors.input, state.code);
+         update_editor(state.editors.cm, state.cm);
+         update_editor(state.editors.peg_cm, state.peg_cm);
          return false;
      });
      $(examples).on('change', async function() {
@@ -730,6 +739,7 @@ body {
      const GRAMMAR_FILE = '_gaiman_grammar.peg';
      const OUTPUT_FILE = '_gaiman_output.js';
      const CODEMIRROR_FILE = '_gaiman_cm.js';
+     const PEG_CODEMIRROR_FILE = '_gaiman_peg_cm.js';
      const CSS_FILE = '_gaiman.css';
      const SCRIPT_FILE = '_gaiman.js';
      const HTML_FILE = '_gaiman.html';
@@ -741,6 +751,7 @@ body {
 
      const REF = await hash('master');
      const repo = `https://cdn.jsdelivr.net/gh/jcubic/gaiman@${REF}/`;
+     const pegjs = 'https://cdn.jsdelivr.net/npm/codemirror@5.x.x/mode/pegjs/pegjs.js';
      const state = {
          dev_mode: ls.get(DEV_MODE),
          selected_tab: ls.get(SELECTED_TAB),
@@ -752,6 +763,7 @@ body {
          grammar: await get_file(GRAMMAR_FILE, `${repo}src/grammar.peg`),
          cm: await get_file(CODEMIRROR_FILE, `${repo}src/codemirror.js`),
          code: await get_file(SOURCE_FILE, `${repo}examples/`, 'hello.gs'),
+         peg_cm: await get_file(PEG_CODEMIRROR_FILE, pegjs),
          ast: {}
      };
      window.state = state;
@@ -811,6 +823,10 @@ body {
          readOnly: false,
          mode: 'javascript'
      });
+     state.editors.peg_cm = make_editor('.peg-cm-editor', state.peg_cm, {
+         readOnly: false,
+         mode: 'javascript'
+     });
      update_html(true);
      set_idb(true);
      load(true);
@@ -848,10 +864,17 @@ body {
      ['css', 'html'].forEach(name => {
          state.editors[name].on('change', debounce(() => update_html(), 800));
      });
+
      state.editors.cm.on('change', debounce(async () => {
          state.cm = state.editors.cm.getValue();
          update_codemirror();
      }, 800));
+
+     state.editors.peg_cm.on('change', debounce(async () => {
+         state.peg_cm = state.editors.peg_cm.getValue();
+         update_peg_codemirror();
+     }, 800));
+
      state.editors.grammar.on('change', debounce(function() {
          if (state.dev_mode) {
              state.grammar = state.editors.grammar.getValue();
@@ -964,9 +987,19 @@ body {
              await set(CODEMIRROR_FILE, state.cm);
              await $.getScript(`./__idb__/${CODEMIRROR_FILE}`);
              state.editors.input.setOption('mode', 'text');
-             state.editors.input.setOption('mode', 'gaiman');
+             setTimeout(() => state.editors.input.setOption('mode', 'gaiman'), 100);
          }
      }
+
+     async function update_peg_codemirror() {
+         if (state.dev_mode) {
+             await set(PEG_CODEMIRROR_FILE, state.peg_cm);
+             await $.getScript(`./__idb__/${PEG_CODEMIRROR_FILE}`);
+             state.editors.grammar.setOption('mode', 'text');
+             setTimeout(() => state.editors.grammar.setOption('mode', 'pegjs'), 100);
+         }
+     }
+
 
      function build_html() {
          state.js = state.editors.js.getValue();

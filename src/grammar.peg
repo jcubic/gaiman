@@ -194,10 +194,9 @@
                 },
                 "body": {
                     "type": "BlockStatement",
-                    "body": [{
-                        "type": "ExpressionStatement",
-                        "expression": gaiman_call('error', make_identifier("e"))
-                    }]
+                    "body": [
+                        expression_statement(gaiman_call('error', make_identifier("e")))
+                    ]
                 }
             }
         };
@@ -358,10 +357,7 @@ statement = !"end" _ statement:(if / for_loop / while_loop / jump / return / imp
 }
 
 expression_statement = !keyword expression:expression_like {
-    return  {
-      "type": "ExpressionStatement",
-      "expression": expression
-    };
+    return expression_statement(expression);
 }
 
 expression_like = set / command / expression
@@ -578,11 +574,11 @@ var = _ "let" _ name:(variable) _ rest:("=" _ expression_like)? _ {
     };
 }
 
-import_name = "import" [ ]+ name:name !([ ]+ "from"){
+import_name = "import" [ ]+ name:name !([ ]+ "from") {
     return declare(name);
 }
 
-import_library = "import" [ ]+ name:name [ ]+ "from" [ ]+ string:string {
+import_named_library = "import" [ ]+ name:name [ ]+ "from" [ ]+ string:string {
     return  [
         {
             "type": "AwaitExpression",
@@ -592,8 +588,15 @@ import_library = "import" [ ]+ name:name [ ]+ "from" [ ]+ string:string {
     ];
 }
 
+import_library = "import" [ ]+ string:string _ {
+    return expression_statement({
+        "type": "AwaitExpression",
+        "argument": gaiman_call('load', string)
+    });
+}
 
-import = import_name / import_library
+
+import = import_name / import_library / import_named_library
 
 DoubleStringCharacter = !('"' / "\\") . / "\\" . { return text(); } // "
 

@@ -273,6 +273,9 @@ exports[`global should parse imports 1`] = `
     try {
         const $_$ = $;
         const $_firebase = firebase;
+        await gaiman.load(\`https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js\`)
+        const $_firebase = firebase;
+        await gaiman.load(\`https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js\`);
     } catch (e) {
         gaiman.error(e);
     }

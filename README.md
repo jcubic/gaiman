@@ -35,10 +35,10 @@ See [Reference Manual on Wiki](https://github.com/jcubic/gaiman/wiki/Reference-M
 
 ## Examples
 
-
 This is Hello world Gaiman DSL example:
 
 ```ruby
+echo get "https://gaiman.js.org/gaiman.txt"
 echo* "Hi, What is your name?", 50 # Typing animation with 50ms delay
 let name = ask "name? "
 echo "Hello $name, nice to meet you."
@@ -95,7 +95,6 @@ end
 
 More examples in [examples directory](https://github.com/jcubic/gaiman/tree/master/examples)
 See [Reference Manual](https://github.com/jcubic/gaiman/wiki/Reference-Manual)
-
 
 ## Live Demo
 

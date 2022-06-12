@@ -249,7 +249,10 @@ class WebAdapter {
         this._term.error(message);
     }
     echo(arg) {
-        this._term.echo(to_string(arg), { newline: this._config.newline });
+        if (typeof arg !== 'function') {
+            arg = to_string(arg);
+        }
+        this._term.echo(arg, { newline: this._config.newline });
     }
     echo_extra(string, delay) {
         return this._term.echo(string, { typing: true, delay });
@@ -534,6 +537,13 @@ let $_LOG2E = Math.LOG2E;
 let $_PI = Math.PI;
 let $_SQRT1_2 = Math.SQRT1_2;
 let $_SQRT2 = Math.SQRT2;
+
+let $_cols = function() {
+    return gaiman._term.cols();
+};
+let $_rows = function() {
+    return gaiman._term.rows();
+};
 
 // Fisher-Yates (aka Knuth) Shuffle
 // ref: https://stackoverflow.com/a/2450976/387194

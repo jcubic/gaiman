@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Sun, 12 Jun 2022 14:58:04 GMT
+ * Buid time: Sun, 12 Jun 2022 16:10:14 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -221,8 +221,8 @@
 	        };
 	        return new_loc;
 	    }
-	    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*", "rpc", "exec", "exec*"];
-	    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update", "clear", "mask"];
+	    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*", "rpc", "exec", "exec*", "enter*"];
+	    var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update", "clear", "mask", "enter"];
 	    var available_commands = async_commands.concat(sync_commands);
 	    var extra_single = ["sleep*", "get*"];
 	    var variable_prefix = '$_';
@@ -433,7 +433,7 @@
 	  var peg$c35 = "infinity";
 	  var peg$c36 = " ";
 	  var peg$c37 = "/";
-	  var peg$c38 = "\\\\/";
+	  var peg$c38 = "\\/";
 	  var peg$c40 = "-";
 	  var peg$c41 = "+";
 	  var peg$c42 = "or";
@@ -470,7 +470,7 @@
 	  var peg$r0 = /^[ ]/;
 	  var peg$r1 = /^[a-z]/;
 	  var peg$r2 = /^[^\/]/;
-	  var peg$r3 = /^[igsu]/;
+	  var peg$r3 = /^[igmsu]/;
 	  var peg$r4 = /^[ \n),.]/;
 	  var peg$r5 = /^[^\n]/;
 	  var peg$r6 = /^[0-9]/;
@@ -524,9 +524,9 @@
 	  var peg$e38 = peg$classExpectation([["a", "z"]], false, false);
 	  var peg$e39 = peg$literalExpectation(" ", false);
 	  var peg$e40 = peg$literalExpectation("/", false);
-	  var peg$e41 = peg$classExpectation(["/"], true, false);
-	  var peg$e42 = peg$literalExpectation("\\\\/", false);
-	  var peg$e43 = peg$classExpectation(["i", "g", "s", "u"], false, false);
+	  var peg$e41 = peg$literalExpectation("\\/", false);
+	  var peg$e42 = peg$classExpectation(["/"], true, false);
+	  var peg$e43 = peg$classExpectation(["i", "g", "m", "s", "u"], false, false);
 	  var peg$e45 = peg$literalExpectation("-", false);
 	  var peg$e46 = peg$literalExpectation("+", false);
 	  var peg$e47 = peg$literalExpectation("or", false);
@@ -4924,17 +4924,17 @@
 	    }
 	    if (s1 !== peg$FAILED) {
 	      s2 = [];
-	      if (peg$r2.test(input.charAt(peg$currPos))) {
-	        s3 = input.charAt(peg$currPos);
-	        peg$currPos++;
+	      if (input.substr(peg$currPos, 2) === peg$c38) {
+	        s3 = peg$c38;
+	        peg$currPos += 2;
 	      } else {
 	        s3 = peg$FAILED;
 	        if (peg$silentFails === 0) { peg$fail(peg$e41); }
 	      }
 	      if (s3 === peg$FAILED) {
-	        if (input.substr(peg$currPos, 3) === peg$c38) {
-	          s3 = peg$c38;
-	          peg$currPos += 3;
+	        if (peg$r2.test(input.charAt(peg$currPos))) {
+	          s3 = input.charAt(peg$currPos);
+	          peg$currPos++;
 	        } else {
 	          s3 = peg$FAILED;
 	          if (peg$silentFails === 0) { peg$fail(peg$e42); }
@@ -4942,17 +4942,17 @@
 	      }
 	      while (s3 !== peg$FAILED) {
 	        s2.push(s3);
-	        if (peg$r2.test(input.charAt(peg$currPos))) {
-	          s3 = input.charAt(peg$currPos);
-	          peg$currPos++;
+	        if (input.substr(peg$currPos, 2) === peg$c38) {
+	          s3 = peg$c38;
+	          peg$currPos += 2;
 	        } else {
 	          s3 = peg$FAILED;
 	          if (peg$silentFails === 0) { peg$fail(peg$e41); }
 	        }
 	        if (s3 === peg$FAILED) {
-	          if (input.substr(peg$currPos, 3) === peg$c38) {
-	            s3 = peg$c38;
-	            peg$currPos += 3;
+	          if (peg$r2.test(input.charAt(peg$currPos))) {
+	            s3 = input.charAt(peg$currPos);
+	            peg$currPos++;
 	          } else {
 	            s3 = peg$FAILED;
 	            if (peg$silentFails === 0) { peg$fail(peg$e42); }

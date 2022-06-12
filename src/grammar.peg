@@ -86,14 +86,16 @@
             "kind": "let"
         };
     }
-    function declare(name) {
+    function declare(names) {
         return {
             "type": "VariableDeclaration",
-            "declarations": [{
-                "type": "VariableDeclarator",
-                "id": make_identifier(variable_prefix + name),
-                "init": make_identifier(name)
-            }],
+            "declarations": names.map(function(name) {
+                return {
+                    "type": "VariableDeclarator",
+                    "id": make_identifier(variable_prefix + name),
+                    "init": make_identifier(name)
+                };
+            }),
             "kind": "const"
         };
     }
@@ -581,8 +583,10 @@ var = _ "let" _ name:(variable) _ rest:("=" _ expression_like)? _ {
     };
 }
 
-import_name = "import" [ ]+ name:name !([ ]+ "from") {
-    return declare(name);
+import_name = "import" [ ]+ name:name rest:("," _ name)*  !([ ]+ "from") {
+    var names = rest.map(x => x[2]);
+    names.unshift(name);
+    return declare(names);
 }
 
 import_named_library = "import" [ ]+ name:name [ ]+ "from" [ ]+ string:string {
@@ -591,7 +595,7 @@ import_named_library = "import" [ ]+ name:name [ ]+ "from" [ ]+ string:string {
             "type": "AwaitExpression",
             "argument": gaiman_call('load', string)
         },
-        declare(name)
+        declare([name])
     ];
 }
 

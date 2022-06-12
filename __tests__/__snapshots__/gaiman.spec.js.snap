@@ -285,8 +285,7 @@ exports[`global should parse imports 1`] = `
 exports[`global should parse other syntax 1`] = `
 "async function main() {
     try {
-        const $_Promise = Promise;
-        const $_setTimeout = setTimeout;
+        const $_Promise = Promise, $_setTimeout = setTimeout;
         gaiman['async'](async function $_async() {
             await gaiman.exec_extra(\`hello, world\`, 0);
         });

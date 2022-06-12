@@ -20,7 +20,7 @@ def ready()
     })
     echo "<yellow>$ascii</yellow>"
     echo* "<white>This is the Jargon File, a comprehensive compendium of hacker slang illuminating many aspects of hackish tradition, folklore, and humor.</white>", 20
-
+    echo
     let commands = ["Hacker", "Hack value"]
     while true do
         ## typing and executing the given commands
@@ -36,6 +36,7 @@ def ready()
         let term = ask* "jargon? ", 10
         for result in service.jargon(term) do
             echo result["def"]
+            echo
         end
     end
 end

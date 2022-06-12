@@ -256,7 +256,7 @@ class WebAdapter {
         }
         this._term.error(message);
     }
-    echo(arg) {
+    echo(arg = "") {
         if (typeof arg !== 'function') {
             arg = to_string(arg);
         }

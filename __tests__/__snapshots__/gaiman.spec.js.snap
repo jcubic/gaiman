@@ -125,9 +125,6 @@ exports[`expressions should use command as part of expression 1`] = `
         gaiman.clear();
         await gaiman.echo_extra(\`message.\`, 50);
         gaiman.echo(await gaiman.ask(\`?\`));
-        gaiman['async'](async function $_async() {
-            await gaiman.exec_extra(\`hello, world\`, 0);
-        });
     } catch (e) {
         gaiman.error(e);
     }
@@ -285,6 +282,25 @@ exports[`global should parse imports 1`] = `
 }"
 `;
 
+exports[`global should parse other syntax 1`] = `
+"async function main() {
+    try {
+        const $_Promise = Promise;
+        const $_setTimeout = setTimeout;
+        gaiman['async'](async function $_async() {
+            await gaiman.exec_extra(\`hello, world\`, 0);
+        });
+        async function $_delay($_time) {
+            return new $_Promise(async function lambda($_resolve) {
+                await $_setTimeout($_resolve, $_time);
+            });
+        }
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
 exports[`if statements should compile base if 1`] = `
 "async function main() {
     try {
@@ -366,6 +382,11 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
                 gaiman.echo($$__m[1] + \`foo\`);
                 let $_bar = 10 + 10 * 20;
                 let $_baz = 30 * 30 / 2;
+                let $_x = 10 % 20;
+            } else if ($_foo === 10 && $_bar === 0) {
+                gaiman.echo(\`\${ $_foo } \${ $_bar }\`);
+            } else if ($_foo === 10 || $_bar === 20) {
+                gaiman.echo(\`\${ $_foo }\`);
             } else {
                 let $_quux = 30 * 30 / 2 * 3;
                 10 * 10 / 2;

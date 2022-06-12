@@ -363,7 +363,7 @@ expression_statement = !keyword expression:expression_like {
 expression_like = async / set / command / expression
 
 
-expression = math_expression / prop_access / heredoc / function_call / lambda / dict / match_var / array / any_name / string / literal / re
+expression = constructor / math_expression / prop_access / heredoc / function_call / lambda / dict / match_var / array / any_name / string / literal / re
 
 command = adapter_command / match
 
@@ -488,6 +488,13 @@ lambda_value = "(" _ lambda:lambda _ ")" { return lambda; }
 
 call = "(" _ args:(argument_list / null_array) _ ")"
 
+constructor = "new" SP expression:variable  _ "(" _ args:(argument_list / null_array) ")" _ {
+    return {
+        "type": "NewExpression",
+        "callee": expression,
+        "arguments": args
+    };
+}
 
 function_call = _ !keyword expression:(prop_access / lambda_value / variable) _ "(" _ args:(argument_list / null_array) ")" _ rest:(call / bracket_prop / dot_prop)* {
     if (rest.length === 0) {
@@ -771,7 +778,7 @@ mul_div
     }
 
 factor
-  = function_call / prop_access / string / literal / match_var / infinity / variable
+  = function_call / prop_access / string / literal / match / match_var / infinity / variable
   / "(" _ expr:(adapter_command / expression) _ ")" { return expr; }
 
 any_name = variable:name {
@@ -912,7 +919,7 @@ zero
 
 DIGIT = [0-9]
 
-keyword = ("if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda" / "from") !name
+keyword = ("if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda" / "from" / "new") !name
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

@@ -11,6 +11,11 @@ if command =~ /(foo)/ then
     echo $1 + "foo"
     let bar = 10 + 10 * 20
     let baz = 30 * 30 / 2
+    let x = 10 % 20
+  else if foo == 10 and bar == 0 then
+    echo "$foo $bar"
+  else if foo == 10 or bar == 20 then
+    echo "$foo"
   else
     let quux = 30 * 30 / 2 * 3
     10 * 10 / 2

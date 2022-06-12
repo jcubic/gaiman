@@ -34,6 +34,9 @@ describe('global', () => {
     it('should parse imports', () => {
         return test_fixture('imports.gs');
     });
+    it('should parse other syntax', () => {
+        return test_fixture('other_syntax.gs');
+    });
 });
 
 describe('if statements', () => {

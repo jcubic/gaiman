@@ -41,7 +41,7 @@
         return property(...props.map(make_identifier));
     }
     function gaiman_prop(method) {
-        return property(make_identifier("gaiman"), make_identifier(method));
+        return property2(make_identifier("gaiman"), make_identifier(method), false);
     }
     function gaiman_call(method, ...args) {
         return call(gaiman_prop(method), ...args);
@@ -125,13 +125,16 @@
     var logical_fold = expression_fold("LogicalExpression");
     function property(...args) {
         return args.reduce(function(result, item) {
-            return {
-                type: "MemberExpression",
-                computed: false,
-                object: result,
-                property: item
-            };
+            return property2(result, item, false);
         });
+    }
+    function property2(object, property, computed) {
+        return {
+            type: "MemberExpression",
+            computed,
+            object,
+            property
+        };
     }
     function call(callee, ...args) {
         return {
@@ -354,7 +357,7 @@ statement_list = !"end" _ statements:statement* _ {
 
 statements = statement_list / null_array
 
-statement = !"end" _ statement:(if / for_loop / while_loop / jump / return / import / var / do_block / expression_statement / function_definition) _ {
+statement = !"end" _ statement:(if / for_loop / named_do / while_loop / jump / return / import / var / do_block / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -362,7 +365,7 @@ expression_statement = !keyword expression:expression_like {
     return expression_statement(expression);
 }
 
-expression_like = named_do / set / command / expression
+expression_like = set / command / expression
 
 
 expression = constructor / math_expression / prop_access / heredoc / function_call / lambda / dict / match_var / array / any_name / string / literal / re
@@ -609,17 +612,12 @@ import_library = "import" [ ]+ string:string _ {
 
 import = import_name / import_library / import_named_library
 
-async_key = "async" {
-    return {
-          "type": "MemberExpression",
-          "computed": true,
-          "object": make_identifier("gaiman"),
-          property: literal("async")
-    };
+async_key = key:"async" {
+    return property2(make_identifier("gaiman"), literal(key), true);
 }
 
 do_block_key = key:("animate") {
-    return gaiman_prop(key);
+    return gaiman_prop(key, false);
 }
 
 async = target:async_key SP "do" _ body:statements _ "end" _ {
@@ -632,19 +630,31 @@ async = target:async_key SP "do" _ body:statements _ "end" _ {
     });
 }
 
-named_do = async / target:do_block_key SP "do" _ body:statements _ "end" _ {
-    return {
-        "type": "AwaitExpression",
-        "argument": call(target, {
+named_do = keys:((async_key / do_block_key) SP)+ "do" _ body:statements _ "end" _ {
+    return keys.reduceRight(function(body, key) {
+        if (!(body instanceof Array)) {
+            body = [body];
+        }
+        key = key[0];
+        var expression = call(key, {
             "type": "FunctionExpression",
             "id": null,
             "async": true,
             "params": [],
             "body": make_block(body)
-        })
-    };
+        });
+        if (key.property.value !== 'async') {
+            expression = {
+                "type": "AwaitExpression",
+                "argument": expression
+            };
+        }
+        return {
+            "type": "ExpressionStatement",
+            "expression": expression
+        };
+    }, body);
 }
-
 
 DoubleStringCharacter = !('"' / "\\") . / "\\" . { return text(); } // "
 

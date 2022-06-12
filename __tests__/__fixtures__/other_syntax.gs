@@ -11,3 +11,17 @@ def delay(time)
         setTimeout(resolve, time)
     end)
 end
+
+async do
+    animate do
+        let command = commands.shift()
+        delay(1000)
+        exec* command, 10
+    end
+end
+
+async animate do
+    let command = commands.shift()
+    delay(1000)
+    exec* command, 10
+end

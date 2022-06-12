@@ -296,6 +296,20 @@ exports[`global should parse other syntax 1`] = `
                 await $_setTimeout($_resolve, $_time);
             });
         }
+        gaiman['async'](async function () {
+            await gaiman.animate(async function () {
+                let $_command = await $_commands.shift();
+                await $_delay(1000);
+                await gaiman.exec_extra($_command, 10);
+            });
+        });
+        gaiman['async'](async function () {
+            await gaiman.animate(async function () {
+                let $_command = await $_commands.shift();
+                await $_delay(1000);
+                await gaiman.exec_extra($_command, 10);
+            });
+        });
     } catch (e) {
         gaiman.error(e);
     }

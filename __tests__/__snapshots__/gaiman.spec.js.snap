@@ -378,7 +378,11 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
             let $_baz = 10;
             let $_quux = -$_baz;
             10 * 10 + 3;
-            if ($$__m = String($_commad).match(/(bar)/), !!$$__m) {
+            if (10 < 0) {
+            }
+            if (10 <= 20 && 10 > 20 || 10 === 20 && 10 !== 20) {
+            }
+            if (!($$__m = String($_commad).match(/(bar)/), !!$$__m) && ($$__m = String($_command).match(/(baz)/), !!$$__m)) {
                 gaiman.echo($$__m[1] + \`foo\`);
                 let $_bar = 10 + 10 * 20;
                 let $_baz = 30 * 30 / 2;

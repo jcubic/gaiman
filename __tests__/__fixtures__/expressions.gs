@@ -7,7 +7,11 @@ if command =~ /(foo)/ then
   let baz = 10
   let quux = -baz
   10 * 10 + 3
-  if commad =~ /(bar)/ then
+  if 10 < 0 then
+  end
+  if 10 <= 20 and 10 > 20 or 10 == 20 and 10 != 20 then
+  end
+  if not commad =~ /(bar)/ and command =~ /(baz)/ then
     echo $1 + "foo"
     let bar = 10 + 10 * 20
     let baz = 30 * 30 / 2

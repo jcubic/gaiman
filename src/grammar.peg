@@ -365,7 +365,7 @@ expression_like = async / set / command / expression
 
 expression = constructor / math_expression / prop_access / heredoc / function_call / lambda / dict / match_var / array / any_name / string / literal / re
 
-command = adapter_command / match
+command = adapter_command
 
 end = "end" { return null; }
 
@@ -648,6 +648,8 @@ infinity = "infinity" {
     return make_identifier('Infinity');
 }
 
+value = string / literal / re / infinity / null
+
 asterisk_name = word:$([a-z]+ "*")
 
 command_name = word:$([a-z]+ "*"?)
@@ -703,27 +705,6 @@ static_command = SPACE method:adapter_static_strings expr:(([ ]+ / &"(") command
     return gaiman_call(map_extra_method(method), expr[1], ...args.map(x => x[2]));
 }
 
-match = expression:(match_var / prop_access / variable) _ "=~" _ re:re _ {
-    return {
-        "type": "SequenceExpression",
-        "expressions": [
-            {
-                type: "AssignmentExpression",
-                operator: "=",
-                left: match_identifer,
-                right: call(
-                    property(
-                        call(make_identifier('String'), expression),
-                        match_method
-                    ),
-                    re
-                )
-             },
-             bang_bang(match_identifer)
-         ]
-    };
-}
-
 re = "/" re:([^/] / "\\\\/")* "/" flags:[igsu]* {
     return {
         type: "Literal",
@@ -737,9 +718,9 @@ re = "/" re:([^/] / "\\\\/")* "/" flags:[igsu]* {
 
 math_expression = unary / or
 
-not = "not" " " { return "!"; }
+not_ = "not" " " { return "!"; }
 
-unary = op:("-" / "+" / not) _ expression:or {
+unary = op:("-" / "+") _ expression:or {
     return {
         "type": "UnaryExpression",
         "operator": op,
@@ -753,9 +734,17 @@ or
   }
 
 and
-  = head:equal tail:(SP "and" SP equal)* {
+  = head:not tail:(SP "and" SP not)* {
       return logical_fold(head, tail, {"and": "&&"});
   }
+
+not = "not " _ expression:equal {
+    return {
+        "type": "UnaryExpression",
+        "operator": "!",
+        "argument": expression
+    };
+} / equal
 
 equal
   = head:binary tail:(_ ("==" / "!=") _ binary)* {
@@ -773,12 +762,35 @@ plus_minus
     }
 
 mul_div
-  = head:factor tail:(_ ("*" / "/" / "%") _ factor)* {
+  = head:match tail:(_ ("*" / "/" / "%") _ match)* {
       return binary_fold(head, tail);
     }
 
+match = head:factor tail:(_ "=~" _ factor)* {
+    return tail.reduce(function(result, element) {
+        return {
+            "type": "SequenceExpression",
+            "expressions": [
+                {
+                    type: "AssignmentExpression",
+                    operator: "=",
+                    left: match_identifer,
+                    right: call(
+                        property(
+                            call(make_identifier('String'), result),
+                            match_method
+                        ),
+                        element[3]
+                    )
+                 },
+                 bang_bang(match_identifer)
+             ]
+        };
+    }, head);
+}
+
 factor
-  = function_call / prop_access / string / literal / match / match_var / infinity / variable
+  = function_call / prop_access / value / match_var / variable
   / "(" _ expr:(adapter_command / expression) _ ")" { return expr; }
 
 any_name = variable:name {

@@ -729,7 +729,7 @@ static_command = SPACE method:adapter_static_strings expr:(([ ]+ / &"(") command
     return gaiman_call(map_extra_method(method), expr[1], ...args.map(x => x[2]));
 }
 
-re = "/" re:([^/] / "\\\\/")* "/" flags:[igsu]* {
+re = "/" re:("\\/" / [^/])* "/" flags:[igmsu]* {
     return {
         type: "Literal",
         value: {},

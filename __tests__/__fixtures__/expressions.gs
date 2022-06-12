@@ -1,6 +1,6 @@
 echo "hello" + " world"
 let command = ask "? "
-if command =~ /(foo)/ then
+if command =~ /<title>.*<\/title>/ then
   let command = ask "? "
   let foo = 30 * 30 / 2
   let bar = +command

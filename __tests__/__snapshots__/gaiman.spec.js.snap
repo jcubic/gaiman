@@ -372,7 +372,7 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
     try {
         gaiman.echo(\`hello\` + \` world\`);
         let $_command = await gaiman.ask(\`? \`);
-        if ($$__m = String($_command).match(/(foo)/), !!$$__m) {
+        if ($$__m = String($_command).match(/<title>.*<\\\\/title>/), !!$$__m) {
             let $_command = await gaiman.ask(\`? \`);
             let $_foo = 30 * 30 / 2;
             let $_bar = +$_command;

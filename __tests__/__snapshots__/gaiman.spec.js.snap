@@ -286,8 +286,10 @@ exports[`global should parse other syntax 1`] = `
 "async function main() {
     try {
         const $_Promise = Promise, $_setTimeout = setTimeout;
-        gaiman['async'](async function $_async() {
-            await gaiman.exec_extra(\`hello, world\`, 0);
+        gaiman['async'](async function () {
+            await gaiman.animate(async function () {
+                await gaiman.exec_extra(\`hello, world\`, 0);
+            });
         });
         async function $_delay($_time) {
             return new $_Promise(async function lambda($_resolve) {

@@ -31,10 +31,11 @@
 
   var keywordList = [
     "ask", "def", "echo", "else", "end", "false", "for", "get", "if", "in",
-    "let", "not", "or", "post", "return", "sleep", "then", "true", "while",
-    "throw", "lambda", "do", "continue", "break", "store", "config", "parse",
-    "type", "ask*", "echo*", "input*", "update", "clear", "mask", "import",
-    "prompt", "rpc", "from", "exec", "exec*", "new"
+    "let", "not", "or", "and", "post", "return", "sleep", "then", "true",
+    "while", "throw", "lambda", "do", "continue", "break", "store", "config",
+    "parse", "type", "ask*", "echo*", "input*", "update", "clear", "mask",
+    "import", "prompt", "rpc", "from", "async", "exec", "exec*", "new",
+    "animate"
   ], keywords = wordRE(keywordList);
 
   var indentTokens = wordRE(["def", "then", "lambda", "do", "\\(", "{"]);

@@ -190,6 +190,11 @@ class WebAdapter {
         this._term = root.terminal($.noop, $.extend({
             greetings: false,
             exit: false,
+            keydown: () => {
+                if (this._animation) {
+                    return false;
+                }
+            },
             exceptionHandler(e) {
                 if (is_iframe) {
                     window.parent.postMessage({
@@ -321,6 +326,11 @@ class WebAdapter {
     }
     exec_extra(command, delay) {
         return this._term.exec(command, { typing: true, delay });
+    }
+    async animate(fn) {
+        this._animation = true;
+        await fn();
+        this._animation = false;
     }
     clear() {
         this._term.clear();

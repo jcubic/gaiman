@@ -362,7 +362,7 @@ expression_statement = !keyword expression:expression_like {
     return expression_statement(expression);
 }
 
-expression_like = async / set / command / expression
+expression_like = named_do / set / command / expression
 
 
 expression = constructor / math_expression / prop_access / heredoc / function_call / lambda / dict / match_var / array / any_name / string / literal / re
@@ -609,20 +609,40 @@ import_library = "import" [ ]+ string:string _ {
 
 import = import_name / import_library / import_named_library
 
-
-async = "async" SP "do" _ body:statements _ "end" _ {
-    return call({
+async_key = "async" {
+    return {
           "type": "MemberExpression",
           "computed": true,
           "object": make_identifier("gaiman"),
           property: literal("async")
-    }, {
+    };
+}
+
+do_block_key = key:("animate") {
+    return gaiman_prop(key);
+}
+
+async = target:async_key SP "do" _ body:statements _ "end" _ {
+    return call(target, {
         "type": "FunctionExpression",
-        "id": make_identifier('$_async'),
+        "id": null,
         "async": true,
         "params": [],
         "body": make_block(body)
     });
+}
+
+named_do = async / target:do_block_key SP "do" _ body:statements _ "end" _ {
+    return {
+        "type": "AwaitExpression",
+        "argument": call(target, {
+            "type": "FunctionExpression",
+            "id": null,
+            "async": true,
+            "params": [],
+            "body": make_block(body)
+        })
+    };
 }
 
 

@@ -246,7 +246,7 @@
             obj.type === 'Literal' &&
             typeof obj.value === 'number';
     }
-    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*", "rpc"];
+    var async_commands = ["ask", "get", "post", "sleep", "echo*", "prompt*", "input*", "ask*", "post*", "rpc", "exec", "exec*"];
     var sync_commands = ["echo", "type", "prompt", "config", "input", "parse*", "parse", "store", "complete", "update", "clear", "mask"];
     var available_commands = async_commands.concat(sync_commands);
     var extra_single = ["sleep*", "get*"];
@@ -360,7 +360,7 @@ expression_statement = !keyword expression:expression_like {
     return expression_statement(expression);
 }
 
-expression_like = set / command / expression
+expression_like = async / set / command / expression
 
 
 expression = math_expression / prop_access / heredoc / function_call / lambda / dict / match_var / array / any_name / string / literal / re
@@ -597,6 +597,23 @@ import_library = "import" [ ]+ string:string _ {
 
 
 import = import_name / import_library / import_named_library
+
+
+async = "async" SP "do" _ body:statements _ "end" _ {
+    return call({
+          "type": "MemberExpression",
+          "computed": true,
+          "object": make_identifier("gaiman"),
+          property: literal("async")
+    }, {
+        "type": "FunctionExpression",
+        "id": make_identifier('$_async'),
+        "async": true,
+        "params": [],
+        "body": make_block(body)
+    });
+}
+
 
 DoubleStringCharacter = !('"' / "\\") . / "\\" . { return text(); } // "
 

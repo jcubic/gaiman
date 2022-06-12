@@ -31,3 +31,7 @@ echo* "message.", 50
 echo(
     ask "?"
 )
+
+async do
+  exec* "hello, world", 0
+end

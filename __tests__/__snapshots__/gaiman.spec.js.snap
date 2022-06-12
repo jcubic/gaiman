@@ -125,6 +125,9 @@ exports[`expressions should use command as part of expression 1`] = `
         gaiman.clear();
         await gaiman.echo_extra(\`message.\`, 50);
         gaiman.echo(await gaiman.ask(\`?\`));
+        gaiman['async'](async function $_async() {
+            await gaiman.exec_extra(\`hello, world\`, 0);
+        });
     } catch (e) {
         gaiman.error(e);
     }

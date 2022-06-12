@@ -120,6 +120,9 @@ const Gaiman = {
     load(url) {
         return $.getScript(url);
     },
+    ['async'](fn) {
+        setTimeout(fn, 0);
+    },
     async rpc(url) {
         // TODO: add Open-RPC
         return new Proxy({}, {
@@ -312,6 +315,12 @@ class WebAdapter {
     }
     input_extra(string, delay) {
         return this._term.exec(string, { typing: true, delay });
+    }
+    exec(command) {
+        return this._term.exec(command);
+    }
+    exec_extra(command, delay) {
+        return this._term.exec(command, { typing: true, delay });
     }
     clear() {
         this._term.clear();
@@ -537,9 +546,9 @@ let $_LOG2E = Math.LOG2E;
 let $_PI = Math.PI;
 let $_SQRT1_2 = Math.SQRT1_2;
 let $_SQRT2 = Math.SQRT2;
-let $_sprintf = sprintf;
 let $_to_base64 = btoa;
 let $_from_base64 = atob;
+let $_sprintf = sprintf;
 
 let $_cols = function() {
     return gaiman._term.cols();

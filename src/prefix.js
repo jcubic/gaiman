@@ -537,6 +537,7 @@ let $_LOG2E = Math.LOG2E;
 let $_PI = Math.PI;
 let $_SQRT1_2 = Math.SQRT1_2;
 let $_SQRT2 = Math.SQRT2;
+let $_sprintf = sprintf;
 
 let $_cols = function() {
     return gaiman._term.cols();

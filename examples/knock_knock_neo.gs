@@ -1,13 +1,15 @@
 prompt ""
-echo* "Wake up, Neo...", 50
-sleep* 5000
-clear
-echo* "The Matrix has you...", 50
-sleep* 5000
-clear
-echo* "Follow the white rabbit.", 50
-sleep* 5000
-clear
-echo "Knock, knock, Neo."
-sleep* 5000
-clear
+animate do
+    prompt* "Wake up, Neo...", 50
+    delay(5000)
+    clear
+    prompt* "The Matrix has you...", 50
+    delay(5000)
+    clear
+    prompt* "Follow the white rabbit.", 50
+    delay(5000)
+    clear
+    prompt "Knock, knock, Neo."
+    delay(5000)
+end
+prompt ""

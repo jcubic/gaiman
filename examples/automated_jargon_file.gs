@@ -1,12 +1,6 @@
 ## import JavaScript objects into Gaiman
 import figlet from "https://cdn.jsdelivr.net/npm/figlet/lib/figlet.js"
-import Array, setTimeout, Promise
-
-def delay(time)
-    return new Promise(lambda(resolve)
-        setTimeout(resolve, time)
-    end)
-end
+import Array
 
 figlet.defaults({
     "fontPath" => "https://unpkg.com/figlet/fonts/"

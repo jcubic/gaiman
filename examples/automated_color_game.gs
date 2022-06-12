@@ -1,12 +1,4 @@
-import setTimeout, Promise
-
-def delay(time)
-    return new Promise(lambda(resolve)
-        setTimeout(resolve, time)
-    end)
-end
-
-echo* "What is your favorite color?", 0
+echo* "What is your favorite color?", 50
 let colors = ["red", "green", "blue", "yellow", "orange"]
 while true do
   if colors.length then
@@ -20,5 +12,5 @@ while true do
     end
   end
   let color = ask "color? "
-  echo* "<$color>$color</$color>, is a nice color", 0
+  echo* "<$color>$color</$color>, is a nice color", 50
 end

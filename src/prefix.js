@@ -566,6 +566,9 @@ let $_cols = function() {
 let $_rows = function() {
     return gaiman._term.rows();
 };
+let $_delay = function(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+};
 
 // Fisher-Yates (aka Knuth) Shuffle
 // ref: https://stackoverflow.com/a/2450976/387194

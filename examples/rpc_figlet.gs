@@ -19,6 +19,7 @@ def ready()
         "font" => "Standard"
     })
     echo "<yellow>$ascii</yellow>"
+    echo* "<white>This is the Jargon File, a comprehensive compendium of hacker slang illuminating many aspects of hackish tradition, folklore, and humor.</white>", 20
 
     while true do
         let term = ask "jargon? "

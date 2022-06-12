@@ -19,18 +19,17 @@ def ready()
         "font" => "Standard"
     })
     echo "<yellow>$ascii</yellow>"
+    echo* "<white>This is the Jargon File, a comprehensive compendium of hacker slang illuminating many aspects of hackish tradition, folklore, and humor.</white>", 20
 
-    let commands = ["Hacker", "Hack", "Hack value"]
+    let commands = ["Hacker", "Hack value"]
     while true do
         ## typing and executing the given commands
         if commands.length then
             prompt ""
-            async do
-                animate do
-                    let command = commands.shift()
-                    delay(1000)
-                    exec* command, 10
-                end
+            async animate do
+                let command = commands.shift()
+                delay(1000)
+                exec* command, 10
             end
         end
 

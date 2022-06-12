@@ -265,6 +265,12 @@ class WebAdapter {
     echo_extra(string, delay) {
         return this._term.echo(string, { typing: true, delay });
     }
+    enter(string) {
+        return this._term.enter(string);
+    }
+    enter_extra(string, delay) {
+        return this._term.enter(string, { typing: true, delay });
+    }
     ask(message, validator = () => true) {
         return new Promise(resolve => {
             this._term.push(result => {

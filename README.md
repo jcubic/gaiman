@@ -100,6 +100,10 @@ See [Reference Manual](https://github.com/jcubic/gaiman/wiki/Reference-Manual)
 
 See [Gaiman language Playground](https://gaiman.js.org/)
 
+Live Edit of Gaiman Code:
+![Gaiman programming language Playground Demo Session](https://github.com/jcubic/gaiman/blob/master/assets/edit.gif?raw=true)
+
+Live edit of style
 ![Gaiman programming language Playground Demo Session](https://github.com/jcubic/gaiman/blob/master/assets/simple.gif?raw=true)
 
 ## Roadmap

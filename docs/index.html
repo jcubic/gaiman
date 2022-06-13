@@ -262,7 +262,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery.splitter"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/idb-keyval.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman/umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
@@ -747,6 +746,8 @@ body {
      const HTML_FILE = '_gaiman.html';
      const USER_HTML = '_user.html';
 
+     set(OUTPUT_ES5_FILE, '// this file intentionally left blank in Playground');
+
      query_mapping[CSS_FILE] = 'css';
      query_mapping[SOURCE_FILE] = 'gaiman';
      query_mapping[USER_HTML] = 'html';
@@ -936,7 +937,6 @@ body {
      function update_code() {
          const prefix = add_version(state.editors.js.getValue());
          state.output_full = prefix + state.output + postfix;
-         state.output_full_es5 = Babel.transform(state.output_full, { presets: ['env'], targets: {ie: 11} }).code;
      }
 
      function template(string, mapping) {
@@ -973,7 +973,6 @@ body {
          }
          set(SCRIPT_FILE, state.js);
          set(OUTPUT_FILE, state.output_full);
-         set(OUTPUT_ES5_FILE, state.output_full_es5);
      }
 
      function update_html(init) {

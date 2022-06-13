@@ -25,3 +25,5 @@ async animate do
     delay(1000)
     exec* command, 10
 end
+
+let stage = new canvas.Canvas(cols(), 10)

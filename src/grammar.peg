@@ -493,7 +493,7 @@ lambda_value = "(" _ lambda:lambda _ ")" { return lambda; }
 
 call = "(" _ args:(argument_list / null_array) _ ")"
 
-constructor = "new" SP expression:variable  _ "(" _ args:(argument_list / null_array) ")" _ {
+constructor = "new" SP expression:(prop_access / variable) _ "(" _ args:(argument_list / null_array) ")" _ {
     return {
         "type": "NewExpression",
         "callee": expression,

@@ -310,6 +310,7 @@ exports[`global should parse other syntax 1`] = `
                 await gaiman.exec_extra($_command, 10);
             });
         });
+        let $_stage = new $_canvas.Canvas(await $_cols(), 10);
     } catch (e) {
         gaiman.error(e);
     }

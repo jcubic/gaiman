@@ -2894,7 +2894,10 @@ function peg$parse(input, options) {
     if (s1 !== peg$FAILED) {
       s2 = peg$parseSP();
       if (s2 !== peg$FAILED) {
-        s3 = peg$parsevariable();
+        s3 = peg$parseprop_access();
+        if (s3 === peg$FAILED) {
+          s3 = peg$parsevariable();
+        }
         if (s3 !== peg$FAILED) {
           s4 = peg$parse_();
           if (s4 !== peg$FAILED) {

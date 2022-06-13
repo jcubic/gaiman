@@ -144,12 +144,6 @@ const Gaiman = {
     }
 };
 
-if (!('Map' in this)) {
-    $.getScript('https://cdn.jsdelivr.net/gh/jcubic/static/js/map.min.js').then(() => {
-        window.Map = ES6_Map;
-    });
-}
-
 function to_string(object) {
     if (object instanceof Array) {
         object = object.map(to_string);

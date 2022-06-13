@@ -32,7 +32,11 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.5",
+    "@babel/standalone": "^7.18.5",
     "@jcubic/lily": "^0.3.0",
-    "escodegen": "^2.0.0"
+    "escodegen": "^2.0.0",
+    "terser": "^5.14.1"
   }
 }

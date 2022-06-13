@@ -262,6 +262,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery.splitter"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/static/js/idb-keyval.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/jcubic/gaiman/umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 <body>
@@ -724,7 +725,7 @@ body {
          const zip = new JSZip();
          const game = zip.folder("gaiman");
          game.file("index.js", state.output_full);
-         game.file("index.html", get_html('index.js'));
+         game.file("index.html", get_html('index.js', 'index.module.js'));
          zip.generateAsync({ type:"blob" }).then(function(content) {
              download(content, "gaiman.zip");
          });
@@ -738,6 +739,7 @@ body {
      const SOURCE_FILE = '_gaiman_source.gs';
      const GRAMMAR_FILE = '_gaiman_grammar.peg';
      const OUTPUT_FILE = '_gaiman_output.js';
+     const OUTPUT_ES5_FILE = '_gaiman_es5_output.js';
      const CODEMIRROR_FILE = '_gaiman_cm.js';
      const PEG_CODEMIRROR_FILE = '_gaiman_peg_cm.js';
      const CSS_FILE = '_gaiman.css';
@@ -934,6 +936,7 @@ body {
      function update_code() {
          const prefix = add_version(state.editors.js.getValue());
          state.output_full = prefix + state.output + postfix;
+         state.output_full_es5 = Babel.transform(state.output_full, { presets: ['env'], targets: {ie: 11} }).code;
      }
 
      function template(string, mapping) {
@@ -970,6 +973,7 @@ body {
          }
          set(SCRIPT_FILE, state.js);
          set(OUTPUT_FILE, state.output_full);
+         set(OUTPUT_ES5_FILE, state.output_full_es5);
      }
 
      function update_html(init) {
@@ -1000,7 +1004,6 @@ body {
          }
      }
 
-
      function build_html() {
          state.js = state.editors.js.getValue();
          state.css = state.editors.css.getValue();
@@ -1010,11 +1013,13 @@ body {
          state.html = get_html();
      }
 
-     function get_html(js_file_name = './_gaiman_output.js') {
+     function get_html(module_file = OUTPUT_FILE, es5_file = OUTPUT_ES5_FILE) {
          return template(tempate_html, {
              STYLE: css_sanitize(state.css),
              HTML: state.user_html + '\n',
-             FILE: js_file_name
+             FILE: module_file,
+             MODULE: module_file,
+             ES5: es5_file
          });
      }
 

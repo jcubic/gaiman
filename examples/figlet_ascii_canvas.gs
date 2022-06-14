@@ -15,8 +15,8 @@ figlet.preloadFonts(Array.from(["Standard"]), ready)
 
 def ready()
     let stage = new canvas.Canvas(cols(), 20)
-    let fig = ascii("Jargon File")
-    let fig_small = ascii("Jargon")
+    let fig = ascii("Gaiman Lang")
+    let fig_small = ascii("Gaiman")
 
     let info = new canvas.Item(get_info())
     let text = new canvas.Item("")
@@ -40,12 +40,12 @@ def ready()
 
     echo lambda()
         let n = cols()
-        if n < 53 then
+        if n < 63 then
             text.update(fig_small)
         else
             text.update(fig)
         end
-        if n < 84 then
+        if n < 94 then
             info.move(position.bottom)
         else
             info.move(position.right)

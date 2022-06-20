@@ -94,7 +94,8 @@ end
 ```
 
 More examples in [examples directory](https://github.com/jcubic/gaiman/tree/master/examples)
-See [Reference Manual](https://github.com/jcubic/gaiman/wiki/Reference-Manual)
+
+See [Reference Manual](https://github.com/jcubic/gaiman/wiki/Reference-Manual) for details about the features
 
 ## Live Demo
 

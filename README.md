@@ -47,6 +47,18 @@ echo "Hello $name, nice to meet you."
 More advanced example:
 
 ```ruby
+if cookie.visited then
+    if cookie.user then
+        let user = cookie.user
+        echo "Hello $user, welcome back"
+    else
+        ask_details("Welcome back strager")
+    end
+else
+    cookie.visited = true
+    ask_details("Welcome stranger")
+end
+
 def ask_details(msg)
     echo msg
     echo "Do you want me to contact you with updates?"
@@ -78,18 +90,6 @@ def ask_details(msg)
     else
         echo "Ok, as you wish. Bye"
     end
-end
-
-if cookie.visited then
-    if cookie.user then
-        let user = cookie.user
-        echo "Hello $user, welcome back"
-    else
-        ask_details("Welcome back strager")
-    end
-else
-    cookie.visited = true
-    ask_details("Welcome stranger")
 end
 ```
 

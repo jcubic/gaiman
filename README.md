@@ -9,7 +9,7 @@
 
 [Gaiman: Storytelling Text Based Game Engine and Programming Language](https://github.com/jcubic/gaiman)
 
-Main part of Gaiman is a minimalist programming language and main purpose is to help create
+Main part of Gaiman is a minimalist, Ruby inspired, programming language. The main purpose of it is to help creating
 [Text Adventure Games](https://en.wikipedia.org/wiki/Interactive_fiction). But it can also be used
 to create any interactive CLI applications (Web Based Terminal applications).
 It support browser based CLI applications and in the future also native command line.

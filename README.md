@@ -1,6 +1,6 @@
 # Gaiman Engine and Programming Language
 
-![Gaiman: Text based advanture games engine and programming language](https://raw.githubusercontent.com/jcubic/gaiman/master/assets/banner.svg)
+![Gaiman: Text based adventure games engine and programming language](https://raw.githubusercontent.com/jcubic/gaiman/master/assets/banner.svg)
 
 [![npm](https://img.shields.io/badge/npm-1.0.0%E2%80%93beta.2-blue.svg)](https://www.npmjs.com/package/gaiman)
 [![Build and test](https://github.com/jcubic/gaiman/actions/workflows/build.yaml/badge.svg)](https://github.com/jcubic/gaiman/actions/workflows/build.yaml)
@@ -12,7 +12,7 @@
 Main part of Gaiman is a minimalist, Ruby inspired, programming language. The main purpose of it is to help creating
 [Text Adventure Games](https://en.wikipedia.org/wiki/Interactive_fiction). But it can also be used
 to create any interactive CLI applications (Web Based Terminal applications).
-It support browser based CLI applications and in the future also native command line.
+It supports browser based CLI applications and in the future also native command line.
 
 ## Installation
 
@@ -52,7 +52,7 @@ if cookie.visited then
         let user = cookie.user
         echo "Hello $user, welcome back"
     else
-        ask_details("Welcome back strager")
+        ask_details("Welcome back stranger")
     end
 else
     cookie.visited = true

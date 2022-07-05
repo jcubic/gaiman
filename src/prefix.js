@@ -165,6 +165,7 @@ function to_string(object) {
 class WebAdapter {
     constructor(config = {}) {
         this._config = $.extend({
+            keepWords: false,
             newline: true,
             loop_threshold: 500,
             loop_timeout: 200
@@ -254,10 +255,10 @@ class WebAdapter {
         if (typeof arg !== 'function') {
             arg = to_string(arg);
         }
-        this._term.echo(arg, { newline: this._config.newline });
+        this._term.echo(arg, { keepWords: this._config.keepWords, newline: this._config.newline });
     }
     echo_extra(string, delay) {
-        return this._term.echo(string, { typing: true, delay });
+        return this._term.echo(string, { keepWords: this._config.keepWords, typing: true, delay });
     }
     enter(string) {
         return this._term.enter(string);

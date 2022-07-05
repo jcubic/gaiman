@@ -203,13 +203,11 @@ class WebAdapter {
             }
         }, options));
     }
-    config(name, value) {
-        if (typeof name === 'string') {
-            this._config[name] = value;
-        } else {
-            const { completion, ...rest } = name;
-            this._term.settings().completion = completion;
-            $.extend(rest, name);
+    config(name) {
+        if (typeof name === 'object') {
+            for (const [key, value] of Object.entries(name)) {
+                this._config[key] = value
+            }
         }
     }
     store(name, ...args) {

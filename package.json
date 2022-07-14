@@ -37,6 +37,6 @@
     "@babel/standalone": "^7.18.5",
     "@jcubic/lily": "^0.3.0",
     "escodegen": "^2.0.0",
-    "terser": "^5.14.1"
+    "terser": "^5.14.2"
   }
 }

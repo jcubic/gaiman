@@ -16,6 +16,8 @@ It supports browser based CLI applications and in the future also native command
 
 ## Installation
 
+First you need to install [NodeJS](https://nodejs.org/en/), after you're done you should open terminal and use npm command (that is included with Node).
+
 ```
 npm install -g gaiman@beta
 ```

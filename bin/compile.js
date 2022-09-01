@@ -18,13 +18,13 @@ function readFile(filepath) {
 }
 
 
-const options = lily(process.argv.slice(2), { boolean: ['debug', 'raw'] });
+const options = lily(process.argv.slice(2), { boolean: ['debug', 'raw', 'c'] });
 const executable = path.basename(process.argv[1]);
 
 if (options.v || options.version) {
   console.log(`Gaiman version: ${json.version}`);
 } else if (options._.length !== 1) {
-    console.error(`usage: ${executable} -v | [-t <html template>] -o <output directory> <input.gs>`);
+    console.error(`usage: ${executable} -v | [-c] [-t <html template>] -o <output directory> <input.gs>`);
 } else {
     fs.promises.readFile(options._[0]).then(async buffer => {
         const source = buffer.toString();
@@ -47,9 +47,11 @@ if (options.v || options.version) {
                         }
                     });
                     writeFile(path.join(options.o, 'index.module.js.map'), minified.map);
-                    writeFile(path.join(options.o, 'index.module.js'), minified.code);
+                    var module_code = options.c ? minified.code : output_code;
+                    writeFile(path.join(options.o, 'index.module.js'), module_code);
                     const output_es5_code = Babel.transform(output_code, { presets: ['env'], targets: {ie: 11} }).code;
-                    writeFile(path.join(options.o, 'index.js'), (await minify(output_es5_code)).code);
+                    const index = options.c ? (await minify(output_es5_code)).code : output_es5_code;
+                    writeFile(path.join(options.o, 'index.js'), index);
                     let template;
                     if (options.t) {
                         template = await fs.promises.readFile(options.t, 'utf8');

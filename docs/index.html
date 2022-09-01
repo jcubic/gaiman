@@ -661,6 +661,17 @@ body {
      cm.scrollTo(left, top);
  }
 
+ function update_query_string(object) {
+     const url = new URL(document.location);
+     Object.entries(object).forEach(([name, value]) => {
+         url.searchParams.set(name, value);
+     });
+     const newUrl = url.toString();
+     if (newUrl !== location.href) {
+         history.pushState({}, '', newUrl);
+     }
+ }
+
  function download(blob, filename) {
      const url = URL.createObjectURL(blob);
      const $a = $(`<a href="${url}" download="${filename}">download</a>`).hide();
@@ -718,6 +729,7 @@ body {
          if (value) {
              state.code = await fetch_text(`${repo}/examples/${value}`)
              update_editor(state.editors.input, state.code);
+             update_query_string({gaiman: value});
          }
      });
      $('#download').on('click', function() {
@@ -804,8 +816,10 @@ body {
      update_codemirror();
      compile();
      get_examples().then(list => {
+         const selected_code = query.gaiman || 'hello.gs';
          list.forEach(name => {
-             $(`<option value="${name}">${name}</option>`).appendTo(examples);
+             const selected = selected_code === name ? ' selected ' : '';
+             $(`<option value="${name}"${selected}>${name}</option>`).appendTo(examples);
          });
      });
      state.editors.output = make_editor('.output', state.output);

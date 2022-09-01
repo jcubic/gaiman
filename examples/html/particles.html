@@ -1,7 +1,17 @@
 <div id="term"></div>
 <div id="background"></div>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://rawcdn.githack.com/nextapps-de/winbox/0.2.0/dist/winbox.bundle.js"></script>
 <script>
-var color = $('#term').css('--color').trim();
+var win = new WinBox("Terminal", {
+    mount: term,
+    width: 800,
+    height: 500,
+    minWidth: 100,
+    minHeight: 30,
+    index: 10
+});
+var color = term.css('--color').trim();
 particlesJS("background", {
     "particles": {
         "number": {

@@ -9,6 +9,9 @@
     --font: monospace;
     --options: {"enabled": false}; /* JSON config for jQuery Terminal */
 }
+html, body {
+    background: white;
+}
 body .shell {
     width: 600px;
     height: 300px;

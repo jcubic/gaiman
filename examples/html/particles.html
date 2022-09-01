@@ -5,13 +5,13 @@
 <script>
 var win = new WinBox("Terminal", {
     mount: term,
-    width: 800,
-    height: 500,
+    width: 570,
+    height: 300,
     minWidth: 100,
     minHeight: 30,
     index: 10
 });
-var color = term.css('--color').trim();
+var color = $(term).css('--color').trim();
 particlesJS("background", {
     "particles": {
         "number": {

@@ -8,6 +8,7 @@
     --size: 1;
     /* --glow: 1 */
     --animation: terminal-blink;
+    --options: {"enabled": false};
 }
 body, html {
     height: 100%;

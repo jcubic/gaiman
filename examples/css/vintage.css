@@ -1,6 +1,9 @@
 /*
  * part of the style based on http://js13kgames.com/entries/lost-in-cyberspace
  */
+:root {
+    --options: {"enabled": false};
+}
 body {
     margin: 0;
     background: black;
@@ -8,7 +11,7 @@ body {
 .terminal img[src*="blob:"], .terminal video {
     max-width: 100%;
 }
-#terminal {
+#term {
     height: 100vh;
 }
 /* glow */
@@ -150,7 +153,7 @@ https://blog.carbonfive.com/2015/01/07/vintage-terminal-effect-in-css3/
       inset 0 3px 8px rgba(64,64,64,0.05),
       inset 0 -5px 10px rgba(25,25,25,0.1);
 }
-#terminal:focus-within ~ .scanlines:before {
+#term:focus-within ~ .scanlines:before {
     content: '';
     display: block;
     animation: vline calc(var(--time, 2) * 1s) linear infinite;

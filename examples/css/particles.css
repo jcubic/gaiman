@@ -2,6 +2,7 @@
     --margin: 30;
     --color: #329632;
     --background: black;
+    --options: {"enabled": false};
 }
 html, body {
     height: 100%;

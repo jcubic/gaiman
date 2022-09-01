@@ -61,6 +61,7 @@ function getStatic(url) {
                 }
                 resolve(textResponse(value, { type: getMime(extension) }));
             }).catch(error => {
+                debugger;
                 resolve(error500(error));
             });
         }

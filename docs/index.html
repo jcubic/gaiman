@@ -268,10 +268,10 @@
   <header>
     <h1>Gaiman Programming Language and Text Advanture Game Engine</h1>
     <div class="right">
-      <label for="examples">Example:</label>
-      <select id="examples">
-        <option>File Name</option>
-      </select>
+      <label for="theme">Theme:</label>
+      <select id="theme"></select>
+      <label for="example">Example:</label>
+      <select id="example"></select>
     </div>
   </header>
   <main>
@@ -581,15 +581,15 @@ body {
 
  const TIMEOUT = 3600;
 
- async function get_examples(timeout = TIMEOUT) {
+ async function get_examples(path = 'examples', filter = /\.gs$/, timeout = TIMEOUT) {
      async function fetch() {
-         const examples = (await list_directory('jcubic', 'gaiman', 'examples')).filter(name => {
-             return name.match(/\.gs$/);
+         const examples = (await list_directory('jcubic', 'gaiman', path)).filter(name => {
+             return name.match(filter);
          });
          await idbKeyval.set(key, { time: timestamp, examples });
          return examples;
      }
-     const key = 'examples';
+     const key = path;
      const timestamp = +new Date();
      const data = await idbKeyval.get(key);
      if (!data) {
@@ -664,7 +664,11 @@ body {
  function update_query_string(object) {
      const url = new URL(document.location);
      Object.entries(object).forEach(([name, value]) => {
-         url.searchParams.set(name, value);
+         if (value) {
+             url.searchParams.set(name, value);
+         } else {
+             url.searchParams.delete(name);
+         }
      });
      const newUrl = url.toString();
      if (newUrl !== location.href) {
@@ -679,6 +683,10 @@ body {
      $a[0].click();
      $a.remove();
      URL.revokeObjectURL(url);
+ }
+
+ function base_name(filename) {
+     return filename.replace(/\.[^.]+$/, '');
  }
 
  (async function($) {
@@ -716,20 +724,36 @@ body {
          state.cm = await fetch_text(`${repo}src/codemirror.js`);
          state.peg_cm = await fetch_text(pegjs);
          update_editor(state.editors.grammar, state.grammar);
-         update_editor(state.editors.css, css.innerHTML);
          update_editor(state.editors.js, state.js);
+         update_editor(state.editors.css, css.innerHTML);
          update_editor(state.editors.html, html.innerHTML);
          update_editor(state.editors.input, state.code);
          update_editor(state.editors.cm, state.cm);
          update_editor(state.editors.peg_cm, state.peg_cm);
          return false;
      });
-     $(examples).on('change', async function() {
+     $(example).on('change', async function() {
          const value = this.value;
          if (value) {
              state.code = await fetch_text(`${repo}/examples/${value}`)
              update_editor(state.editors.input, state.code);
              update_query_string({gaiman: value});
+         }
+     });
+     $(theme).on('change', async function() {
+         const value = this.value;
+         if (value) {
+             state.css = await fetch_text(`${repo}/examples/css/${value}.css`);
+             state.user_html = await fetch_text(`${repo}/examples/html/${value}.html`);
+             update_editor(state.editors.css, state.css);
+             setTimeout(() => {
+                 update_editor(state.editors.html, state.user_html);
+             }, 10);
+             update_query_string({css: `${value}.css`, html: `${value}.html`});
+         } else {
+             update_editor(state.editors.css, css.innerHTML);
+             update_editor(state.editors.html, html.innerHTML);
+             update_query_string({css: '', html: ''});
          }
      });
      $('#download').on('click', function() {
@@ -819,7 +843,17 @@ body {
          const selected_code = query.gaiman || 'hello.gs';
          list.forEach(name => {
              const selected = selected_code === name ? ' selected ' : '';
-             $(`<option value="${name}"${selected}>${name}</option>`).appendTo(examples);
+             $(`<option value="${name}"${selected}>${name}</option>`).appendTo(example);
+         });
+     });
+     get_examples('examples/html', /\.html$/).then(list => {
+         const css = query.css ? base_name(query.css) : '';
+         const html = query.html ? base_name(query.html) : '';
+         const selected_theme = css === html ? css : null;
+         console.log([''].concat(list));
+         [''].concat(list).map(base_name).forEach(name => {
+             const selected = selected_theme === name ? ' selected ' : '';
+             $(`<option value="${name}"${selected}>${name || 'default'}</option>`).appendTo(theme);
          });
      });
      state.editors.output = make_editor('.output', state.output);

@@ -7,7 +7,7 @@
     /* available animations: terminal-bar, terminal-underline */
     --animation: terminal-underline;
     --font: monospace;
-    --options: {"enabled": false}; /* JSON config for jQuery Terminal */
+    --options: {}; /* JSON config for jQuery Terminal */
 }
 html, body {
     background: white;

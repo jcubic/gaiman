@@ -181,6 +181,10 @@ class WebAdapter {
                 options = {};
             }
         }
+        var playground = window.parent?.__GAIMAN_PLAYGROUND__;
+        if (playground) {
+            options.enabled = false;
+        }
         this._term = root.terminal($.noop, $.extend({
             greetings: false,
             exit: false,

@@ -2,7 +2,7 @@
  * part of the style based on http://js13kgames.com/entries/lost-in-cyberspace
  */
 :root {
-    --options: {"enabled": false};
+    --options: {};
 }
 body {
     margin: 0;

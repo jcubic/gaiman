@@ -364,7 +364,7 @@
     /* available animations: terminal-bar, terminal-underline */
     --animation: terminal-blink;
     --font: monospace;
-    --options: {"enabled": false}; /* JSON config for jQuery Terminal */
+    --options: {}; /* JSON config for jQuery Terminal */
 }
 body {
     margin: 0;
@@ -375,6 +375,7 @@ body {
 }</script>
 <script type="text/x-template" id="html"><div id="term"></div></script>
 <script>
+ var __GAIMAN_PLAYGROUND__ = true;
 
  $.fn.cm_refresh = function() {
      return this.filter('.CodeMirror').each(function() {

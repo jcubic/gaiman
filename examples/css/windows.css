@@ -16,10 +16,16 @@ body .shell {
     width: 600px;
     height: 300px;
 }
+
 body .shell .terminal {
     height: calc(100% - 29px);
-    padding: 10px;
     --size: 1.1;
+}
+body .shell .content.terminal {
+    padding: 0;
+}
+.shell .terminal .terminal-scroller {
+    padding: 10px;
     /*
      * padding bottom 0 on terminal and margin
      * on .cmd will be in version 2.0.1
@@ -53,7 +59,7 @@ body .shell .terminal .cmd {
     }
 }
 /*
- * overwrite shell.js style because shell.js   
+ * overwrite shell.js style because shell.js
  * selectors are stronger then terminal ones
  */
 .cmd span.cursor {
@@ -82,17 +88,14 @@ body .shell .terminal .cmd {
     visibility: visible;
     pointer-events: none;
 }
-.terminal::-webkit-scrollbar-track
-{
-	border: 1px solid var(--color, #aaa);
-	background-color: var(--background);
+.terminal::-webkit-scrollbar-track {
+    border: 1px solid var(--color, #aaa);
+    background-color: var(--background);
 }
-.terminal::-webkit-scrollbar
-{
-	width: 10px;
-	background-color: var(--background);
+.terminal::-webkit-scrollbar {
+    width: 10px;
+    background-color: var(--background);
 }
-.terminal::-webkit-scrollbar-thumb
-{
-	background-color: var(--color, #aaa);
+.terminal::-webkit-scrollbar-thumb {
+    background-color: var(--color, #aaa);
 }

@@ -732,11 +732,11 @@ async_command = SPACE method:adapter_async_strings " " SPACE expr:command_argume
     };
 }
 
-static_command = SPACE method:adapter_static_strings expr:(([ ]+ / &"(") command_argument)? SPACE args:("," [ ]* expression)* {
+static_command = SPACE method:adapter_static_strings ([ ]+ / &"(")? expr:command_argument? SPACE args:("," [ ]* expression)* {
     if (!expr) {
         return gaiman_call(map_extra_method(method), ...args.map(x => x[2]));
     }
-    return gaiman_call(map_extra_method(method), expr[1], ...args.map(x => x[2]));
+    return gaiman_call(map_extra_method(method), expr, ...args.map(x => x[2]));
 }
 
 re = "/" re:("\\/" / [^/])* "/" flags:[igmsu]* {

@@ -609,4 +609,5 @@ try {
         colno: null,
         lineno: null
     });
+    throw e;
 }

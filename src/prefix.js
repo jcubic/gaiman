@@ -282,6 +282,9 @@ class WebAdapter {
                     }
                 });
             }, {
+                keymap: {
+                    'CTRL+D': () => false
+                },
                 prompt: message
             });
         });
@@ -304,6 +307,10 @@ class WebAdapter {
                         });
                     }
                 })
+            }, {
+                keymap: {
+                    'CTRL+D': () => false
+                }
             }).set_prompt(message, {
                 typing: true,
                 delay

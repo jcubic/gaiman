@@ -4,11 +4,11 @@
  * / /_/ / /_/ / / / / / / / /_/ / / / /
  * \____/\__,_/_/_/ /_/ /_/\__,_/_/ /_/
  *
- * Storytelling Text Based Game Engine 1.0.0-beta.2
+ * Storytelling Text Based Game Engine 1.0.0-beta.3
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Sun, 13 Nov 2022 17:02:35 GMT
+ * Buid time: Mon, 26 Dec 2022 22:11:41 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -14622,7 +14622,7 @@
 	}(escodegen$1));
 
 	var name = "gaiman";
-	var version$1 = "1.0.0-beta.2";
+	var version$1 = "1.0.0-beta.3";
 	var description = "Gaiman Text based advanture games engine and programming language";
 	var main = "index.js";
 	var scripts = {

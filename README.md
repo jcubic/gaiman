@@ -2,7 +2,7 @@
 
 ![Gaiman: Text based adventure games engine and programming language](https://raw.githubusercontent.com/jcubic/gaiman/master/assets/banner.svg)
 
-[![npm](https://img.shields.io/badge/npm-1.0.0%E2%80%93beta.2-blue.svg)](https://www.npmjs.com/package/gaiman)
+[![npm](https://img.shields.io/badge/npm-1.0.0%E2%80%93beta.3-blue.svg)](https://www.npmjs.com/package/gaiman)
 [![Build and test](https://github.com/jcubic/gaiman/actions/workflows/build.yaml/badge.svg)](https://github.com/jcubic/gaiman/actions/workflows/build.yaml)
 [![Coverage Status](https://coveralls.io/repos/github/jcubic/gaiman/badge.svg?branch=master)](https://coveralls.io/github/jcubic/gaiman?branch=master)
 [![LICENSE GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/jcubic/gaiman/blob/master/LICENSE)

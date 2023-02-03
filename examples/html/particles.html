@@ -13,7 +13,22 @@ var win = new WinBox("Terminal", {
     y: "center",
     index: 10
 });
-var color = $(term).css('--color').trim();
+var color = parseColor($(term).css('--color'));
+var runAnimation = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function parseColor(color) {
+    if (color.startsWith('#')) {
+        return color;
+    }
+    var m = color.match(/rgb\(([0-9]+)\s*,?\s*([0-9]+)\s*,?\s*([0-9]+)\)/);
+    if (m) {
+        return '#' + m.slice(1).map(num => {
+            return parseInt(num).toString(16).padStart('0', 2);
+        }).join('');
+    }
+    throw new Error('Invalid Color');
+}
+
 particlesJS("background", {
     "particles": {
         "number": {
@@ -46,7 +61,7 @@ particlesJS("background", {
             "random": false,
             "anim": {
                 "enable": false,
-                "speed": 1,
+                "speed": runAnimation ? 1 : 0,
                 "opacity_min": 0.1,
                 "sync": false
             }
@@ -56,7 +71,7 @@ particlesJS("background", {
             "random": true,
             "anim": {
                 "enable": false,
-                "speed": 40,
+                "speed": runAnimation ? 40 : 0,
                 "size_min": 0.1,
                 "sync": false
             }
@@ -70,7 +85,7 @@ particlesJS("background", {
         },
         "move": {
             "enable": true,
-            "speed": 6,
+            "speed": runAnimation ? 6 : 0,
             "direction": "none",
             "random": false,
             "straight": false,
@@ -83,7 +98,7 @@ particlesJS("background", {
             }
         }
     },
-    "interactivity": {
+    "interactivity": runAnimation ? {
         "detect_on": "canvas",
         "events": {
             "onhover": {
@@ -119,6 +134,15 @@ particlesJS("background", {
             },
             "remove": {
                 "particles_nb": 2
+            }
+        }
+    } : {
+        "events": {
+            "onhover": {
+                "enable": false
+            },
+            "onclick": {
+                "enable": false
             }
         }
     },

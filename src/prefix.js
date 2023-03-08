@@ -254,14 +254,14 @@ class WebAdapter {
         }
         this._term.error(message);
     }
-    echo(arg = "") {
+    echo(arg = "", options = {}) {
         if (typeof arg !== 'function') {
             arg = to_string(arg);
         }
-        this._term.echo(arg, { newline: this._config.newline });
+        this._term.echo(arg, { newline: this._config.newline, ...options });
     }
-    echo_extra(string, delay) {
-        return this._term.echo(string, { typing: true, delay });
+    echo_extra(string, delay, options = {}) {
+        return this._term.echo(string, { typing: true, delay, ...options });
     }
     enter(string) {
         return this._term.enter(string);

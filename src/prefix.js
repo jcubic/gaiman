@@ -212,7 +212,7 @@ class WebAdapter {
         } else {
             const { completion, ...rest } = name;
             this._term.settings().completion = completion;
-            $.extend(rest, name);
+            $.extend(this._config, rest);
         }
     }
     store(name, ...args) {

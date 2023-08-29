@@ -31,6 +31,10 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(fetch(event.request).catch(() => {}));
 });
 
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
+});
+
 function getMime(type) {
     const result = mime[type];
     if (result) {

@@ -24,12 +24,14 @@ npm install -g gaiman@beta
 
 ## Usage
 
+First, create `input.gs` file with your Gaiman program, and then run:
+
 ```
 gaiman -o directory input.gs
 ```
 
 This will compile your source file and generate `dir/index.html` and `dir/index.js` files.
-And you can open generated html file in browser and run the game.
+You can open the generated HTML file in the browser and run the game.
 
 ## Documentation
 

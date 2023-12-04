@@ -36,4 +36,8 @@ def range(start, stop, step)
     return result
 end
 
-echo range(10)
+
+while true do
+   let num = ask "range> "
+   echo range(num)
+end

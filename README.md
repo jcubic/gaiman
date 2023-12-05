@@ -24,14 +24,26 @@ npm install -g gaiman@beta
 
 ## Usage
 
-First, create `input.gs` file with your Gaiman program, and then run:
+First, create `input.gs` file with your Gaiman program (you can use one of the examples), and then run:
 
 ```
 gaiman -o directory input.gs
 ```
 
-This will compile your source file and generate `dir/index.html` and `dir/index.js` files.
+This will compile your source file and generate `directory/index.html` and `directory/index.js` files.
 You can open the generated HTML file in the browser and run the game.
+
+When output files are generated you can use this command to run live [Web server](https://en.wikipedia.org/wiki/Web_server).
+This is required to run the example. It's like running a website on the internet.
+
+```
+cd directory
+npx live-server
+```
+
+This should open `index.html` inside your browser. When your app is ready you can publish it with:
+* [GitHub Pages](https://progate.com/docs/github-pages)
+* [Netlify](https://www.freecodecamp.org/news/publish-your-website-netlify-github/)
 
 ## Documentation
 

@@ -562,6 +562,46 @@ exports[`loop should parse while loops 1`] = `
 }"
 `;
 
+exports[`try..catch should parse empty try..catch 1`] = `
+"async function main() {
+    try {
+        try {
+        } catch (e) {
+        }
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
+exports[`try..catch should parse try..catch with code 1`] = `
+"async function main() {
+    try {
+        try {
+            gaiman.echo(10);
+        } catch ($_echo) {
+            \`err\`;
+        }
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
+exports[`try..catch should parse try..catch with exception var 1`] = `
+"async function main() {
+    try {
+        try {
+            await $_x();
+        } catch ($_e) {
+            gaiman.echo(\`Err: \` + $_e.message);
+        }
+    } catch (e) {
+        gaiman.error(e);
+    }
+}"
+`;
+
 exports[`values should parse arrays 1`] = `
 "async function main() {
     try {

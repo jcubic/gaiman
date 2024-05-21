@@ -131,3 +131,15 @@ describe('errors', () => {
         return test_fixture('mutli_line_string.gs');
     });
 });
+
+describe('try..catch', () => {
+    it('should parse empty try..catch', () => {
+        return test_fixture('empty_try_catch.gs');
+    });
+    it('should parse try..catch with code', () => {
+        return test_fixture('base_try_catch.gs');
+    });
+    it('should parse try..catch with exception var', () => {
+         return test_fixture('variable_try_catch.gs');
+    });
+});

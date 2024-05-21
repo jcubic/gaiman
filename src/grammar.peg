@@ -187,7 +187,13 @@
     function escape_quote(str) {
        return str.replace(/\$\x7b/g, '\\$\x7b');
     }
-    function try_catch(body) {
+    function main_try_catch(body) {
+        return try_catch(body, 'e', [
+            expression_statement(gaiman_call('error', make_identifier("e")))
+        ]);
+    }
+    
+    function try_catch(body, error_var, catch_clause) {
         return {
             "type": "TryStatement",
             "block": make_block(body),
@@ -195,14 +201,9 @@
                 "type": "CatchClause",
                 "param": {
                     "type": "Identifier",
-                    "name": "e"
+                    "name": error_var
                 },
-                "body": {
-                    "type": "BlockStatement",
-                    "body": [
-                        expression_statement(gaiman_call('error', make_identifier("e")))
-                    ]
-                }
+                "body": make_block(catch_clause)
             }
         };
     }
@@ -345,7 +346,7 @@ Start = statements:statements {
         "type": "Program",
         "body": [
             main([
-                try_catch(statements)
+                main_try_catch(statements)
             ])
         ]
     };
@@ -357,7 +358,7 @@ statement_list = !"end" _ statements:statement* _ {
 
 statements = statement_list / null_array
 
-statement = !"end" _ statement:(if / for_loop / named_do / while_loop / jump / return / import / var / do_block / expression_statement / function_definition) _ {
+statement = !("end" / "catch") _ statement:(if / for_loop / named_do / while_loop / try_catch / jump / return / import / var / do_block / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -404,6 +405,17 @@ for_loop = "for" SP !keyword arg:((variable _ "," _ variable) / variable) SP "in
 while_loop = "while" SP test:expression _ "do" _ body:statements _ "end" _ {
     return while_loop(test, body);
 }
+
+try_catch_with_var = "try" _ try_block:statements _ "catch" SP varable:name _ catch_block:statements _ "end" _ {
+    return try_catch(try_block, variable_prefix + varable, catch_block);
+}
+
+
+try_catch_simple = "try" _ try_block:statements _ "catch" _ catch_block:statements _ "end" _ {
+    return try_catch(try_block, 'e', catch_block);
+}
+
+try_catch = try_catch_with_var / try_catch_simple
 
 bracket_prop = prop:("[" _ property:(math_expression / dict / match_var / array / function_call / string / literal) _ "]")
 
@@ -965,7 +977,7 @@ zero
 
 DIGIT = [0-9]
 
-keyword = ("if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda" / "from" / "new") !name
+keyword = ("if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda" / "from" / "new" / "try" / "catch") !name
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

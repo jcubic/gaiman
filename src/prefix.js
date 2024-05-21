@@ -193,6 +193,7 @@ class WebAdapter {
                     return false;
                 }
             },
+            prompt: '',
             exceptionHandler(e) {
                 if (is_iframe) {
                     window.parent.postMessage({

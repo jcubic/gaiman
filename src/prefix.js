@@ -254,7 +254,10 @@ class WebAdapter {
         }
         this._term.error(message);
     }
-    echo(arg = "", options = {}) {
+    echo(arg = null, options = {}) {
+        if (arg === undefined || arg === null) {
+            return;
+        }
         if (typeof arg !== 'function') {
             arg = to_string(arg);
         }

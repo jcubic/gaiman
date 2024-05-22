@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Tue, 21 May 2024 18:00:15 GMT
+ * Buid time: Wed, 22 May 2024 18:30:59 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -173,7 +173,6 @@
 	            expression_statement(gaiman_call('error', make_identifier("e")))
 	        ]);
 	    }
-	    
 	    function try_catch(body, error_var, catch_clause) {
 	        return {
 	            "type": "TryStatement",
@@ -588,7 +587,8 @@
 	          "type": "Program",
 	          "body": [
 	              main$2([
-	                  main_try_catch(statements)
+	                  main_try_catch(statements),
+	                  expression_statement(gaiman_call('exit'))
 	              ])
 	          ]
 	      };

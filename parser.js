@@ -185,7 +185,6 @@
             expression_statement(gaiman_call('error', make_identifier("e")))
         ]);
     }
-    
     function try_catch(body, error_var, catch_clause) {
         return {
             "type": "TryStatement",
@@ -611,7 +610,8 @@ function peg$parse(input, options) {
           "type": "Program",
           "body": [
               main([
-                  main_try_catch(statements)
+                  main_try_catch(statements),
+                  expression_statement(gaiman_call('exit'))
               ])
           ]
       };

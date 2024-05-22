@@ -276,15 +276,19 @@ class WebAdapter {
     ask(message, validator = () => true) {
         return new Promise(resolve => {
             this._term.push(result => {
-                return Promise.resolve().then(async () => {
-                    if (typeof validator !== 'function') {
-                        throw new Error('ask validator needs to be a function');
+                if (typeof validator !== 'function') {
+                    throw new Error('ask validator needs to be a function');
+                }
+                (async () => {
+                    try {
+                        if (await validator(result)) {
+                            this._term.pop();
+                            resolve(result);
+                        }
+                    } catch(e) {
+                        this._term.error(e.message);
                     }
-                    if (await validator(result)) {
-                        this._term.pop();
-                        resolve(result);
-                    }
-                });
+                })();
             }, {
                 keymap: {
                     'CTRL+D': () => false
@@ -297,19 +301,25 @@ class WebAdapter {
         return new Promise(resolve => {
             const prompt = this._term.get_prompt();
             this._term.push(result => {
-                return Promise.resolve().then(async () => {
+                return Promise.resolve().then(() => {
                     if (typeof validator !== 'function') {
                         throw new Error('ask* validator needs to be a function');
                     }
-                    if (await validator(result)) {
-                        this._term.pop().set_prompt(prompt);
-                        resolve(result);
-                    } else {
-                        this._term.set_prompt(message, {
-                            typing: true,
-                            delay
-                        });
-                    }
+                    (async () => {
+                        try {
+                            if (await validator(result)) {
+                                this._term.pop().set_prompt(prompt);
+                                resolve(result);
+                            } else {
+                                this._term.set_prompt(message, {
+                                    typing: true,
+                                    delay
+                                });
+                            }
+                        } catch(e) {
+                            this._term.error(e.message);
+                        }
+                    })();
                 })
             }, {
                 keymap: {
@@ -349,6 +359,10 @@ class WebAdapter {
     }
     clear() {
         this._term.clear();
+    }
+    exit() {
+        this._term.freeze(true);
+        this._term.pause();
     }
 }
 

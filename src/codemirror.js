@@ -38,9 +38,9 @@
     "animate", "enter", "try", "catch"
   ], keywords = wordRE(keywordList);
 
-  var indentTokens = wordRE(["def", "then", "lambda", "do", "\\(", "{"]);
+  var indentTokens = wordRE(["def", "then", "lambda", "do", "try", "\\(", "{"]);
   var dedentTokens = wordRE(["end", "\\)", "}"]);
-  var dedentPartial = prefixRE(["end", "else", "\\)", "}", "else\\s+if"]);
+  var dedentPartial = prefixRE(["end", "else", "catch", "\\)", "}", "else\\s+if"]);
   var opening = {"[": "]", "{": "}", "(": ")"};
   var closing = {"]": "[", "}": "{", ")": "("};
 

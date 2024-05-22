@@ -41,7 +41,7 @@ function extend(object, prototype) {
 
 const loops = {};
 
-class Exit {}
+class Gaiman_Exit {}
 
 const Gaiman = {
     _get_time() {
@@ -292,6 +292,7 @@ class WebAdapter {
                     }
                 })();
             }, {
+                name: message,
                 keymap: {
                     'CTRL+D': () => false
                 },
@@ -324,6 +325,7 @@ class WebAdapter {
                     })();
                 })
             }, {
+                name: message,
                 keymap: {
                     'CTRL+D': () => false
                 }

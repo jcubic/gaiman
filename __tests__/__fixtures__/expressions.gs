@@ -7,6 +7,9 @@ if command =~ /<title>.*<\/title>/ then
   let baz = 10
   let quux = -baz
   10 * 10 + 3
+  if -1 == -1 then
+    let x = -1 == 10
+  end
   if 10 < 0 then
   end
   if 10 <= 20 and 10 > 20 or 10 == 20 and 10 != 20 then

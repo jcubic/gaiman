@@ -15,6 +15,7 @@ exports[`expressions should call methods 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -28,6 +29,7 @@ exports[`expressions should chain methods 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -43,6 +45,7 @@ exports[`expressions should parse assign operators 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -68,6 +71,7 @@ exports[`expressions should parse map function 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -85,6 +89,7 @@ exports[`expressions should parse property access 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -97,6 +102,7 @@ exports[`expressions should parse property access 2`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -128,6 +134,7 @@ exports[`expressions should use command as part of expression 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -159,6 +166,7 @@ exports[`functions should compile function calls 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -189,6 +197,7 @@ exports[`functions should compile function definitions 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -205,6 +214,7 @@ exports[`functions should create factorial function 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -237,6 +247,7 @@ exports[`global should ignore comments 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -250,6 +261,7 @@ exports[`global should parse constant values 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -265,6 +277,7 @@ exports[`global should parse do blocks 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -279,6 +292,7 @@ exports[`global should parse imports 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -314,6 +328,7 @@ exports[`global should parse other syntax 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -329,6 +344,7 @@ exports[`if statements should compile base if 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -350,6 +366,7 @@ exports[`if statements should compile if_else 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -379,6 +396,7 @@ exports[`if statements should compile multiple if_else  1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -394,6 +412,9 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
             let $_baz = 10;
             let $_quux = -$_baz;
             10 * 10 + 3;
+            if (-1 === -1) {
+                let $_x = -1 === 10;
+            }
             if (10 < 0) {
             }
             if (10 <= 20 && 10 > 20 || 10 === 20 && 10 !== 20) {
@@ -426,6 +447,7 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -447,6 +469,7 @@ exports[`loop should parse break 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -466,6 +489,7 @@ exports[`loop should parse continue 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -521,6 +545,7 @@ exports[`loop should parse for loops 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -559,6 +584,7 @@ exports[`loop should parse while loops 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -571,6 +597,7 @@ exports[`try..catch should parse empty try..catch 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -585,6 +612,7 @@ exports[`try..catch should parse try..catch with code 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -599,6 +627,7 @@ exports[`try..catch should parse try..catch with exception var 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -629,6 +658,7 @@ exports[`values should parse arrays 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -649,6 +679,7 @@ exports[`values should parse dictionaries 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -669,6 +700,7 @@ exports[`values should parse heredocs 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -689,6 +721,7 @@ exports[`values should parse numbers 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -704,6 +737,7 @@ exports[`values should parse strings 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;
 
@@ -717,5 +751,6 @@ exports[`values should setting values 1`] = `
     } catch (e) {
         gaiman.error(e);
     }
+    gaiman.exit();
 }"
 `;

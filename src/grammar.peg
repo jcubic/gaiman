@@ -762,17 +762,9 @@ re = "/" re:("\\/" / [^/])* "/" flags:[igmsu]* {
     }
 }
 
-math_expression = unary / or
+math_expression = or
 
 not_ = "not" " " { return "!"; }
-
-unary = op:("-" / "+") _ expression:or {
-    return {
-        "type": "UnaryExpression",
-        "operator": op,
-        "argument": expression
-    };
-}
 
 or
   = head:and tail:(SP "or" SP and)* {
@@ -812,7 +804,7 @@ mul_div
       return binary_fold(head, tail);
     }
 
-match = head:factor tail:(_ "=~" _ factor)* {
+match = head:unary tail:(_ "=~" _ unary)* {
     return tail.reduce(function(result, element) {
         return {
             "type": "SequenceExpression",
@@ -834,6 +826,14 @@ match = head:factor tail:(_ "=~" _ factor)* {
         };
     }, head);
 }
+
+unary = op:("-" / "+") _ expression:factor {
+    return {
+        "type": "UnaryExpression",
+        "operator": op,
+        "argument": expression
+    };
+} / factor
 
 factor
   = function_call / prop_access / value / match_var / variable

@@ -41,6 +41,8 @@ function extend(object, prototype) {
 
 const loops = {};
 
+class Exit {}
+
 const Gaiman = {
     _get_time() {
         return +new Date;

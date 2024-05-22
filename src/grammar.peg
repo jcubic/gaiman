@@ -86,6 +86,20 @@
             "kind": "let"
         };
     }
+    function not(expression) {
+        return {
+            "type": "UnaryExpression",
+            "operator": "!",
+            "argument": expression
+        };
+    }
+    function new_expr(expression, args) {
+        return {
+            "type": "NewExpression",
+            "callee": expression,
+            "arguments": args
+        };
+    }
     function declare(names) {
         return {
             "type": "VariableDeclaration",
@@ -187,12 +201,54 @@
     function escape_quote(str) {
        return str.replace(/\$\x7b/g, '\\$\x7b');
     }
+    function instance_of(left, right) {
+        return {
+            "type": "BinaryExpression",
+            "operator": "instanceof",
+            "left": left,
+            "right": right
+        };
+    }
+    function is_exit_expr(variable) {
+        return instance_of(variable, stop_exception);
+    }
+    function is_not_exit(variable, action) {
+        return make_if(not(is_exit_expr(variable)), [
+            action
+        ]);
+    }
+    function is_exit(variable, action) {
+        return make_if(is_exit_expr(variable), [
+            action
+        ]);
+    }
+    function throw_expression(expr) {
+        return {
+            "type": "ThrowStatement",
+            "argument": expr
+        };
+    }
+    function stop() {
+        return throw_expression(new_expr(stop_exception, []));
+    }
+    function throw_if_error(variable) {
+        variable = make_identifier(variable);
+        return is_exit(variable, throw_expression(variable));
+    }
     function main_try_catch(body) {
-        return try_catch(body, 'e', [
-            expression_statement(gaiman_call('error', make_identifier("e")))
+        var err_var = make_identifier("e");
+        return try_catch_simple(body, 'e', [
+            is_not_exit(err_var,
+                expression_statement(gaiman_call('error', err_var))
+            )
         ]);
     }
     function try_catch(body, error_var, catch_clause) {
+        return try_catch_simple(body, error_var, [
+            throw_if_error(error_var)
+        ].concat(catch_clause));
+    }
+    function try_catch_simple(body, error_var, catch_clause) {
         return {
             "type": "TryStatement",
             "block": make_block(body),
@@ -257,6 +313,7 @@
     var extra_single = ["sleep*", "get*"];
     var blacklist_properties = ["constructor", "__proto__", "prototype"];
     var variable_prefix = '$_';
+    var stop_exception = make_identifier('Gaiman_Exit');
 }}
 
 {
@@ -358,7 +415,7 @@ statement_list = !"end" _ statements:statement* _ {
 
 statements = statement_list / null_array
 
-statement = !("end" / "catch") _ statement:(if / for_loop / named_do / while_loop / try_catch / jump / return / import / var / do_block / expression_statement / function_definition) _ {
+statement = !"end" _ statement:(if / for_loop / named_do / while_loop / try_catch / jump / return / import / var / do_block / special_commands / expression_statement / function_definition) _ {
    return statement;
 }
 
@@ -506,11 +563,7 @@ lambda_value = "(" _ lambda:lambda _ ")" { return lambda; }
 call = "(" _ args:(argument_list / null_array) _ ")"
 
 constructor = "new" SP expression:(prop_access / variable) _ "(" _ args:(argument_list / null_array) ")" _ {
-    return {
-        "type": "NewExpression",
-        "callee": expression,
-        "arguments": args
-    };
+    return new_expr(expression, args);
 }
 
 function_call = _ !keyword expression:(prop_access / lambda_value / variable) _ "(" _ args:(argument_list / null_array) ")" _ rest:(call / bracket_prop / dot_prop)* {
@@ -777,11 +830,7 @@ and
   }
 
 not = "not " _ expression:equal {
-    return {
-        "type": "UnaryExpression",
-        "operator": "!",
-        "argument": expression
-    };
+    return not(expression);
 } / equal
 
 equal
@@ -837,7 +886,14 @@ unary = op:("-" / "+") _ expression:factor {
 
 factor
   = function_call / prop_access / value / match_var / variable
-  / "(" _ expr:(adapter_command / expression) _ ")" { return expr; }
+  / "(" _ expr:(adapter_command / special_commands / expression) _ ")" { return expr; }
+
+special_commands = exit
+
+exit = _ "exit" _ {
+    return stop();
+}
+
 
 any_name = variable:name {
   return make_identifier(variable_prefix + variable);

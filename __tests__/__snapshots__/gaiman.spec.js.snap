@@ -594,6 +594,11 @@ exports[`try..catch should parse empty try..catch 1`] = `
         try {
         } catch (e) {
         }
+        if (true) {
+            try {
+            } catch (e) {
+            }
+        }
     } catch (e) {
         gaiman.error(e);
     }

@@ -406,7 +406,7 @@ while_loop = "while" SP test:expression _ "do" _ body:statements _ "end" _ {
     return while_loop(test, body);
 }
 
-try_catch_with_var = "try" _ try_block:statements _ "catch" SP varable:name _ catch_block:statements _ "end" _ {
+try_catch_with_var = "try" _ try_block:statements _ "catch" SP !"end" varable:name _ catch_block:statements _ "end" _ {
     return try_catch(try_block, variable_prefix + varable, catch_block);
 }
 

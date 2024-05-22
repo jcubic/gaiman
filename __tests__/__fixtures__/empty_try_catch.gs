@@ -1,3 +1,9 @@
 try
-catch 
+catch
+end
+
+if true then
+  try
+  catch
+  end
 end

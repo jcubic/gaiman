@@ -1024,13 +1024,13 @@ body {
          set(OUTPUT_FILE, state.output_full);
      }
 
-     function update_html(init) {
+     async function update_html(init) {
          build_html();
          if (!init) {
-             set(CSS_FILE, state.css);
-             set(USER_HTML, state.user_html);
+             await set(CSS_FILE, state.css);
+             await set(USER_HTML, state.user_html);
          }
-         set(HTML_FILE, state.html);
+         await set(HTML_FILE, state.html);
          frame.src = `./__idb__/${HTML_FILE}`;
      }
 

@@ -8,7 +8,7 @@
  * Copyright (C) 2021 Jakub T. Jankiewicz <https://jcubic.pl/me>
  *
  * Released under GNU GPL v3 or later
- * Buid time: Wed, 22 May 2024 20:41:21 GMT
+ * Buid time: Thu, 23 May 2024 08:13:24 GMT
  */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -155,7 +155,7 @@
 	                constants.push({
 	                    "type": "TemplateElement",
 	                    "value": {
-	                        "raw": escape_quote(token)
+	                        "raw": escape_string(token)
 	                    }
 	                });
 	            }
@@ -179,8 +179,8 @@
 	            "prefix": true
 	        };
 	    }
-	    function escape_quote(str) {
-	       return str.replace(/\$\x7b/g, '\\$\x7b');
+	    function escape_string(str) {
+	       return str.replace(/\$\x7b/g, '\\$\x7b').replace(/`/g, '\\`');
 	    }
 	    function instance_of(left, right) {
 	        return {
@@ -216,20 +216,20 @@
 	        variable = make_identifier(variable);
 	        return is_exit(variable, throw_expression(variable));
 	    }
-	    function main_try_catch(body) {
+	    function main_try_catch(body, finalize) {
 	        var err_var = make_identifier("e");
 	        return try_catch_simple(body, 'e', [
 	            is_not_exit(err_var,
 	                expression_statement(gaiman_call('error', err_var))
 	            )
-	        ]);
+	        ], finalize);
 	    }
 	    function try_catch(body, error_var, catch_clause) {
 	        return try_catch_simple(body, error_var, [
 	            throw_if_error(error_var)
 	        ].concat(catch_clause));
 	    }
-	    function try_catch_simple(body, error_var, catch_clause) {
+	    function try_catch_simple(body, error_var, catch_clause, finalize) {
 	        return {
 	            "type": "TryStatement",
 	            "block": make_block(body),
@@ -240,7 +240,8 @@
 	                    "name": error_var
 	                },
 	                "body": make_block(catch_clause)
-	            }
+	            },
+	            "finalizer": finalize && make_block(finalize)
 	        };
 	    }
 	    function jump(name) {
@@ -285,7 +286,7 @@
 	    var available_commands = async_commands.concat(sync_commands);
 	    var extra_single = ["sleep*", "get*"];
 	    var variable_prefix = '$_';
-	    var stop_exception = make_identifier('Gaiman_Exit');
+	    var stop_exception = make_identifier('Exit');
 
 
 	function peg$subclass(child, parent) {
@@ -646,8 +647,9 @@
 	          "type": "Program",
 	          "body": [
 	              main$2([
-	                  main_try_catch(statements),
-	                  expression_statement(gaiman_call('exit'))
+	                  main_try_catch(statements, [
+	                      expression_statement(gaiman_call('exit'))
+	                  ])
 	              ])
 	          ]
 	      };

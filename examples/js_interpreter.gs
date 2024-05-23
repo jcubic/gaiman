@@ -10,6 +10,6 @@ while true do
         end
         echo eval(code)
     catch e
-      echo "<red>" + e.message + "</red>"
+        echo "<red>" + e.message + "</red>"
     end
 end

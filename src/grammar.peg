@@ -174,7 +174,7 @@
                 constants.push({
                     "type": "TemplateElement",
                     "value": {
-                        "raw": escape_quote(token)
+                        "raw": escape_string(token)
                     }
                 });
             }
@@ -198,8 +198,8 @@
             "prefix": true
         };
     }
-    function escape_quote(str) {
-       return str.replace(/\$\x7b/g, '\\$\x7b');
+    function escape_string(str) {
+       return str.replace(/\$\x7b/g, '\\$\x7b').replace(/`/g, '\\`');
     }
     function instance_of(left, right) {
         return {

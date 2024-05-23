@@ -13,11 +13,12 @@ exports[`expressions should call methods 1`] = `
         gaiman.echo(await $_x.map($_square));
         await $_foo.bar.baz(\`hello\`);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -29,11 +30,12 @@ exports[`expressions should chain methods 1`] = `
         gaiman.echo(await (await (await $_arr.map($_square)).filter($_identity)).join(\`\`));
         gaiman.echo(await (await \`foo\`.split(\`\`)).join(\`:\`));
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -47,11 +49,12 @@ exports[`expressions should parse assign operators 1`] = `
         $_i /= 2;
         $_i %= 2;
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -75,11 +78,12 @@ exports[`expressions should parse map function 1`] = `
             return $_x * $_x;
         }, new GaimanArray(1, 2, 3, 4)));
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -95,11 +99,12 @@ exports[`expressions should parse property access 1`] = `
         $_dict.foo.bar.baz[\`hello\`][$_nice].quux;
         $_dict[$_i][\`hello\`].foo.bar.baz[\`hello\`][$_nice].quux;
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -110,11 +115,12 @@ exports[`expressions should parse property access 2`] = `
         $_dict[$_i] = { [\`foo\`]: 10 };
         $_dict[10 + 10] = \`hello \${ $_bar }\`;
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -144,11 +150,12 @@ exports[`expressions should use command as part of expression 1`] = `
         await gaiman.echo_extra(\`message.\`, 50);
         gaiman.echo(await gaiman.ask(\`?\`));
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -178,11 +185,12 @@ exports[`functions should compile function calls 1`] = `
         gaiman.echo(await (await 'this\\\\nis\\\\ntext'.toUpperCase()).replace(/this\\\\n/i, \`\`));
         gaiman.echo(await (await 'this\\\\nis\\\\ntext'.toUpperCase()).replace(/this\\\\n/i, \`\`));
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -211,11 +219,12 @@ exports[`functions should compile function definitions 1`] = `
         async function $_define($_a, ...$_args) {
         }
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -230,11 +239,12 @@ exports[`functions should create factorial function 1`] = `
             }
         }
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -265,11 +275,12 @@ exports[`global should ignore comments 1`] = `
         }
         gaiman.exit_loop(2);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -281,11 +292,12 @@ exports[`global should parse constant values 1`] = `
         let $_c = true;
         let $_d = false;
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -299,11 +311,12 @@ exports[`global should parse do blocks 1`] = `
         }
         gaiman.echo($_x);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -316,11 +329,12 @@ exports[`global should parse imports 1`] = `
         const $_firebase = firebase;
         await gaiman.load(\`https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js\`);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -354,11 +368,12 @@ exports[`global should parse other syntax 1`] = `
         });
         let $_stage = new $_canvas.Canvas(await $_cols(), 10);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -372,11 +387,12 @@ exports[`if statements should compile base if 1`] = `
             }
         }
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -396,11 +412,12 @@ exports[`if statements should compile if_else 1`] = `
             gaiman.echo(\`NOP\`);
         }
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -428,11 +445,12 @@ exports[`if statements should compile multiple if_else  1`] = `
             gaiman.echo(\`3\`);
         }
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -481,11 +499,12 @@ exports[`if statements should compile multiple if_else with expressions 1`] = `
             return $_x;
         }(\`fun fun\`);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -505,11 +524,12 @@ exports[`loop should parse break 1`] = `
         }
         gaiman.exit_loop(1);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -527,11 +547,12 @@ exports[`loop should parse continue 1`] = `
         }
         gaiman.exit_loop(1);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -585,11 +606,12 @@ exports[`loop should parse for loops 1`] = `
         }
         gaiman.exit_loop(7);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -626,11 +648,12 @@ exports[`loop should parse while loops 1`] = `
         }
         gaiman.exit_loop(4);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -639,24 +662,25 @@ exports[`try..catch should parse empty try..catch 1`] = `
     try {
         try {
         } catch (e) {
-            if (e instanceof Gaiman_Exit) {
+            if (e instanceof Exit) {
                 throw e;
             }
         }
         if (true) {
             try {
             } catch (e) {
-                if (e instanceof Gaiman_Exit) {
+                if (e instanceof Exit) {
                     throw e;
                 }
             }
         }
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -666,17 +690,18 @@ exports[`try..catch should parse try..catch with code 1`] = `
         try {
             gaiman.echo(10);
         } catch ($_echo) {
-            if ($_echo instanceof Gaiman_Exit) {
+            if ($_echo instanceof Exit) {
                 throw $_echo;
             }
             \`err\`;
         }
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -686,17 +711,18 @@ exports[`try..catch should parse try..catch with exception var 1`] = `
         try {
             await $_x();
         } catch ($_e) {
-            if ($_e instanceof Gaiman_Exit) {
+            if ($_e instanceof Exit) {
                 throw $_e;
             }
             gaiman.echo(\`Err: \` + $_e.message);
         }
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -725,11 +751,12 @@ exports[`values should parse arrays 1`] = `
             return $_x * $_x;
         }));
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -748,11 +775,12 @@ exports[`values should parse dictionaries 1`] = `
             }
         };
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -771,11 +799,12 @@ exports[`values should parse heredocs 1`] = `
         gaiman.echo(await 'this\\\\nis\\\\ntext'.toUpperCase());
         gaiman.echo(await (await 'this\\\\nis\\\\ntext'.toUpperCase()).replace(/this\\\\n/i, \`\`));
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -794,11 +823,12 @@ exports[`values should parse numbers 1`] = `
         255;
         1000000000;
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -812,11 +842,12 @@ exports[`values should parse strings 1`] = `
         gaiman.echo(\`hello \${ $_xxx } bar\`);
         gaiman.echo(\`hello \\\\\${x()} baz\`);
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;
 
@@ -828,10 +859,11 @@ exports[`values should setting values 1`] = `
         document.cookie = 'foo=' + String(10);
         location.href = \`https://example.com\`;
     } catch (e) {
-        if (!(e instanceof Gaiman_Exit)) {
+        if (!(e instanceof Exit)) {
             gaiman.error(e);
         }
+    } finally {
+        gaiman.exit();
     }
-    gaiman.exit();
 }"
 `;

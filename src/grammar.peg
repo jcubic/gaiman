@@ -1038,7 +1038,8 @@ zero
 
 DIGIT = [0-9]
 
-keyword = ("if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda" / "from" / "new" / "try" / "catch") !name
+keyword = ("if" / "then" / "end" / "else" / "return" / "def" / "do" / "in" / "for" / "while" / "break" / "continue" / "lambda" / "from" / "try" / "catch") !name
+
 
 name = [A-Z_$a-z][A-Z_a-z0-9]* { return text(); }
 

@@ -7593,29 +7593,20 @@ function peg$parse(input, options) {
                                 if (peg$silentFails === 0) { peg$fail(peg$e30); }
                               }
                               if (s1 === peg$FAILED) {
-                                if (input.substr(peg$currPos, 3) === peg$c22) {
-                                  s1 = peg$c22;
+                                if (input.substr(peg$currPos, 3) === peg$c11) {
+                                  s1 = peg$c11;
                                   peg$currPos += 3;
                                 } else {
                                   s1 = peg$FAILED;
-                                  if (peg$silentFails === 0) { peg$fail(peg$e22); }
+                                  if (peg$silentFails === 0) { peg$fail(peg$e11); }
                                 }
                                 if (s1 === peg$FAILED) {
-                                  if (input.substr(peg$currPos, 3) === peg$c11) {
-                                    s1 = peg$c11;
-                                    peg$currPos += 3;
+                                  if (input.substr(peg$currPos, 5) === peg$c12) {
+                                    s1 = peg$c12;
+                                    peg$currPos += 5;
                                   } else {
                                     s1 = peg$FAILED;
-                                    if (peg$silentFails === 0) { peg$fail(peg$e11); }
-                                  }
-                                  if (s1 === peg$FAILED) {
-                                    if (input.substr(peg$currPos, 5) === peg$c12) {
-                                      s1 = peg$c12;
-                                      peg$currPos += 5;
-                                    } else {
-                                      s1 = peg$FAILED;
-                                      if (peg$silentFails === 0) { peg$fail(peg$e12); }
-                                    }
+                                    if (peg$silentFails === 0) { peg$fail(peg$e12); }
                                   }
                                 }
                               }

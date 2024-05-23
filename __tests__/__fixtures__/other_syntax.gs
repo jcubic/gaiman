@@ -1,5 +1,9 @@
 import Promise, setTimeout
 
+new Promise(lambda(resolve)
+    setTimeout(resole, 0)
+end)
+
 async do
   animate do
     exec* "hello, world", 0

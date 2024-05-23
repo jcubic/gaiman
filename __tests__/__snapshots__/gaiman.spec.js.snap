@@ -348,7 +348,7 @@ exports[`global should parse other syntax 1`] = `
             });
         });
         async function $_delay($_time) {
-            return new $_Promise(async function lambda($_resolve) {
+            return await new $_Promise(async function lambda($_resolve) {
                 await $_setTimeout($_resolve, $_time);
             });
         }
@@ -366,7 +366,7 @@ exports[`global should parse other syntax 1`] = `
                 await gaiman.exec_extra($_command, 10);
             });
         });
-        let $_stage = new $_canvas.Canvas(await $_cols(), 10);
+        let $_stage = await new $_canvas.Canvas(await $_cols(), 10);
     } catch (e) {
         if (!(e instanceof Exit)) {
             gaiman.error(e);

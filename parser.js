@@ -93,6 +93,12 @@
             "arguments": args
         };
     }
+    function await_expr(expression) {
+        return {
+            "type": "AwaitExpression",
+            "argument": expression
+        };
+    }
     function declare(names) {
         return {
             "type": "VariableDeclaration",
@@ -781,14 +787,11 @@ function peg$parse(input, options) {
   };
   var peg$f22 = function(lambda) { return lambda; };
   var peg$f23 = function(expression, args) {
-      return new_expr(expression, args);
+      return await_expr(new_expr(expression, args));
   };
   var peg$f24 = function(expression, args, rest) {
       if (rest.length === 0) {
-          return {
-              "type": "AwaitExpression",
-              "argument": call(expression, ...args)
-          };
+          return await_expr(call(expression, ...args))
       }
       return rest.reduce(function(acc, item) {
           if (acc.type === 'CallExpression') {

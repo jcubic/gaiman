@@ -100,6 +100,12 @@
             "arguments": args
         };
     }
+    function await_expr(expression) {
+        return {
+            "type": "AwaitExpression",
+            "argument": expression
+        };
+    }
     function declare(names) {
         return {
             "type": "VariableDeclaration",
@@ -565,15 +571,12 @@ lambda_value = "(" _ lambda:lambda _ ")" { return lambda; }
 call = "(" _ args:(argument_list / null_array) _ ")"
 
 constructor = "new" SP expression:(prop_access / variable) _ "(" _ args:(argument_list / null_array) ")" _ {
-    return new_expr(expression, args);
+    return await_expr(new_expr(expression, args));
 }
 
 function_call = _ !keyword expression:(prop_access / lambda_value / variable) _ "(" _ args:(argument_list / null_array) ")" _ rest:(call / bracket_prop / dot_prop)* {
     if (rest.length === 0) {
-        return {
-            "type": "AwaitExpression",
-            "argument": call(expression, ...args)
-        };
+        return await_expr(call(expression, ...args))
     }
     return rest.reduce(function(acc, item) {
         if (acc.type === 'CallExpression') {

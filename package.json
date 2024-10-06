@@ -33,10 +33,10 @@
   },
   "dependencies": {
     "@babel/cli": "^7.17.10",
-    "@babel/core": "^7.22.6",
+    "@babel/core": "^7.23.2",
     "@babel/standalone": "^7.18.5",
     "@jcubic/lily": "^0.3.0",
-    "escodegen": "^2.0.0",
+    "escodegen": "^2.1.0",
     "terser": "^5.14.2"
   }
 }

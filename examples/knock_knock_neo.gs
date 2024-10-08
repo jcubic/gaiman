@@ -1,4 +1,3 @@
-prompt ""
 animate do
     prompt* "Wake up, Neo...", 50
     delay(5000)
@@ -9,4 +8,3 @@ animate do
     prompt "Knock, knock, Neo."
     delay(5000)
 end
-prompt ""

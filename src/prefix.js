@@ -123,7 +123,10 @@ const Gaiman = {
         return $.getScript(url);
     },
     ['async'](fn) {
-        setTimeout(fn, 0);
+        if (typeof fn !== 'function') {
+            throw new Error('async expression needs to be a function or animation block');
+        }
+        fn();
     },
     async rpc(url) {
         // TODO: add Open-RPC
